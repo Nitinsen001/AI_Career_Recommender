@@ -258,18 +258,18 @@
                                             </div>
                                         </div>
                                         
-                                        {% if profile.skills %}
+                                        {% if profile_skills %}
                                         <div class="mt-3">
                                             <strong>Extracted Skills:</strong>
                                             <div class="skills-container mt-2">
-                                                {% for skill in profile.skills %}
+                                                {% for skill in profile_skills %}
                                                     <span class="badge bg-primary skill-badge">{{ skill }}</span>
                                                 {% endfor %}
                                             </div>
                                             <div class="mt-2 text-center">
                                                 <small class="text-muted">
                                                     <i class="fas fa-info-circle me-1"></i>
-                                                    {{ profile.skills|length }} skills detected
+                                                    {{ profile_skills|length }} skills detected
                                                 </small>
                                             </div>
                                         </div>
@@ -688,44 +688,7 @@
         });
 
 
-        // Add this function to clean skill display
-function cleanSkillDisplay() {
-    const skillBadges = document.querySelectorAll('.skill-badge');
-    skillBadges.forEach(badge => {
-        let skillText = badge.textContent.trim();
-        
-        // Clean up skills that are individual characters separated by spaces
-        if (skillText.includes('  ') || skillText.split(' ').length > 3) {
-            // Try to reconstruct proper skill names
-            const words = skillText.split(' ');
-            const reconstructed = [];
-            let currentWord = '';
-            
-            for (let i = 0; i < words.length; i++) {
-                if (words[i].length === 1) {
-                    currentWord += words[i];
-                } else {
-                    if (currentWord) {
-                        reconstructed.push(currentWord);
-                        currentWord = '';
-                    }
-                    reconstructed.push(words[i]);
-                }
-            }
-            
-            if (currentWord) {
-                reconstructed.push(currentWord);
-            }
-            
-            badge.textContent = reconstructed.join(' ');
-        }
-    });
-}
-
-// Call this function when the page loads
-document.addEventListener('DOMContentLoaded', function() {
-    cleanSkillDisplay();
-});
+        // Removed client-side skill cleaning; skills are cleaned server-side
 
     </script>
 </body>

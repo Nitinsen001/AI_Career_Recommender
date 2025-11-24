@@ -108,5 +108,6 @@ class JobMarketTrend(models.Model):
     key_skills_in_demand = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
         return f"{self.career.title} - {self.trend_year}"

@@ -10,7 +10,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('resume/', views.resume_upload, name='resume'),
-    path('resume/analyze/', views.analyze_resume, name='analyze_resume'),
+    # REMOVE THIS LINE: path('resume/analyze/', views.analyze_resume, name='analyze_resume'),
     
     
     path('skills/', views.skills_assessment, name='skills'),
@@ -29,8 +29,6 @@ urlpatterns = [
     
     path('trends/', views.job_trends, name='trends'),
     path('chatbot/', views.chatbot, name='chatbot'),
-    
-    # Removed API endpoints as requested
     
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),

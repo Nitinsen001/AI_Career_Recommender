@@ -21,6 +21,57 @@ import PyPDF2
 from docx import Document
 
 from .models import UserProfile, Career, PersonalityAssessment, SkillAssessment, CareerRecommendation
+
+# Utility to clean and normalize skill names for display/storage
+def clean_skill_list(skills):
+    try:
+        keep_single_letter = {'c', 'r'}
+        acronyms = {'SQL', 'HTML', 'CSS', 'REST', 'AWS', 'GCP', 'NLP', 'ETL', 'API', 'CI/CD', 'C++', 'C#', 'R', 'AI'}
+        cleaned = []
+        seen = set()
+        for s in skills:
+            if not isinstance(s, str):
+                continue
+            s = s.strip()
+            if not s:
+                continue
+            # normalize spacing and dashes
+            s = re.sub(r'[\u2010\u2011\u2012\u2013\u2014\-]+', ' ', s)
+            s = re.sub(r'\s+', ' ', s).strip()
+
+            # basic filters
+            sl = s.lower()
+            if len(sl) < 2 and sl not in keep_single_letter:
+                continue
+            if len(sl.split()) > 4:
+                continue
+            if re.fullmatch(r'[\W_]+', sl):
+                continue
+
+            # Title case, then restore acronyms and special tokens
+            nice = s.title()
+            tokens = []
+            for token in re.split(r'(\/)', nice):  # keep slashes separate
+                if token == '/':
+                    tokens.append(token)
+                    continue
+                subtoks = token.split()
+                for st in subtoks:
+                    up = st.upper()
+                    if up in acronyms:
+                        tokens.append(up)
+                    else:
+                        tokens.append(st)
+            nice = ' '.join(tokens).replace(' / ', '/').replace('Ci/Cd', 'CI/CD')
+
+            key = nice.lower()
+            if key not in seen:
+                seen.add(key)
+                cleaned.append(nice)
+        return cleaned
+    except Exception:
+        # on failure, return unique list conservatively
+        return list(dict.fromkeys([str(s).strip() for s in skills if str(s).strip()]))
 from .forms import UserRegistrationForm, UserProfileForm, PersonalityAssessmentForm, SkillAssessmentForm, ResumeUploadForm
 
 # --- 1. CONFIGURATION AND MODEL/DATA LOADING ---
@@ -340,9 +391,12 @@ def resume_upload(request):
     
     # GET request - Always pass fresh profile
     profile = UserProfile.objects.get(id=profile.id)
+    # Build cleaned skills list for template display
+    profile_skills = clean_skill_list([s.strip() for s in (profile.skills or '').split(',') if s.strip()]) if profile.skills else []
     return render(request, 'resume.html', {
         'form': ResumeUploadForm(), 
-        'profile': profile
+        'profile': profile,
+        'profile_skills': profile_skills,
     })
 @login_required
 def analyze_resume(request):
@@ -662,13 +716,16 @@ def analyze_resume_file(resume_file):
             if skill_name in text_lower:
                 skills_found.append(skill_name)
         
+        # Clean and normalize skills
+        skills_clean = clean_skill_list(list(set(skills_found)))
+        
         experience_years = 0
         matches = re.findall(r'(\d+)\s*(?:year|yr|years|yrs)\s*(?:of)?\s*(?:exp|experience)', text, re.IGNORECASE)
         if matches:
              experience_years = max([int(m[0]) for m in matches])
 
         return {
-            'skills': list(set(skills_found)),
+            'skills': skills_clean,
             'experience_years': experience_years,
             'analysis_method': 'ML_model'
         }
