@@ -709,25 +709,51 @@ def analyze_resume_file(resume_file):
         if not text.strip():
             return {'error': 'No text could be extracted from the file'}
 
-        skills_found = []
         text_lower = simple_clean_text(text)
-        
-        for skill_name in SKILL_EXTRACTOR.keys():
-            if skill_name in text_lower:
-                skills_found.append(skill_name)
-        
+
+        # Extract skills using model if loaded, else fallback to keyword list
+        skills_found = set()
+        analysis_method = 'ml_model'
+        try:
+            if not models_loaded or 'SKILL_EXTRACTOR' not in globals() or not SKILL_EXTRACTOR:
+                analysis_method = 'keyword_fallback'
+                candidate_skills = []
+                if 'SKILLS_DF' in globals() and isinstance(SKILLS_DF, pd.DataFrame) and not SKILLS_DF.empty and 'skill_name' in SKILLS_DF.columns:
+                    candidate_skills = [str(s).strip().lower() for s in SKILLS_DF['skill_name'].dropna().unique().tolist()]
+                else:
+                    candidate_skills = [
+                        'python','java','javascript','typescript','sql','html','css','react','node','django','flask',
+                        'c','c++','c#','r','matlab','pandas','numpy','scikit learn','machine learning','deep learning',
+                        'nlp','data analysis','excel','power bi','tableau','aws','gcp','azure','docker','kubernetes',
+                        'git','linux','communication','leadership','project management','teamwork','problem solving'
+                    ]
+                for s in candidate_skills:
+                    if s and s in text_lower:
+                        skills_found.add(s)
+            else:
+                for skill_name in SKILL_EXTRACTOR.keys():
+                    s = str(skill_name).strip().lower()
+                    if s and s in text_lower:
+                        skills_found.add(s)
+        except Exception:
+            # fallback hard if model parsing has issues
+            analysis_method = 'keyword_fallback'
+            for s in ['python','java','javascript','sql','html','css','react','node','django','flask','machine learning','data analysis','communication','leadership','project management']:
+                if s in text_lower:
+                    skills_found.add(s)
+
         # Clean and normalize skills
-        skills_clean = clean_skill_list(list(set(skills_found)))
-        
+        skills_clean = clean_skill_list(list(skills_found))
+
         experience_years = 0
         matches = re.findall(r'(\d+)\s*(?:year|yr|years|yrs)\s*(?:of)?\s*(?:exp|experience)', text, re.IGNORECASE)
         if matches:
-             experience_years = max([int(m[0]) for m in matches])
+            experience_years = max(int(m) for m in matches)
 
         return {
             'skills': skills_clean,
             'experience_years': experience_years,
-            'analysis_method': 'ML_model'
+            'analysis_method': analysis_method
         }
     except Exception as e:
         return {'error': f'Analysis error: {str(e)}'}
