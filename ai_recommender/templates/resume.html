@@ -199,7 +199,7 @@
                         <div class="resume-stats">
                             <div class="row text-center">
                                 <div class="col-md-3">
-                                    <div class="stat-number">{{ profile.skills|length|default:0 }}</div>
+                                    <div class="stat-number">{{ profile_skills|length|default:0 }}</div>
                                     <div>Skills Extracted</div>
                                 </div>
                                 <div class="col-md-3">
@@ -220,13 +220,15 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-number">
-                                        {% if profile.skills and profile.skills|length > 8 %}
-                                            High
-                                        {% elif profile.skills and profile.skills|length > 3 %}
-                                            Medium
-                                        {% else %}
-                                            Low
-                                        {% endif %}
+                                        {% with cnt=profile_skills|length %}
+                                            {% if cnt >= 8 %}
+                                                High
+                                            {% elif cnt >= 4 %}
+                                                Medium
+                                            {% else %}
+                                                Low
+                                            {% endif %}
+                                        {% endwith %}
                                     </div>
                                     <div>Market Readiness</div>
                                 </div>

@@ -8,44 +8,994 @@ skill_id,skill_name,category,proficiency_levels,related_careers,demand_level
 7,ruby,Programming Language,Intermediate,"Web Developer, Ruby on Rails Developer, Backend Developer",0.55
 8,go,Programming Language,Intermediate,"Backend Developer, System Programmer, DevOps Engineer, Cloud Engineer",0.7
 9,rust,Programming Language,Advanced,"System Programmer, Blockchain Developer, Embedded Systems Engineer",0.65
-10,html,Web Technology,Beginner,"Web Developer, Frontend Developer, UI Developer, Content Manager",0.8
-11,css,Web Technology,Beginner,"Web Developer, Frontend Developer, UI Developer, UX Designer",0.8
-12,react,Frontend Framework,Intermediate,"Frontend Developer, React Developer, UI Developer, Full Stack Developer",0.85
-13,angular,Frontend Framework,Intermediate,"Frontend Developer, Angular Developer, Enterprise Application Developer",0.7
-14,vue,Frontend Framework,Intermediate,"Frontend Developer, Vue Developer, UI Developer",0.65
-15,django,Backend Framework,Intermediate,"Python Developer, Backend Developer, Full Stack Developer",0.7
-16,flask,Backend Framework,Intermediate,"Python Developer, Backend Developer, API Developer",0.6
-17,nodejs,Backend Runtime,Intermediate,"Backend Developer, Full Stack Developer, JavaScript Developer",0.8
-18,pandas,Data Science,Intermediate,"Data Scientist, Data Analyst, Machine Learning Engineer, Research Analyst",0.85
-19,numpy,Data Science,Intermediate,"Data Scientist, Machine Learning Engineer, Research Scientist, Quantitative Analyst",0.8
-20,matplotlib,Data Science,Intermediate,"Data Scientist, Data Analyst, Research Analyst, Business Intelligence Analyst",0.7
-21,scikit-learn,Machine Learning,Intermediate,"Machine Learning Engineer, Data Scientist, Research Scientist",0.8
-22,tensorflow,Machine Learning,Advanced,"Machine Learning Engineer, AI Engineer, Deep Learning Engineer, Research Scientist",0.75
-23,pytorch,Machine Learning,Advanced,"Machine Learning Engineer, AI Researcher, Deep Learning Engineer, Computer Vision Engineer",0.7
-24,sql,Database,Beginner,"Data Analyst, Database Administrator, Backend Developer, Business Intelligence Analyst",0.9
-25,mongodb,Database,Intermediate,"Backend Developer, Full Stack Developer, Database Administrator",0.7
-26,postgresql,Database,Intermediate,"Database Administrator, Backend Developer, Data Engineer",0.65
-27,mysql,Database,Intermediate,"Database Administrator, Backend Developer, Web Developer",0.6
-28,redis,Database,Intermediate,"Backend Developer, DevOps Engineer, System Architect",0.55
-29,git,DevOps,Beginner,"Software Developer, DevOps Engineer, Technical Lead, Project Manager",0.9
-30,docker,DevOps,Intermediate,"DevOps Engineer, Backend Developer, Cloud Engineer, System Administrator",0.8
-31,kubernetes,DevOps,Advanced,"DevOps Engineer, Cloud Engineer, System Architect, Platform Engineer",0.75
-32,aws,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, Solution Architect, System Administrator",0.85
-33,azure,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, .NET Developer, Enterprise Architect",0.7
-34,gcp,Cloud Computing,Intermediate,"Cloud Engineer, Data Engineer, Machine Learning Engineer, DevOps Engineer",0.65
-35,machine learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, AI Researcher, Business Intelligence Analyst",0.9
-36,artificial intelligence,AI/ML,Advanced,"AI Engineer, Research Scientist, Machine Learning Engineer, AI Product Manager",0.8
-37,deep learning,AI/ML,Advanced,"Deep Learning Engineer, Computer Vision Engineer, NLP Engineer, AI Researcher",0.75
-38,data analysis,Data Science,Intermediate,"Data Analyst, Business Analyst, Data Scientist, Market Research Analyst",0.85
-39,data structures,Computer Science,Intermediate,"Software Engineer, Algorithm Developer, Competitive Programmer, System Designer",0.7
-40,algorithms,Computer Science,Intermediate,"Software Engineer, Research Scientist, Algorithm Developer, Quantitative Analyst",0.75
-41,project management,Soft Skill,Intermediate,"Project Manager, Product Manager, Team Lead, Scrum Master, Delivery Manager",0.8
-42,problem solving,Soft Skill,Intermediate,"Software Engineer, Data Scientist, Business Analyst, Consultant",0.9
-43,team collaboration,Soft Skill,Beginner,"Team Member, Project Manager, Team Lead, Product Manager",0.85
-44,communication,Soft Skill,Beginner,"All Roles - Team Lead, Project Manager, Sales, Consultant",0.9
-45,leadership,Soft Skill,Advanced,"Team Lead, Project Manager, Product Manager, Department Head",0.8
-46,agile methodology,Project Management,Intermediate,"Project Manager, Scrum Master, Product Owner, Development Team Member",0.7
-47,scrum,Project Management,Intermediate,"Scrum Master, Product Owner, Agile Coach, Project Manager",0.65
-48,rest api,Backend Development,Intermediate,"Backend Developer, Full Stack Developer, API Developer, Mobile Developer",0.8
-49,microservices,Architecture,Advanced,"System Architect, Backend Developer, DevOps Engineer, Cloud Engineer",0.7
-50,aws lambda,Cloud Computing,Intermediate,"Cloud Engineer, Backend Developer, DevOps Engineer, Serverless Developer",0.6
+10,swift,Programming Language,Intermediate,"iOS Developer, Mobile Developer, Apple Ecosystem Developer",0.7
+11,kotlin,Programming Language,Intermediate,"Android Developer, Backend Developer, Full Stack Developer",0.65
+12,typescript,Programming Language,Intermediate,"Frontend Developer, Full Stack Developer, Angular Developer",0.75
+13,scala,Programming Language,Advanced,"Data Engineer, Big Data Developer, Backend Developer",0.6
+14,r,Programming Language,Intermediate,"Data Scientist, Statistician, Research Analyst, Biostatistician",0.7
+15,perl,Programming Language,Intermediate,"System Administrator, DevOps Engineer, Bioinformatics Developer",0.4
+16,haskell,Programming Language,Advanced,"Functional Programmer, Research Scientist, Blockchain Developer",0.45
+17,elixir,Programming Language,Intermediate,"Backend Developer, Real-time System Developer, Web Developer",0.5
+18,clojure,Programming Language,Advanced,"Functional Programmer, Backend Developer, Data Processing Engineer",0.4
+19,dart,Programming Language,Intermediate,"Flutter Developer, Mobile Developer, Cross-platform Developer",0.6
+20,julia,Programming Language,Intermediate,"Data Scientist, Research Scientist, Quantitative Analyst",0.55
+21,html,Web Technology,Beginner,"Web Developer, Frontend Developer, UI Developer, Content Manager",0.8
+22,css,Web Technology,Beginner,"Web Developer, Frontend Developer, UI Developer, UX Designer",0.8
+23,sass,Web Technology,Intermediate,"Frontend Developer, UI Developer, Web Designer",0.65
+24,less,Web Technology,Intermediate,"Frontend Developer, UI Developer, Web Designer",0.5
+25,webgl,Web Technology,Advanced,"Game Developer, 3D Developer, Graphics Programmer",0.55
+26,websocket,Web Technology,Intermediate,"Real-time Application Developer, Backend Developer, Full Stack Developer",0.6
+27,webassembly,Web Technology,Advanced,"Web Developer, System Programmer, Game Developer",0.5
+28,react,Frontend Framework,Intermediate,"Frontend Developer, React Developer, UI Developer, Full Stack Developer",0.85
+29,angular,Frontend Framework,Intermediate,"Frontend Developer, Angular Developer, Enterprise Application Developer",0.7
+30,vue,Frontend Framework,Intermediate,"Frontend Developer, Vue Developer, UI Developer",0.65
+31,svelte,Frontend Framework,Intermediate,"Frontend Developer, JavaScript Developer, UI Developer",0.55
+32,ember,Frontend Framework,Intermediate,"Frontend Developer, JavaScript Developer, Web Developer",0.4
+33,backbone,Frontend Framework,Intermediate,"Frontend Developer, JavaScript Developer, Web Developer",0.3
+34,nextjs,Frontend Framework,Intermediate,"React Developer, Full Stack Developer, Frontend Developer",0.7
+35,nuxtjs,Frontend Framework,Intermediate,"Vue Developer, Full Stack Developer, Frontend Developer",0.55
+36,gatsby,Frontend Framework,Intermediate,"React Developer, Frontend Developer, Web Developer",0.5
+37,django,Backend Framework,Intermediate,"Python Developer, Backend Developer, Full Stack Developer",0.7
+38,flask,Backend Framework,Intermediate,"Python Developer, Backend Developer, API Developer",0.6
+39,spring,Backend Framework,Intermediate,"Java Developer, Backend Developer, Enterprise Developer",0.75
+40,express,Backend Framework,Intermediate,"Node.js Developer, Backend Developer, Full Stack Developer",0.7
+41,laravel,Backend Framework,Intermediate,"PHP Developer, Backend Developer, Web Developer",0.6
+42,rails,Backend Framework,Intermediate,"Ruby Developer, Backend Developer, Web Developer",0.55
+43,aspnet,Backend Framework,Intermediate,"C# Developer, Backend Developer, Enterprise Developer",0.65
+44,fastapi,Backend Framework,Intermediate,"Python Developer, Backend Developer, API Developer",0.6
+45,nodejs,Backend Runtime,Intermediate,"Backend Developer, Full Stack Developer, JavaScript Developer",0.8
+46,deno,Backend Runtime,Intermediate,"Backend Developer, JavaScript Developer, TypeScript Developer",0.4
+47,pandas,Data Science,Intermediate,"Data Scientist, Data Analyst, Machine Learning Engineer, Research Analyst",0.85
+48,numpy,Data Science,Intermediate,"Data Scientist, Machine Learning Engineer, Research Scientist, Quantitative Analyst",0.8
+49,matplotlib,Data Science,Intermediate,"Data Scientist, Data Analyst, Research Analyst, Business Intelligence Analyst",0.7
+50,seaborn,Data Science,Intermediate,"Data Scientist, Data Analyst, Research Analyst",0.6
+51,plotly,Data Science,Intermediate,"Data Scientist, Data Analyst, Business Intelligence Developer",0.55
+52,d3js,Data Science,Advanced,"Data Visualization Specialist, Frontend Developer, Data Analyst",0.5
+53,scikit-learn,Machine Learning,Intermediate,"Machine Learning Engineer, Data Scientist, Research Scientist",0.8
+54,tensorflow,Machine Learning,Advanced,"Machine Learning Engineer, AI Engineer, Deep Learning Engineer, Research Scientist",0.75
+55,pytorch,Machine Learning,Advanced,"Machine Learning Engineer, AI Researcher, Deep Learning Engineer, Computer Vision Engineer",0.7
+56,keras,Machine Learning,Intermediate,"Machine Learning Engineer, Data Scientist, Deep Learning Engineer",0.65
+57,mxnet,Machine Learning,Advanced,"Machine Learning Engineer, Research Scientist, Deep Learning Engineer",0.4
+58,caffe,Machine Learning,Advanced,"Computer Vision Engineer, Research Scientist, Deep Learning Engineer",0.35
+59,opencv,Computer Vision,Intermediate,"Computer Vision Engineer, Robotics Engineer, AI Developer",0.65
+60,nltk,Natural Language Processing,Intermediate,"NLP Engineer, Data Scientist, Research Scientist",0.6
+61,spacy,Natural Language Processing,Intermediate,"NLP Engineer, Data Scientist, Linguist",0.65
+62,transformers,Natural Language Processing,Advanced,"NLP Engineer, AI Researcher, Machine Learning Engineer",0.7
+63,langchain,AI Tools,Intermediate,"AI Engineer, LLM Developer, Chatbot Developer",0.6
+64,llama-index,AI Tools,Intermediate,"AI Engineer, Data Engineer, Search Engineer",0.55
+65,sql,Database,Beginner,"Data Analyst, Database Administrator, Backend Developer, Business Intelligence Analyst",0.9
+66,mongodb,Database,Intermediate,"Backend Developer, Full Stack Developer, Database Administrator",0.7
+67,postgresql,Database,Intermediate,"Database Administrator, Backend Developer, Data Engineer",0.65
+68,mysql,Database,Intermediate,"Database Administrator, Backend Developer, Web Developer",0.6
+69,redis,Database,Intermediate,"Backend Developer, DevOps Engineer, System Architect",0.55
+70,cassandra,Database,Advanced,"Data Engineer, Big Data Developer, Database Administrator",0.5
+71,elasticsearch,Search Engine,Intermediate,"Search Engineer, Backend Developer, Data Engineer",0.65
+72,solr,Search Engine,Intermediate,"Search Engineer, Backend Developer, Data Engineer",0.45
+73,oracle,Database,Intermediate,"Database Administrator, Enterprise Developer, Data Analyst",0.6
+74,sqlserver,Database,Intermediate,"Database Administrator, Backend Developer, Business Intelligence Developer",0.55
+75,sqlite,Database,Beginner,"Mobile Developer, Embedded Developer, Application Developer",0.5
+76,firebase,Database,Intermediate,"Mobile Developer, Full Stack Developer, Backend Developer",0.6
+77,dynamodb,Database,Intermediate,"Cloud Developer, Backend Developer, DevOps Engineer",0.55
+78,cosmosdb,Database,Intermediate,"Azure Developer, Backend Developer, Cloud Engineer",0.45
+79,neo4j,Database,Intermediate,"Data Scientist, Backend Developer, Graph Analyst",0.4
+80,arangodb,Database,Intermediate,"Backend Developer, Full Stack Developer, Data Engineer",0.35
+81,git,DevOps,Beginner,"Software Developer, DevOps Engineer, Technical Lead, Project Manager",0.9
+82,docker,DevOps,Intermediate,"DevOps Engineer, Backend Developer, Cloud Engineer, System Administrator",0.8
+83,kubernetes,DevOps,Advanced,"DevOps Engineer, Cloud Engineer, System Architect, Platform Engineer",0.75
+84,jenkins,DevOps,Intermediate,"DevOps Engineer, Build Engineer, CI/CD Engineer",0.7
+85,github-actions,DevOps,Intermediate,"DevOps Engineer, Software Developer, CI/CD Engineer",0.65
+86,gitlab-ci,DevOps,Intermediate,"DevOps Engineer, Software Developer, CI/CD Engineer",0.6
+87,terraform,DevOps,Intermediate,"DevOps Engineer, Cloud Engineer, Infrastructure Engineer",0.75
+88,ansible,DevOps,Intermediate,"DevOps Engineer, System Administrator, Cloud Engineer",0.65
+89,puppet,DevOps,Intermediate,"DevOps Engineer, System Administrator, Infrastructure Engineer",0.5
+90,chef,DevOps,Intermediate,"DevOps Engineer, System Administrator, Infrastructure Engineer",0.45
+91,prometheus,DevOps,Intermediate,"DevOps Engineer, SRE, System Administrator",0.6
+92,grafana,DevOps,Intermediate,"DevOps Engineer, SRE, Data Analyst, System Administrator",0.55
+93,aws,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, Solution Architect, System Administrator",0.85
+94,azure,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, .NET Developer, Enterprise Architect",0.7
+95,gcp,Cloud Computing,Intermediate,"Cloud Engineer, Data Engineer, Machine Learning Engineer, DevOps Engineer",0.65
+96,aws-lambda,Cloud Computing,Intermediate,"Cloud Engineer, Backend Developer, DevOps Engineer, Serverless Developer",0.6
+97,azure-functions,Cloud Computing,Intermediate,"Cloud Engineer, Backend Developer, Azure Developer",0.5
+98,google-cloud-functions,Cloud Computing,Intermediate,"Cloud Engineer, Backend Developer, GCP Developer",0.45
+99,ec2,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, System Administrator",0.7
+100,s3,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, Data Engineer",0.75
+101,rds,Cloud Computing,Intermediate,"Cloud Engineer, Database Administrator, Backend Developer",0.6
+102,iam,Cloud Computing,Intermediate,"Cloud Engineer, Security Engineer, DevOps Engineer",0.65
+103,vpc,Cloud Computing,Intermediate,"Cloud Engineer, Network Engineer, DevOps Engineer",0.55
+104,cloudformation,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, Infrastructure Engineer",0.5
+105,machine-learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, AI Researcher, Business Intelligence Analyst",0.9
+106,artificial-intelligence,AI/ML,Advanced,"AI Engineer, Research Scientist, Machine Learning Engineer, AI Product Manager",0.8
+107,deep-learning,AI/ML,Advanced,"Deep Learning Engineer, Computer Vision Engineer, NLP Engineer, AI Researcher",0.75
+108,computer-vision,AI/ML,Advanced,"Computer Vision Engineer, Robotics Engineer, AI Researcher",0.7
+109,natural-language-processing,AI/ML,Advanced,"NLP Engineer, Computational Linguist, AI Researcher",0.7
+110,reinforcement-learning,AI/ML,Advanced,"AI Researcher, Robotics Engineer, Game AI Developer",0.6
+111,generative-ai,AI/ML,Advanced,"AI Engineer, Content Creator, Research Scientist",0.75
+112,llm,AI/ML,Advanced,"AI Engineer, NLP Engineer, Research Scientist",0.7
+113,data-analysis,Data Science,Intermediate,"Data Analyst, Business Analyst, Data Scientist, Market Research Analyst",0.85
+114,data-visualization,Data Science,Intermediate,"Data Analyst, Business Intelligence Developer, Data Scientist",0.7
+115,statistical-analysis,Data Science,Intermediate,"Data Scientist, Statistician, Research Analyst",0.75
+116,bi-tools,Data Science,Intermediate,"Business Intelligence Analyst, Data Analyst, Business Analyst",0.7
+117,tableau,Data Visualization,Intermediate,"Business Intelligence Developer, Data Analyst, Data Scientist",0.75
+118,power-bi,Data Visualization,Intermediate,"Business Intelligence Developer, Data Analyst, Business Analyst",0.7
+119,qlik,Data Visualization,Intermediate,"Business Intelligence Developer, Data Analyst, Consultant",0.55
+120,looker,Data Visualization,Intermediate,"Business Intelligence Developer, Data Analyst, Business Analyst",0.5
+121,data-engineering,Data Engineering,Intermediate,"Data Engineer, Big Data Developer, Data Architect",0.75
+122,apache-spark,Big Data,Advanced,"Data Engineer, Big Data Developer, Data Scientist",0.7
+123,hadoop,Big Data,Advanced,"Data Engineer, Big Data Developer, System Administrator",0.6
+124,kafka,Big Data,Intermediate,"Data Engineer, Backend Developer, Real-time System Developer",0.65
+125,airflow,Data Engineering,Intermediate,"Data Engineer, DevOps Engineer, Data Scientist",0.6
+126,dbt,Data Engineering,Intermediate,"Data Engineer, Data Analyst, Analytics Engineer",0.55
+127,data-warehousing,Data Engineering,Intermediate,"Data Engineer, Data Architect, Business Intelligence Developer",0.65
+128,elt-etl,Data Engineering,Intermediate,"Data Engineer, Data Integration Specialist, Business Intelligence Developer",0.7
+129,data-modeling,Data Engineering,Intermediate,"Data Engineer, Database Administrator, Data Architect",0.65
+130,data-governance,Data Management,Intermediate,"Data Architect, Data Manager, Compliance Officer",0.55
+131,data-structures,Computer Science,Intermediate,"Software Engineer, Algorithm Developer, Competitive Programmer, System Designer",0.7
+132,algorithms,Computer Science,Intermediate,"Software Engineer, Research Scientist, Algorithm Developer, Quantitative Analyst",0.75
+133,design-patterns,Software Engineering,Intermediate,"Software Architect, Senior Developer, Technical Lead",0.7
+134,software-architecture,Software Engineering,Advanced,"Software Architect, Technical Lead, System Designer",0.75
+135,system-design,Software Engineering,Advanced,"Software Architect, Technical Lead, Senior Developer",0.8
+136,clean-code,Software Engineering,Intermediate,"Software Developer, Technical Lead, Code Reviewer",0.7
+137,code-review,Software Engineering,Intermediate,"Senior Developer, Technical Lead, Team Lead",0.65
+138,testing,Software Engineering,Intermediate,"QA Engineer, Software Developer, Test Automation Engineer",0.7
+139,unit-testing,Software Engineering,Intermediate,"Software Developer, QA Engineer, Test Engineer",0.65
+140,integration-testing,Software Engineering,Intermediate,"QA Engineer, Test Engineer, Software Developer",0.6
+141,test-automation,Software Engineering,Intermediate,"QA Engineer, Test Automation Engineer, DevOps Engineer",0.65
+142,selenium,Testing,Intermediate,"Test Automation Engineer, QA Engineer, Web Developer",0.6
+143,cypress,Testing,Intermediate,"Test Automation Engineer, Frontend Developer, QA Engineer",0.55
+144,jest,Testing,Intermediate,"JavaScript Developer, Frontend Developer, Full Stack Developer",0.6
+145,junit,Testing,Intermediate,"Java Developer, Software Engineer, Test Engineer",0.55
+146,pytest,Testing,Intermediate,"Python Developer, Software Engineer, Test Engineer",0.6
+147,security,Cybersecurity,Intermediate,"Security Engineer, DevOps Engineer, Software Developer",0.75
+148,penetration-testing,Cybersecurity,Advanced,"Penetration Tester, Security Analyst, Ethical Hacker",0.65
+149,network-security,Cybersecurity,Intermediate,"Network Engineer, Security Engineer, System Administrator",0.7
+150,application-security,Cybersecurity,Intermediate,"Security Engineer, Software Developer, DevOps Engineer",0.65
+151,cryptography,Cybersecurity,Advanced,"Security Engineer, Cryptography Researcher, Blockchain Developer",0.6
+152,owasp,Cybersecurity,Intermediate,"Security Engineer, Web Developer, DevOps Engineer",0.55
+153,siem,Security Tools,Intermediate,"Security Analyst, SOC Analyst, Security Engineer",0.6
+154,firewalls,Networking,Intermediate,"Network Engineer, Security Engineer, System Administrator",0.55
+155,vpn,Networking,Intermediate,"Network Engineer, Security Engineer, System Administrator",0.5
+156,networking,Networking,Intermediate,"Network Engineer, System Administrator, Cloud Engineer",0.65
+157,tcp-ip,Networking,Intermediate,"Network Engineer, System Administrator, Backend Developer",0.6
+158,dns,Networking,Intermediate,"Network Engineer, System Administrator, DevOps Engineer",0.55
+159,load-balancing,Networking,Intermediate,"DevOps Engineer, Network Engineer, System Administrator",0.6
+160,cdn,Networking,Intermediate,"DevOps Engineer, Frontend Developer, System Administrator",0.55
+161,linux,System Administration,Intermediate,"System Administrator, DevOps Engineer, Backend Developer",0.75
+162,windows-server,System Administration,Intermediate,"System Administrator, Windows Administrator, IT Support",0.6
+163,unix,System Administration,Intermediate,"System Administrator, DevOps Engineer, Backend Developer",0.6
+164,shell-scripting,System Administration,Intermediate,"System Administrator, DevOps Engineer, Software Developer",0.65
+165,bash,System Administration,Intermediate,"System Administrator, DevOps Engineer, Software Developer",0.7
+166,powershell,System Administration,Intermediate,"Windows Administrator, System Administrator, DevOps Engineer",0.6
+167,containerization,DevOps,Intermediate,"DevOps Engineer, Backend Developer, Cloud Engineer",0.75
+168,serverless,Cloud Computing,Intermediate,"Cloud Engineer, Backend Developer, Full Stack Developer",0.65
+169,microservices,Architecture,Advanced,"System Architect, Backend Developer, DevOps Engineer, Cloud Engineer",0.7
+170,monolith-architecture,Architecture,Intermediate,"Backend Developer, Software Architect, Technical Lead",0.5
+171,soa,Architecture,Advanced,"Enterprise Architect, System Architect, Technical Lead",0.45
+172,event-driven-architecture,Architecture,Advanced,"System Architect, Backend Developer, Data Engineer",0.6
+173,rest-api,Backend Development,Intermediate,"Backend Developer, Full Stack Developer, API Developer, Mobile Developer",0.8
+174,graphql,Backend Development,Intermediate,"Backend Developer, Full Stack Developer, API Developer",0.65
+175,soap,Backend Development,Intermediate,"Enterprise Developer, Backend Developer, Integration Specialist",0.4
+176,grpc,Backend Development,Intermediate,"Backend Developer, Microservices Developer, System Architect",0.55
+177,api-design,Backend Development,Intermediate,"Backend Developer, API Developer, System Architect",0.7
+178,api-security,Backend Development,Intermediate,"Security Engineer, Backend Developer, API Developer",0.6
+179,oauth,Security,Intermediate,"Security Engineer, Backend Developer, Full Stack Developer",0.65
+180,jwt,Security,Intermediate,"Backend Developer, Security Engineer, Full Stack Developer",0.6
+181,mobile-development,Mobile Development,Intermediate,"Mobile Developer, iOS Developer, Android Developer",0.7
+182,ios-development,Mobile Development,Intermediate,"iOS Developer, Mobile Developer, Apple Ecosystem Developer",0.65
+183,android-development,Mobile Development,Intermediate,"Android Developer, Mobile Developer, Kotlin Developer",0.65
+184,react-native,Mobile Development,Intermediate,"Mobile Developer, JavaScript Developer, Cross-platform Developer",0.6
+185,flutter,Mobile Development,Intermediate,"Mobile Developer, Dart Developer, Cross-platform Developer",0.65
+186,xamarin,Mobile Development,Intermediate,"Mobile Developer, C# Developer, Cross-platform Developer",0.45
+187,ionic,Mobile Development,Intermediate,"Mobile Developer, Web Developer, Hybrid App Developer",0.4
+188,swiftui,Mobile Development,Intermediate,"iOS Developer, Mobile Developer, UI Developer",0.55
+189,jetpack-compose,Mobile Development,Intermediate,"Android Developer, Mobile Developer, UI Developer",0.5
+190,ar-vr,Extended Reality,Advanced,"AR/VR Developer, Game Developer, 3D Developer",0.55
+191,unity,Game Development,Intermediate,"Game Developer, AR/VR Developer, 3D Developer",0.65
+192,unreal-engine,Game Development,Advanced,"Game Developer, 3D Artist, Technical Artist",0.6
+193,blender,3D Modeling,Intermediate,"3D Artist, Game Developer, Animation Designer",0.5
+194,maya,3D Modeling,Advanced,"3D Artist, Animation Designer, VFX Artist",0.45
+195,photoshop,Design,Beginner,"Graphic Designer, UI Designer, Web Designer",0.6
+196,illustrator,Design,Intermediate,"Graphic Designer, UI Designer, Illustrator",0.55
+197,figma,Design,Intermediate,"UI Designer, UX Designer, Product Designer",0.7
+198,sketch,Design,Intermediate,"UI Designer, UX Designer, Product Designer",0.5
+199,adobe-xd,Design,Intermediate,"UI Designer, UX Designer, Product Designer",0.45
+200,invision,Design,Intermediate,"UI Designer, UX Designer, Product Designer",0.4
+201,ux-research,UX Design,Intermediate,"UX Researcher, Product Designer, UX Designer",0.6
+202,usability-testing,UX Design,Intermediate,"UX Designer, Product Designer, UX Researcher",0.55
+203,wireframing,UX Design,Intermediate,"UX Designer, Product Designer, UI Designer",0.65
+204,prototyping,UX Design,Intermediate,"UX Designer, Product Designer, UI Designer",0.6
+205,information-architecture,UX Design,Intermediate,"UX Designer, Information Architect, Product Designer",0.55
+206,project-management,Soft Skill,Intermediate,"Project Manager, Product Manager, Team Lead, Scrum Master, Delivery Manager",0.8
+207,problem-solving,Soft Skill,Intermediate,"Software Engineer, Data Scientist, Business Analyst, Consultant",0.9
+208,team-collaboration,Soft Skill,Beginner,"Team Member, Project Manager, Team Lead, Product Manager",0.85
+209,communication,Soft Skill,Beginner,"All Roles - Team Lead, Project Manager, Sales, Consultant",0.9
+210,leadership,Soft Skill,Advanced,"Team Lead, Project Manager, Product Manager, Department Head",0.8
+211,agile-methodology,Project Management,Intermediate,"Project Manager, Scrum Master, Product Owner, Development Team Member",0.7
+212,scrum,Project Management,Intermediate,"Scrum Master, Product Owner, Agile Coach, Project Manager",0.65
+213,kanban,Project Management,Intermediate,"Project Manager, Team Lead, Product Owner",0.6
+214,waterfall,Project Management,Intermediate,"Project Manager, Business Analyst, Enterprise Architect",0.4
+215,product-management,Product Management,Intermediate,"Product Manager, Product Owner, Business Analyst",0.75
+216,requirements-gathering,Business Analysis,Intermediate,"Business Analyst, Product Manager, System Analyst",0.65
+217,stakeholder-management,Business Analysis,Intermediate,"Business Analyst, Project Manager, Product Manager",0.7
+218,user-stories,Agile,Intermediate,"Product Owner, Business Analyst, Agile Coach",0.6
+219,acceptance-criteria,Agile,Intermediate,"Product Owner, Business Analyst, QA Engineer",0.55
+220,technical-writing,Documentation,Intermediate,"Technical Writer, Developer, Documentation Specialist",0.6
+221,documentation,Documentation,Beginner,"All Technical Roles, Technical Writer, Support Engineer",0.7
+222,presentation-skills,Soft Skill,Intermediate,"All Roles, Sales Engineer, Product Manager, Team Lead",0.75
+223,negotiation,Soft Skill,Intermediate,"Product Manager, Sales Engineer, Business Analyst",0.65
+224,conflict-resolution,Soft Skill,Intermediate,"Team Lead, Project Manager, HR Manager",0.6
+225,time-management,Soft Skill,Beginner,"All Roles, Project Manager, Team Lead",0.8
+226,critical-thinking,Soft Skill,Intermediate,"All Technical Roles, Analyst, Consultant",0.85
+227,creativity,Soft Skill,Intermediate,"Designer, Product Manager, Marketing Specialist",0.7
+228,adaptability,Soft Skill,Beginner,"All Roles, Consultant, Freelancer",0.75
+229,emotional-intelligence,Soft Skill,Intermediate,"Team Lead, Manager, HR Professional",0.7
+230,mentoring,Soft Skill,Intermediate,"Senior Developer, Team Lead, Technical Lead",0.65
+231,coaching,Soft Skill,Intermediate,"Team Lead, Agile Coach, Manager",0.6
+232,public-speaking,Soft Skill,Intermediate,"Technical Evangelist, Team Lead, Sales Engineer",0.55
+233,networking,Soft Skill,Intermediate,"All Roles, Sales, Business Development",0.65
+234,customer-service,Soft Skill,Beginner,"Support Engineer, Sales, Account Manager",0.7
+235,sales,Soft Skill,Intermediate,"Sales Engineer, Account Executive, Business Development",0.65
+236,marketing,Soft Skill,Intermediate,"Marketing Specialist, Product Manager, Growth Hacker",0.6
+237,seo,Digital Marketing,Intermediate,"SEO Specialist, Digital Marketer, Content Strategist",0.55
+238,sem,Digital Marketing,Intermediate,"Digital Marketer, PPC Specialist, Marketing Manager",0.5
+239,content-marketing,Digital Marketing,Intermediate,"Content Strategist, Digital Marketer, SEO Specialist",0.55
+240,social-media-marketing,Digital Marketing,Intermediate,"Social Media Manager, Digital Marketer, Content Creator",0.5
+241,email-marketing,Digital Marketing,Intermediate,"Email Marketer, Digital Marketer, Marketing Specialist",0.45
+242,analytics,Digital Marketing,Intermediate,"Digital Marketer, Data Analyst, Marketing Analyst",0.6
+243,google-analytics,Analytics,Intermediate,"Digital Marketer, Web Analyst, Data Analyst",0.65
+244,google-tag-manager,Analytics,Intermediate,"Digital Marketer, Web Analyst, Marketing Technologist",0.5
+245,ab-testing,Analytics,Intermediate,"Data Analyst, Product Manager, Growth Hacker",0.55
+246,conversion-rate-optimization,Analytics,Intermediate,"Growth Hacker, Digital Marketer, Product Manager",0.5
+247,blockchain,Blockchain,Advanced,"Blockchain Developer, Smart Contract Developer, Cryptocurrency Analyst",0.6
+248,solidity,Blockchain,Intermediate,"Smart Contract Developer, Blockchain Developer, DeFi Developer",0.55
+249,web3,Blockchain,Intermediate,"Blockchain Developer, Frontend Developer, Full Stack Developer",0.5
+250,smart-contracts,Blockchain,Advanced,"Smart Contract Developer, Blockchain Developer, Security Auditor",0.55
+251,defi,Blockchain,Intermediate,"Blockchain Developer, Financial Analyst, DeFi Developer",0.5
+252,nft,Blockchain,Intermediate,"Blockchain Developer, Digital Artist, Product Manager",0.45
+253,iot,IoT,Intermediate,"IoT Developer, Embedded Systems Engineer, Hardware Developer",0.6
+254,embedded-systems,Embedded Systems,Advanced,"Embedded Systems Engineer, Firmware Developer, Hardware Engineer",0.65
+255,arduino,Embedded Systems,Intermediate,"IoT Developer, Hobbyist, Prototype Developer",0.5
+256,raspberry-pi,Embedded Systems,Intermediate,"IoT Developer, Educator, Prototype Developer",0.45
+257,firmware,Embedded Systems,Advanced,"Firmware Developer, Embedded Systems Engineer, Hardware Engineer",0.6
+258,robotics,Robotics,Advanced,"Robotics Engineer, AI Researcher, Automation Engineer",0.55
+259,automation,Automation,Intermediate,"Automation Engineer, DevOps Engineer, System Administrator",0.7
+260,rpa,Automation,Intermediate,"RPA Developer, Business Analyst, Automation Engineer",0.55
+261,quantum-computing,Quantum Computing,Advanced,"Quantum Researcher, Algorithm Developer, Physicist",0.4
+262,bioinformatics,Bioinformatics,Advanced,"Bioinformatician, Computational Biologist, Research Scientist",0.45
+263,geospatial,Geospatial,Intermediate,"GIS Developer, Data Scientist, Geospatial Analyst",0.5
+264,gis,Geospatial,Intermediate,"GIS Specialist, Geospatial Analyst, Urban Planner",0.45
+265,computer-graphics,Computer Graphics,Advanced,"Graphics Programmer, Game Developer, 3D Developer",0.55
+266,digital-signal-processing,DSP,Advanced,"Audio Engineer, Signal Processing Engineer, Research Scientist",0.5
+267,audio-processing,Audio,Intermediate,"Audio Engineer, Music Technologist, DSP Engineer",0.45
+268,video-processing,Video,Intermediate,"Video Engineer, Multimedia Developer, Computer Vision Engineer",0.5
+269,compilers,Computer Science,Advanced,"Compiler Developer, Programming Language Researcher, System Programmer",0.45
+270,operating-systems,Computer Science,Advanced,"System Programmer, Kernel Developer, Embedded Engineer",0.6
+271,computer-networks,Computer Science,Intermediate,"Network Engineer, System Administrator, Backend Developer",0.65
+272,distributed-systems,Computer Science,Advanced,"System Architect, Backend Developer, Data Engineer",0.7
+273,parallel-computing,Computer Science,Advanced,"High Performance Computing Engineer, Research Scientist, Data Scientist",0.55
+274,high-performance-computing,HPC,Advanced,"HPC Engineer, Research Scientist, Quantitative Analyst",0.5
+275,memory-management,Computer Science,Advanced,"System Programmer, Game Developer, Embedded Engineer",0.55
+276,virtualization,Virtualization,Intermediate,"System Administrator, Cloud Engineer, DevOps Engineer",0.6
+277,vmware,Virtualization,Intermediate,"System Administrator, Virtualization Engineer, IT Manager",0.5
+278,virtualbox,Virtualization,Intermediate,"Developer, System Administrator, Tester",0.4
+279,hyper-v,Virtualization,Intermediate,"Windows Administrator, System Administrator, Cloud Engineer",0.45
+280,container-orchestration,DevOps,Advanced,"DevOps Engineer, Platform Engineer, Cloud Engineer",0.7
+281,service-mesh,DevOps,Advanced,"DevOps Engineer, Platform Engineer, Cloud Architect",0.55
+282,istio,DevOps,Advanced,"DevOps Engineer, Platform Engineer, Cloud Engineer",0.5
+283,linkerd,DevOps,Advanced,"DevOps Engineer, Platform Engineer, Cloud Engineer",0.4
+284,monitoring,DevOps,Intermediate,"DevOps Engineer, SRE, System Administrator",0.75
+285,logging,DevOps,Intermediate,"DevOps Engineer, Software Developer, System Administrator",0.7
+286,apm,DevOps,Intermediate,"DevOps Engineer, Performance Engineer, SRE",0.6
+287,distributed-tracing,DevOps,Advanced,"DevOps Engineer, SRE, Backend Developer",0.55
+288,chaos-engineering,DevOps,Advanced,"SRE, DevOps Engineer, Reliability Engineer",0.5
+289,disaster-recovery,IT Operations,Intermediate,"System Administrator, DevOps Engineer, IT Manager",0.6
+290,backup-solutions,IT Operations,Intermediate,"System Administrator, IT Manager, Storage Engineer",0.55
+291,storage-systems,IT Operations,Intermediate,"Storage Engineer, System Administrator, Cloud Engineer",0.5
+292,data-backup,Data Management,Intermediate,"Database Administrator, System Administrator, Data Engineer",0.6
+293,data-recovery,Data Management,Intermediate,"Database Administrator, System Administrator, Data Engineer",0.55
+294,compliance,Governance,Intermediate,"Compliance Officer, Security Engineer, Data Protection Officer",0.6
+295,gdpr,Compliance,Intermediate,"Data Protection Officer, Compliance Manager, Security Engineer",0.55
+296,hipaa,Compliance,Intermediate,"Healthcare IT, Compliance Officer, Security Engineer",0.5
+297,soc2,Compliance,Intermediate,"Compliance Manager, Security Engineer, IT Auditor",0.45
+298,risk-management,Risk Management,Intermediate,"Risk Analyst, Security Engineer, Compliance Officer",0.55
+299,incident-response,Security,Intermediate,"Security Analyst, SOC Analyst, Incident Responder",0.6
+300,digital-forensics,Security,Advanced,"Forensic Analyst, Security Investigator, Law Enforcement",0.5
+301,threat-intelligence,Security,Intermediate,"Threat Intelligence Analyst, Security Researcher, SOC Analyst",0.55
+302,vulnerability-assessment,Security,Intermediate,"Security Engineer, Penetration Tester, Vulnerability Analyst",0.6
+303,security-auditing,Security,Intermediate,"Security Auditor, Compliance Officer, IT Auditor",0.55
+304,access-control,Security,Intermediate,"Security Engineer, System Administrator, Identity Manager",0.6
+305,identity-management,Security,Intermediate,"Identity Engineer, Security Engineer, System Administrator",0.55
+306,biometrics,Security,Advanced,"Security Researcher, Biometric Engineer, System Architect",0.45
+307,zero-trust,Security,Advanced,"Security Architect, Network Engineer, Cloud Engineer",0.5
+308,devsecops,Security,Intermediate,"Security Engineer, DevOps Engineer, Cloud Engineer",0.6
+309,cloud-security,Security,Intermediate,"Cloud Security Engineer, DevOps Engineer, Security Architect",0.65
+310,application-security,Security,Intermediate,"Security Engineer, Software Developer, DevOps Engineer",0.6
+311,mobile-security,Security,Intermediate,"Mobile Developer, Security Engineer, Penetration Tester",0.55
+312,iot-security,Security,Advanced,"Security Researcher, IoT Developer, Embedded Engineer",0.5
+313,quantum-cryptography,Security,Advanced,"Cryptography Researcher, Security Scientist, Quantum Developer",0.4
+314,homomorphic-encryption,Security,Advanced,"Cryptography Researcher, Data Scientist, Security Engineer",0.35
+315,privacy-engineering,Privacy,Intermediate,"Privacy Engineer, Security Engineer, Data Protection Officer",0.55
+316,data-anonymization,Privacy,Intermediate,"Data Scientist, Privacy Engineer, Data Analyst",0.5
+317,differential-privacy,Privacy,Advanced,"Privacy Researcher, Data Scientist, Statistician",0.45
+318,ai-ethics,Ethics,Intermediate,"AI Ethicist, Product Manager, Research Scientist",0.5
+319,responsible-ai,Ethics,Intermediate,"AI Researcher, Product Manager, Compliance Officer",0.45
+320,algorithmic-fairness,Ethics,Advanced,"AI Researcher, Data Scientist, Social Scientist",0.4
+321,explainable-ai,AI,Advanced,"AI Researcher, Data Scientist, Product Manager",0.5
+322,mlops,AI/ML,Intermediate,"ML Engineer, Data Scientist, DevOps Engineer",0.65
+323,model-deployment,AI/ML,Intermediate,"ML Engineer, DevOps Engineer, Data Scientist",0.6
+324,model-monitoring,AI/ML,Intermediate,"ML Engineer, Data Scientist, SRE",0.55
+325,model-governance,AI/ML,Intermediate,"ML Engineer, Data Scientist, Compliance Officer",0.5
+326,feature-store,AI/ML,Intermediate,"ML Engineer, Data Engineer, Data Scientist",0.45
+327,data-lineage,Data Management,Intermediate,"Data Engineer, Data Architect, Compliance Officer",0.5
+328,data-catalog,Data Management,Intermediate,"Data Engineer, Data Architect, Business Analyst",0.45
+329,data-quality,Data Management,Intermediate,"Data Engineer, Data Analyst, Business Intelligence Developer",0.6
+330,data-profiling,Data Management,Intermediate,"Data Engineer, Data Analyst, Database Administrator",0.55
+331,data-cleaning,Data Management,Intermediate,"Data Analyst, Data Scientist, Data Engineer",0.7
+332,data-wrangling,Data Management,Intermediate,"Data Scientist, Data Analyst, Data Engineer",0.65
+333,data-mining,Data Science,Intermediate,"Data Scientist, Business Intelligence Analyst, Research Analyst",0.6
+334,predictive-modeling,Data Science,Intermediate,"Data Scientist, Statistician, Business Analyst",0.65
+335,time-series-analysis,Data Science,Intermediate,"Data Scientist, Quantitative Analyst, Financial Analyst",0.6
+336,anomaly-detection,Data Science,Intermediate,"Data Scientist, Fraud Analyst, System Monitor",0.55
+337,recommendation-systems,Data Science,Advanced,"Data Scientist, ML Engineer, Product Manager",0.6
+338,search-algorithms,Computer Science,Intermediate,"Search Engineer, Algorithm Developer, Data Scientist",0.55
+339,optimization-algorithms,Computer Science,Advanced,"Operations Researcher, Quantitative Analyst, Data Scientist",0.5
+340,graph-algorithms,Computer Science,Advanced,"Data Scientist, Network Analyst, Algorithm Developer",0.55
+341,game-theory,Mathematics,Advanced,"Economist, AI Researcher, Quantitative Analyst",0.45
+342,statistics,Mathematics,Intermediate,"Data Scientist, Statistician, Research Analyst",0.75
+343,probability,Mathematics,Intermediate,"Data Scientist, Quantitative Analyst, Risk Analyst",0.7
+344,linear-algebra,Mathematics,Intermediate,"Data Scientist, Machine Learning Engineer, Graphics Programmer",0.65
+345,calculus,Mathematics,Intermediate,"Data Scientist, Research Scientist, Quantitative Analyst",0.6
+346,numerical-methods,Mathematics,Advanced,"Computational Scientist, Research Scientist, Quantitative Analyst",0.55
+347,discrete-mathematics,Mathematics,Intermediate,"Computer Scientist, Cryptographer, Algorithm Developer",0.6
+348,financial-modeling,Finance,Intermediate,"Quantitative Analyst, Financial Analyst, Risk Manager",0.65
+349,risk-modeling,Finance,Advanced,"Risk Analyst, Quantitative Analyst, Financial Engineer",0.6
+350,portfolio-optimization,Finance,Advanced,"Quantitative Analyst, Portfolio Manager, Financial Engineer",0.55
+351,algorithmic-trading,Finance,Advanced,"Quantitative Developer, Trading System Developer, Financial Engineer",0.6
+352,derivatives-pricing,Finance,Advanced,"Quantitative Analyst, Financial Engineer, Risk Manager",0.5
+353,market-risk,Finance,Intermediate,"Risk Analyst, Financial Analyst, Portfolio Manager",0.55
+354,credit-risk,Finance,Intermediate,"Risk Analyst, Credit Analyst, Loan Officer",0.5
+355,regulatory-reporting,Finance,Intermediate,"Compliance Officer, Financial Analyst, Risk Manager",0.45
+356,financial-reporting,Finance,Intermediate,"Financial Analyst, Accountant, Business Analyst",0.5
+357,accounting,Finance,Intermediate,"Accountant, Financial Analyst, Business Analyst",0.45
+358,auditing,Finance,Intermediate,"Auditor, Compliance Officer, Risk Manager",0.4
+359,taxation,Finance,Intermediate,"Tax Accountant, Financial Analyst, Business Owner",0.35
+360,financial-planning,Finance,Intermediate,"Financial Planner, Investment Advisor, Business Analyst",0.4
+361,wealth-management,Finance,Intermediate,"Wealth Manager, Financial Advisor, Portfolio Manager",0.35
+362,investment-banking,Finance,Advanced,"Investment Banker, Financial Analyst, M&A Advisor",0.45
+363,private-equity,Finance,Advanced,"Private Equity Analyst, Investment Professional, Financial Analyst",0.4
+364,venture-capital,Finance,Advanced,"VC Analyst, Investment Professional, Startup Advisor",0.35
+365,mergers-acquisitions,Finance,Advanced,"M&A Advisor, Investment Banker, Corporate Developer",0.4
+366,corporate-finance,Finance,Intermediate,"Financial Analyst, Corporate Developer, Business Manager",0.45
+367,fpna,Finance,Intermediate,"Financial Analyst, Business Analyst, Strategy Consultant",0.4
+368,business-valuation,Finance,Advanced,"Valuation Analyst, Investment Banker, M&A Advisor",0.35
+369,due-diligence,Finance,Intermediate,"Financial Analyst, Investment Professional, Lawyer",0.4
+370,financial-modeling,Finance,Intermediate,"Financial Analyst, Quantitative Analyst, Business Analyst",0.45
+371,supply-chain-management,Operations,Intermediate,"Supply Chain Analyst, Operations Manager, Logistics Manager",0.55
+372,logistics,Operations,Intermediate,"Logistics Manager, Supply Chain Analyst, Operations Manager",0.5
+373,inventory-management,Operations,Intermediate,"Inventory Analyst, Supply Chain Manager, Operations Manager",0.45
+374,procurement,Operations,Intermediate,"Procurement Manager, Sourcing Specialist, Supply Chain Manager",0.4
+375,supplier-relationship-management,Operations,Intermediate,"Procurement Manager, Supply Chain Manager, Operations Manager",0.35
+376,demand-planning,Operations,Intermediate,"Demand Planner, Supply Chain Analyst, Operations Manager",0.4
+377,production-planning,Operations,Intermediate,"Production Planner, Operations Manager, Manufacturing Engineer",0.35
+378,quality-control,Operations,Intermediate,"Quality Manager, Manufacturing Engineer, Operations Manager",0.45
+379,six-sigma,Operations,Intermediate,"Quality Manager, Process Engineer, Operations Manager",0.4
+380,lean-manufacturing,Operations,Intermediate,"Operations Manager, Process Engineer, Manufacturing Engineer",0.35
+381,total-quality-management,Operations,Intermediate,"Quality Manager, Operations Manager, Process Engineer",0.3
+382,process-improvement,Operations,Intermediate,"Process Engineer, Operations Manager, Business Analyst",0.45
+383,operations-research,Operations,Advanced,"Operations Researcher, Data Scientist, Quantitative Analyst",0.4
+384,supply-chain-optimization,Operations,Advanced,"Supply Chain Analyst, Operations Researcher, Data Scientist",0.35
+385,transportation-management,Operations,Intermediate,"Logistics Manager, Transportation Analyst, Supply Chain Manager",0.3
+386,warehouse-management,Operations,Intermediate,"Warehouse Manager, Logistics Manager, Operations Manager",0.25
+387,reverse-logistics,Operations,Intermediate,"Logistics Manager, Returns Manager, Sustainability Manager",0.2
+388,sustainability,Corporate Social Responsibility,Intermediate,"Sustainability Manager, ESG Analyst, Corporate Responsibility Manager",0.45
+389,esg,Corporate Social Responsibility,Intermediate,"ESG Analyst, Sustainability Manager, Investment Analyst",0.4
+390,corporate-social-responsibility,Corporate Social Responsibility,Intermediate,"CSR Manager, Sustainability Manager, Public Relations",0.35
+391,environmental-management,Environmental,Intermediate,"Environmental Manager, Sustainability Manager, Compliance Officer",0.3
+392,energy-management,Environmental,Intermediate,"Energy Manager, Sustainability Manager, Facilities Manager",0.25
+393,waste-management,Environmental,Intermediate,"Environmental Manager, Sustainability Manager, Operations Manager",0.2
+394,water-management,Environmental,Intermediate,"Environmental Manager, Sustainability Manager, Agricultural Manager",0.15
+395,carbon-accounting,Environmental,Intermediate,"Sustainability Manager, ESG Analyst, Environmental Manager",0.3
+396,life-cycle-assessment,Environmental,Advanced,"Environmental Scientist, Sustainability Manager, Product Manager",0.25
+397,green-building,Environmental,Intermediate,"Sustainability Manager, Architect, Construction Manager",0.2
+398,renewable-energy,Energy,Intermediate,"Energy Analyst, Sustainability Manager, Project Developer",0.35
+399,solar-energy,Energy,Intermediate,"Solar Engineer, Energy Analyst, Project Developer",0.3
+400,wind-energy,Energy,Intermediate,"Wind Engineer, Energy Analyst, Project Developer",0.25
+401,hydro-energy,Energy,Intermediate,"Hydro Engineer, Energy Analyst, Project Developer",0.2
+402,geothermal-energy,Energy,Intermediate,"Geothermal Engineer, Energy Analyst, Project Developer",0.15
+403,energy-storage,Energy,Intermediate,"Energy Storage Engineer, Electrical Engineer, Project Developer",0.25
+404,smart-grid,Energy,Advanced,"Smart Grid Engineer, Electrical Engineer, Systems Engineer",0.3
+405,energy-efficiency,Energy,Intermediate,"Energy Analyst, Sustainability Manager, Facilities Manager",0.25
+406,oil-gas,Energy,Intermediate,"Petroleum Engineer, Geologist, Energy Analyst",0.3
+407,mining,Resources,Intermediate,"Mining Engineer, Geologist, Resource Manager",0.25
+408,metallurgy,Materials Science,Intermediate,"Metallurgical Engineer, Materials Scientist, Quality Manager",0.2
+409,materials-science,Materials Science,Advanced,"Materials Scientist, Research Scientist, Product Developer",0.3
+410,nanotechnology,Nanotech,Advanced,"Nanotechnologist, Research Scientist, Materials Scientist",0.25
+411,biotechnology,Biotech,Advanced,"Biotechnologist, Research Scientist, Lab Manager",0.35
+412,pharmaceuticals,Healthcare,Advanced,"Pharmaceutical Researcher, Clinical Scientist, Regulatory Affairs",0.4
+413,clinical-research,Healthcare,Intermediate,"Clinical Research Associate, Medical Writer, Data Manager",0.35
+414,regulatory-affairs,Healthcare,Intermediate,"Regulatory Affairs Specialist, Compliance Officer, Quality Manager",0.3
+415,medical-devices,Healthcare,Intermediate,"Medical Device Engineer, Quality Manager, Regulatory Affairs",0.35
+416,healthcare-it,Healthcare,Intermediate,"Healthcare IT Specialist, System Administrator, Clinical Analyst",0.4
+417,telemedicine,Healthcare,Intermediate,"Telemedicine Coordinator, Healthcare IT, Product Manager",0.3
+418,health-informatics,Healthcare,Advanced,"Health Informatician, Data Scientist, Healthcare Analyst",0.35
+419,patient-safety,Healthcare,Intermediate,"Patient Safety Officer, Quality Manager, Healthcare Administrator",0.25
+420,healthcare-compliance,Healthcare,Intermediate,"Compliance Officer, Healthcare Administrator, Quality Manager",0.3
+421,medical-coding,Healthcare,Intermediate,"Medical Coder, Biller, Healthcare Administrator",0.25
+422,healthcare-analytics,Healthcare,Intermediate,"Healthcare Analyst, Data Scientist, Business Intelligence",0.35
+423,population-health,Healthcare,Intermediate,"Public Health Analyst, Healthcare Administrator, Policy Analyst",0.3
+424,epidemiology,Healthcare,Advanced,"Epidemiologist, Public Health Researcher, Data Scientist",0.25
+425,public-health,Healthcare,Intermediate,"Public Health Specialist, Policy Analyst, Healthcare Administrator",0.3
+426,health-policy,Healthcare,Intermediate,"Policy Analyst, Healthcare Administrator, Government Relations",0.25
+427,health-economics,Healthcare,Intermediate,"Health Economist, Policy Analyst, Healthcare Administrator",0.2
+428,mental-health,Healthcare,Intermediate,"Mental Health Professional, Counselor, Therapist",0.35
+429,psychology,Social Sciences,Intermediate,"Psychologist, Researcher, HR Professional",0.3
+430,sociology,Social Sciences,Intermediate,"Sociologist, Researcher, Policy Analyst",0.25
+431,anthropology,Social Sciences,Intermediate,"Anthropologist, Researcher, UX Researcher",0.2
+432,political-science,Social Sciences,Intermediate,"Policy Analyst, Government Relations, Political Consultant",0.25
+433,economics,Social Sciences,Intermediate,"Economist, Data Analyst, Policy Analyst",0.35
+434,international-relations,Social Sciences,Intermediate,"Diplomat, Policy Analyst, International Business",0.2
+435,public-policy,Social Sciences,Intermediate,"Policy Analyst, Government Relations, Think Tank Researcher",0.25
+436,law,Legal,Advanced,"Lawyer, Legal Counsel, Compliance Officer",0.4
+437,contract-law,Legal,Intermediate,"Contract Manager, Lawyer, Procurement Manager",0.35
+438,intellectual-property,Legal,Intermediate,"IP Lawyer, Patent Agent, Product Manager",0.3
+439,corporate-law,Legal,Advanced,"Corporate Lawyer, Legal Counsel, M&A Advisor",0.25
+440,labor-law,Legal,Intermediate,"HR Manager, Lawyer, Labor Relations",0.2
+441,tax-law,Legal,Advanced,"Tax Lawyer, Accountant, Financial Planner",0.25
+442,compliance-law,Legal,Intermediate,"Compliance Officer, Lawyer, Regulatory Affairs",0.3
+443,data-privacy-law,Legal,Intermediate,"Privacy Officer, Lawyer, Compliance Manager",0.35
+444,cybersecurity-law,Legal,Intermediate,"Security Engineer, Lawyer, Compliance Officer",0.3
+445,international-law,Legal,Advanced,"International Lawyer, Diplomat, Business Developer",0.2
+446,human-resources,HR,Intermediate,"HR Manager, Recruiter, Talent Acquisition",0.45
+447,talent-acquisition,HR,Intermediate,"Recruiter, HR Manager, Talent Sourcer",0.4
+448,recruitment,HR,Intermediate,"Recruiter, Talent Acquisition, HR Manager",0.45
+449,onboarding,HR,Intermediate,"HR Manager, Recruiter, Training Specialist",0.35
+450,performance-management,HR,Intermediate,"HR Manager, Team Lead, Department Head",0.4
+451,compensation-benefits,HR,Intermediate,"Compensation Analyst, HR Manager, Financial Analyst",0.35
+452,employee-relations,HR,Intermediate,"HR Manager, Labor Relations, Team Lead",0.3
+453,training-development,HR,Intermediate,"Training Manager, HR Manager, Learning Specialist",0.35
+454,succession-planning,HR,Advanced,"HR Director, Organizational Development, Executive",0.25
+455,diversity-inclusion,HR,Intermediate,"D&I Manager, HR Manager, Executive",0.4
+456,hr-analytics,HR,Intermediate,"HR Analyst, Data Analyst, HR Manager",0.35
+457,organizational-development,HR,Advanced,"OD Consultant, HR Director, Change Manager",0.3
+458,change-management,Business,Intermediate,"Change Manager, Project Manager, HR Manager",0.4
+459,business-transformation,Business,Advanced,"Transformation Manager, Consultant, Executive",0.35
+460,digital-transformation,Business,Intermediate,"Digital Transformation Manager, IT Manager, Consultant",0.45
+461,innovation-management,Business,Intermediate,"Innovation Manager, Product Manager, R&D Manager",0.4
+462,strategic-planning,Business,Advanced,"Strategy Consultant, Business Manager, Executive",0.45
+463,business-development,Business,Intermediate,"Business Developer, Sales Manager, Account Executive",0.5
+464,sales-management,Sales,Intermediate,"Sales Manager, Account Executive, Business Developer",0.45
+465,account-management,Sales,Intermediate,"Account Manager, Customer Success, Sales Representative",0.5
+466,customer-success,Customer Service,Intermediate,"Customer Success Manager, Account Manager, Support Manager",0.55
+467,customer-support,Customer Service,Beginner,"Support Agent, Customer Service, Technical Support",0.6
+468,technical-support,Customer Service,Intermediate,"Technical Support Engineer, IT Support, Customer Service",0.55
+469,help-desk,IT Support,Intermediate,"Help Desk Technician, IT Support, System Administrator",0.5
+470,itil,IT Service Management,Intermediate,"IT Manager, Service Manager, Process Manager",0.45
+471,service-desk,IT Support,Intermediate,"Service Desk Manager, IT Support, Help Desk",0.4
+472,incident-management,IT Service Management,Intermediate,"Incident Manager, IT Manager, System Administrator",0.45
+473,problem-management,IT Service Management,Intermediate,"Problem Manager, IT Manager, System Administrator",0.4
+474,change-management,IT Service Management,Intermediate,"Change Manager, IT Manager, Project Manager",0.45
+475,release-management,IT Service Management,Intermediate,"Release Manager, DevOps Engineer, IT Manager",0.4
+476,capacity-management,IT Service Management,Intermediate,"Capacity Planner, System Administrator, Cloud Engineer",0.35
+477,availability-management,IT Service Management,Intermediate,"System Administrator, DevOps Engineer, SRE",0.4
+478,service-level-management,IT Service Management,Intermediate,"Service Manager, Account Manager, IT Manager",0.35
+479,financial-management-it,IT Finance,Intermediate,"IT Manager, Financial Analyst, Budget Manager",0.3
+480,it-governance,Governance,Intermediate,"IT Manager, Compliance Officer, Auditor",0.35
+481,cobit,Governance,Intermediate,"IT Manager, Auditor, Compliance Officer",0.3
+482,risk-management-it,IT Risk,Intermediate,"Risk Manager, Security Engineer, IT Manager",0.35
+483,business-continuity,Business,Intermediate,"Business Continuity Manager, Risk Manager, IT Manager",0.4
+484,disaster-recovery,IT Operations,Intermediate,"System Administrator, IT Manager, DevOps Engineer",0.45
+485,crisis-management,Business,Intermediate,"Crisis Manager, PR Manager, Executive",0.35
+486,emergency-response,Safety,Intermediate,"Safety Manager, Security Manager, Operations Manager",0.3
+487,workplace-safety,Safety,Intermediate,"Safety Officer, HR Manager, Operations Manager",0.25
+488,environmental-health-safety,EHS,Intermediate,"EHS Manager, Safety Officer, Compliance Officer",0.3
+489,occupational-health,Safety,Intermediate,"Health Manager, Safety Officer, HR Manager",0.25
+490,fire-safety,Safety,Intermediate,"Safety Manager, Facility Manager, Security Manager",0.2
+491,security-management,Security,Intermediate,"Security Manager, Safety Officer, Facility Manager",0.35
+492,physical-security,Security,Intermediate,"Security Officer, Facility Manager, Safety Manager",0.3
+493,access-control,Security,Intermediate,"Security Manager, System Administrator, Facility Manager",0.35
+494,surveillance,Security,Intermediate,"Security Manager, Loss Prevention, Facility Manager",0.25
+495,investigation,Security,Intermediate,"Investigator, Security Manager, Loss Prevention",0.2
+496,loss-prevention,Retail,Intermediate,"Loss Prevention Manager, Security Manager, Store Manager",0.25
+497,retail-operations,Retail,Intermediate,"Store Manager, Operations Manager, Retail Manager",0.3
+498,merchandising,Retail,Intermediate,"Merchandiser, Buyer, Store Manager",0.25
+499,visual-merchandising,Retail,Intermediate,"Visual Merchandiser, Store Manager, Marketing",0.2
+500,inventory-management,Retail,Intermediate,"Inventory Manager, Store Manager, Operations Manager",0.3
+501,supply-chain,Retail,Intermediate,"Supply Chain Manager, Operations Manager, Retail Manager",0.25
+502,store-management,Retail,Intermediate,"Store Manager, Retail Manager, Operations Manager",0.3
+503,customer-service,Retail,Beginner,"Sales Associate, Customer Service, Store Staff",0.35
+504,sales-techniques,Retail,Intermediate,"Sales Manager, Store Manager, Account Executive",0.3
+505,point-of-sale,Retail,Intermediate,"Store Manager, Cashier, IT Support",0.25
+506,ecommerce,Digital Commerce,Intermediate,"E-commerce Manager, Digital Marketer, Web Developer",0.45
+507,online-marketplaces,E-commerce,Intermediate,"Marketplace Manager, E-commerce Manager, Digital Marketer",0.4
+508,digital-payments,E-commerce,Intermediate,"Payment Specialist, E-commerce Manager, Financial Analyst",0.35
+509,shipping-logistics,E-commerce,Intermediate,"Logistics Manager, E-commerce Manager, Operations Manager",0.3
+510,customer-experience,E-commerce,Intermediate,"UX Designer, Customer Success, E-commerce Manager",0.4
+511,conversion-optimization,E-commerce,Intermediate,"Growth Hacker, Digital Marketer, E-commerce Manager",0.35
+512,web-analytics,E-commerce,Intermediate,"Web Analyst, Digital Marketer, Data Analyst",0.4
+513,email-marketing,E-commerce,Intermediate,"Email Marketer, Digital Marketer, E-commerce Manager",0.35
+514,social-media,E-commerce,Intermediate,"Social Media Manager, Digital Marketer, Community Manager",0.4
+515,content-creation,Marketing,Intermediate,"Content Creator, Marketer, Social Media Manager",0.45
+516,blogging,Content Creation,Intermediate,"Blogger, Content Writer, Digital Marketer",0.35
+517,video-creation,Content Creation,Intermediate,"Video Producer, Content Creator, Marketer",0.4
+518,podcasting,Content Creation,Intermediate,"Podcast Producer, Content Creator, Audio Engineer",0.3
+519,graphic-design,Design,Intermediate,"Graphic Designer, UI Designer, Marketing",0.45
+520,photography,Creative,Intermediate,"Photographer, Content Creator, Marketing",0.35
+521,videography,Creative,Intermediate,"Videographer, Content Creator, Film Maker",0.4
+522,audio-production,Creative,Intermediate,"Audio Engineer, Music Producer, Podcast Producer",0.3
+523,animation,Creative,Intermediate,"Animator, Motion Designer, Game Developer",0.35
+524,3d-modeling,Creative,Intermediate,"3D Artist, Game Developer, Architect",0.4
+525,game-design,Game Development,Intermediate,"Game Designer, Level Designer, Product Manager",0.35
+526,level-design,Game Development,Intermediate,"Level Designer, Game Designer, Environment Artist",0.3
+527,game-mechanics,Game Development,Advanced,"Game Designer, Systems Designer, Programmer",0.35
+528,user-interface-design,UI/UX,Intermediate,"UI Designer, UX Designer, Product Designer",0.6
+529,user-experience-design,UI/UX,Intermediate,"UX Designer, Product Designer, Researcher",0.65
+530,interaction-design,UI/UX,Intermediate,"Interaction Designer, UX Designer, Product Designer",0.55
+531,visual-design,UI/UX,Intermediate,"Visual Designer, UI Designer, Graphic Designer",0.5
+532,design-systems,UI/UX,Advanced,"Design System Manager, UI Designer, Frontend Developer",0.45
+533,prototyping,UI/UX,Intermediate,"UX Designer, Product Designer, UI Designer",0.55
+534,usability-testing,UI/UX,Intermediate,"UX Researcher, Product Designer, QA Tester",0.5
+535,accessibility-design,UI/UX,Intermediate,"Accessibility Specialist, UX Designer, Frontend Developer",0.4
+536,mobile-design,UI/UX,Intermediate,"Mobile Designer, UI Designer, Product Designer",0.55
+537,web-design,UI/UX,Intermediate,"Web Designer, UI Designer, Frontend Developer",0.5
+538,responsive-design,UI/UX,Intermediate,"Web Designer, Frontend Developer, UI Designer",0.55
+539,typography,Design,Intermediate,"Graphic Designer, UI Designer, Typographer",0.4
+540,color-theory,Design,Intermediate,"Designer, Artist, UI Designer",0.35
+541,layout-design,Design,Intermediate,"Graphic Designer, UI Designer, Web Designer",0.4
+542,brand-identity,Design,Intermediate,"Brand Designer, Graphic Designer, Marketing",0.45
+543,logo-design,Design,Intermediate,"Graphic Designer, Brand Designer, Freelancer",0.35
+544,packaging-design,Design,Intermediate,"Packaging Designer, Graphic Designer, Product Manager",0.3
+545,print-design,Design,Intermediate,"Graphic Designer, Print Producer, Marketing",0.25
+546,motion-graphics,Design,Intermediate,"Motion Designer, Animator, Video Editor",0.4
+547,illustration,Art,Intermediate,"Illustrator, Graphic Designer, Concept Artist",0.35
+548,concept-art,Art,Intermediate,"Concept Artist, Illustrator, Game Developer",0.3
+549,character-design,Art,Intermediate,"Character Designer, Concept Artist, Animator",0.25
+550,environment-art,Art,Intermediate,"Environment Artist, Concept Artist, Game Developer",0.3
+551,digital-painting,Art,Intermediate,"Digital Artist, Illustrator, Concept Artist",0.25
+552,storyboarding,Art,Intermediate,"Storyboard Artist, Film Maker, Animator",0.2
+553,comic-art,Art,Intermediate,"Comic Artist, Illustrator, Writer",0.15
+554,fine-arts,Art,Advanced,"Artist, Curator, Art Teacher",0.1
+555,art-history,Art,Intermediate,"Art Historian, Curator, Teacher",0.05
+556,music-production,Music,Intermediate,"Music Producer, Audio Engineer, Composer",0.3
+557,sound-design,Audio,Intermediate,"Sound Designer, Audio Engineer, Game Developer",0.25
+558,audio-engineering,Audio,Advanced,"Audio Engineer, Music Producer, Sound Designer",0.3
+559,mixing-mastering,Audio,Advanced,"Audio Engineer, Music Producer, Sound Designer",0.25
+560,music-theory,Music,Intermediate,"Musician, Composer, Music Teacher",0.2
+561,composition,Music,Advanced,"Composer, Music Producer, Arranger",0.25
+562,arrangement,Music,Intermediate,"Arranger, Music Producer, Composer",0.2
+563,orchestration,Music,Advanced,"Orchestrator, Composer, Music Director",0.15
+564,film-scoring,Music,Advanced,"Film Composer, Music Producer, Arranger",0.2
+565,live-sound,Audio,Intermediate,"Sound Engineer, Technician, Event Producer",0.25
+566,broadcast-audio,Audio,Intermediate,"Audio Engineer, Broadcast Technician, Producer",0.2
+567,podcast-production,Audio,Intermediate,"Podcast Producer, Audio Engineer, Content Creator",0.3
+568,voice-acting,Performance,Intermediate,"Voice Actor, Audio Producer, Animator",0.25
+569,dialogue-editing,Audio,Intermediate,"Audio Editor, Sound Designer, Film Editor",0.2
+570,foley,Audio,Intermediate,"Foley Artist, Sound Designer, Film Producer",0.15
+571,sound-effects,Audio,Intermediate,"Sound Designer, Audio Engineer, Game Developer",0.25
+572,ambient-sound,Audio,Intermediate,"Sound Designer, Audio Engineer, Film Maker",0.2
+573,audio-restoration,Audio,Advanced,"Audio Engineer, Archivist, Restoration Specialist",0.15
+574,acoustics,Physics,Advanced,"Acoustician, Audio Engineer, Architect",0.1
+575,psychoacoustics,Psychology,Advanced,"Researcher, Audio Engineer, Product Designer",0.05
+576,writing,Content Creation,Intermediate,"Writer, Content Creator, Journalist",0.45
+577,creative-writing,Writing,Intermediate,"Author, Content Creator, Copywriter",0.4
+578,technical-writing,Writing,Intermediate,"Technical Writer, Documentation Specialist, Developer",0.5
+579,copywriting,Writing,Intermediate,"Copywriter, Marketer, Content Creator",0.45
+580,content-strategy,Content,Intermediate,"Content Strategist, Marketer, Editor",0.4
+581,editing,Writing,Intermediate,"Editor, Writer, Content Manager",0.35
+582,proofreading,Writing,Intermediate,"Proofreader, Editor, Writer",0.3
+583,ghostwriting,Writing,Intermediate,"Ghostwriter, Author, Content Creator",0.25
+584,scriptwriting,Writing,Intermediate,"Screenwriter, Playwright, Video Producer",0.3
+585,journalism,Writing,Intermediate,"Journalist, Reporter, Editor",0.35
+586,investigative-journalism,Writing,Advanced,"Investigator, Journalist, Researcher",0.3
+587,feature-writing,Writing,Intermediate,"Feature Writer, Journalist, Content Creator",0.25
+588,opinion-writing,Writing,Intermediate,"Columnist, Blogger, Content Creator",0.2
+589,business-writing,Writing,Intermediate,"Business Writer, Consultant, Executive",0.35
+590,grant-writing,Writing,Intermediate,"Grant Writer, Nonprofit Manager, Researcher",0.3
+591,resume-writing,Writing,Intermediate,"Career Coach, Recruiter, HR Professional",0.25
+592,academic-writing,Writing,Intermediate,"Researcher, Student, Professor",0.3
+593,scientific-writing,Writing,Advanced,"Research Scientist, Academic, Journalist",0.25
+594,medical-writing,Writing,Intermediate,"Medical Writer, Researcher, Healthcare Professional",0.3
+595,legal-writing,Writing,Advanced,"Lawyer, Legal Writer, Paralegal",0.25
+596,translation,Language,Intermediate,"Translator, Interpreter, Localization Specialist",0.4
+597,interpretation,Language,Advanced,"Interpreter, Translator, Diplomat",0.35
+598,localization,Language,Intermediate,"Localization Specialist, Translator, Product Manager",0.3
+599,language-teaching,Education,Intermediate,"Language Teacher, Tutor, Educator",0.25
+600,curriculum-development,Education,Intermediate,"Curriculum Designer, Teacher, Educational Consultant",0.3
+601,instructional-design,Education,Intermediate,"Instructional Designer, Educator, E-learning Developer",0.35
+602,e-learning,Education,Intermediate,"E-learning Developer, Instructional Designer, Educator",0.4
+603,educational-technology,EdTech,Intermediate,"EdTech Developer, Educator, Product Manager",0.35
+604,classroom-management,Education,Intermediate,"Teacher, Educator, School Administrator",0.3
+605,assessment-design,Education,Intermediate,"Assessment Specialist, Teacher, Researcher",0.25
+606,special-education,Education,Advanced,"Special Education Teacher, Therapist, Counselor",0.3
+607,early-childhood-education,Education,Intermediate,"Early Childhood Educator, Teacher, Childcare Worker",0.25
+608,higher-education,Education,Advanced,"Professor, Academic, Researcher",0.3
+609,adult-education,Education,Intermediate,"Adult Educator, Trainer, Corporate Trainer",0.25
+610,vocational-training,Education,Intermediate,"Vocational Trainer, Career Counselor, Educator",0.2
+611,career-counseling,Education,Intermediate,"Career Counselor, Coach, HR Professional",0.25
+612,academic-advising,Education,Intermediate,"Academic Advisor, Counselor, Educator",0.2
+613,student-affairs,Education,Intermediate,"Student Affairs Professional, Counselor, Administrator",0.15
+614,educational-leadership,Education,Advanced,"School Administrator, Principal, Superintendent",0.2
+615,education-policy,Education,Intermediate,"Policy Analyst, Educational Consultant, Administrator",0.15
+616,research-methodology,Research,Intermediate,"Researcher, Scientist, Academic",0.4
+617,qualitative-research,Research,Intermediate,"Researcher, Social Scientist, UX Researcher",0.35
+618,quantitative-research,Research,Intermediate,"Researcher, Data Scientist, Statistician",0.4
+619,mixed-methods,Research,Advanced,"Researcher, Social Scientist, Data Scientist",0.3
+620,ethnography,Research,Advanced,"Anthropologist, Sociologist, UX Researcher",0.25
+621,survey-design,Research,Intermediate,"Researcher, Data Analyst, Market Researcher",0.35
+622,experimental-design,Research,Advanced,"Research Scientist, Psychologist, Biologist",0.3
+623,data-collection,Research,Intermediate,"Researcher, Data Analyst, Field Worker",0.4
+624,data-analysis,Research,Intermediate,"Researcher, Data Scientist, Analyst",0.45
+625,research-ethics,Research,Intermediate,"Ethics Board Member, Researcher, Compliance Officer",0.3
+626,academic-publishing,Research,Intermediate,"Researcher, Author, Editor",0.25
+627,literature-review,Research,Intermediate,"Researcher, Student, Academic",0.3
+628,citation-management,Research,Intermediate,"Researcher, Student, Academic",0.25
+629,peer-review,Research,Advanced,"Researcher, Editor, Journal Manager",0.2
+630,conference-presentation,Research,Intermediate,"Researcher, Academic, Professional",0.25
+631,laboratory-techniques,Science,Intermediate,"Lab Technician, Research Scientist, Biologist",0.35
+632,wet-lab,Science,Intermediate,"Lab Researcher, Biologist, Chemist",0.3
+633,dry-lab,Science,Intermediate,"Computational Researcher, Data Scientist, Bioinformatician",0.35
+634,microscopy,Science,Intermediate,"Lab Technician, Researcher, Biologist",0.25
+635,spectroscopy,Science,Advanced,"Chemist, Physicist, Materials Scientist",0.2
+636,chromatography,Science,Intermediate,"Chemist, Lab Technician, Quality Control",0.25
+637,pcr,Science,Intermediate,"Molecular Biologist, Lab Technician, Researcher",0.3
+638,cell-culture,Science,Intermediate,"Biologist, Lab Technician, Researcher",0.25
+639,protein-purification,Science,Advanced,"Biochemist, Lab Researcher, Pharmaceutical Scientist",0.2
+640,dna-sequencing,Science,Advanced,"Geneticist, Bioinformatician, Lab Researcher",0.25
+641,genetic-engineering,Science,Advanced,"Genetic Engineer, Researcher, Biotechnologist",0.3
+642,crispr,Science,Advanced,"Research Scientist, Geneticist, Biotechnologist",0.35
+643,stem-cell-research,Science,Advanced,"Research Scientist, Biologist, Medical Researcher",0.25
+644,drug-discovery,Science,Advanced,"Pharmaceutical Researcher, Chemist, Biologist",0.3
+645,clinical-trials,Healthcare,Intermediate,"Clinical Research Associate, Medical Writer, Statistician",0.35
+646,good-laboratory-practice,Science,Intermediate,"Lab Manager, Quality Assurance, Researcher",0.25
+647,good-manufacturing-practice,Manufacturing,Intermediate,"Quality Manager, Manufacturing Engineer, Compliance Officer",0.3
+648,quality-assurance,Quality,Intermediate,"QA Specialist, Quality Manager, Process Engineer",0.4
+649,quality-control,Quality,Intermediate,"QC Technician, Quality Manager, Lab Technician",0.35
+650,auditing,Quality,Intermediate,"Quality Auditor, Compliance Officer, Process Engineer",0.3
+651,regulatory-compliance,Compliance,Intermediate,"Compliance Officer, Quality Manager, Legal Counsel",0.35
+652,standard-operating-procedures,Operations,Intermediate,"Process Engineer, Quality Manager, Operations Manager",0.3
+653,document-control,Documentation,Intermediate,"Document Controller, Quality Manager, Administrative Assistant",0.25
+654,training-development,HR,Intermediate,"Training Manager, HR Professional, Educator",0.35
+655,performance-evaluation,HR,Intermediate,"HR Manager, Team Lead, Executive",0.3
+656,compensation-planning,HR,Intermediate,"Compensation Analyst, HR Manager, Financial Analyst",0.25
+657,benefits-administration,HR,Intermediate,"Benefits Administrator, HR Manager, Payroll Specialist",0.2
+658,employee-engagement,HR,Intermediate,"HR Manager, Team Lead, Executive",0.35
+659,talent-management,HR,Intermediate,"Talent Manager, HR Director, Executive",0.3
+660,succession-planning,HR,Advanced,"HR Director, Executive, Organizational Development",0.25
+661,workforce-planning,HR,Intermediate,"HR Manager, Business Planner, Executive",0.3
+662,hr-information-systems,HR,Intermediate,"HRIS Analyst, HR Manager, System Administrator",0.25
+663,payroll-administration,HR,Intermediate,"Payroll Specialist, HR Manager, Accountant",0.3
+664,recruitment-marketing,HR,Intermediate,"Recruiter, Marketer, HR Manager",0.25
+665,employer-branding,HR,Intermediate,"HR Manager, Marketer, Executive",0.3
+666,diversity-recruitment,HR,Intermediate,"Recruiter, D&I Manager, HR Manager",0.25
+667,interviewing-skills,HR,Intermediate,"Recruiter, Hiring Manager, HR Professional",0.35
+668,background-checks,HR,Intermediate,"HR Professional, Recruiter, Security Manager",0.25
+669,onboarding,HR,Intermediate,"HR Manager, Recruiter, Team Lead",0.3
+670,orientation-programs,HR,Intermediate,"HR Manager, Trainer, Team Lead",0.25
+671,employee-development,HR,Intermediate,"HR Manager, Trainer, Coach",0.3
+672,leadership-development,HR,Advanced,"HR Director, Executive Coach, Organizational Development",0.25
+673,coaching-mentoring,HR,Intermediate,"Coach, Mentor, HR Professional",0.3
+674,career-development,HR,Intermediate,"Career Coach, HR Manager, Mentor",0.25
+675,performance-coaching,HR,Intermediate,"Coach, Manager, HR Professional",0.3
+676,executive-coaching,HR,Advanced,"Executive Coach, Consultant, HR Director",0.2
+677,team-building,HR,Intermediate,"Team Lead, HR Manager, Facilitator",0.35
+678,conflict-resolution,HR,Intermediate,"Mediator, HR Manager, Team Lead",0.3
+679,mediation,HR,Advanced,"Mediator, Lawyer, HR Director",0.25
+680,negotiation,Business,Intermediate,"Negotiator, Sales, Business Developer",0.4
+681,arbitration,Legal,Advanced,"Arbitrator, Lawyer, Mediator",0.2
+682,facilitation,Business,Intermediate,"Facilitator, Trainer, Meeting Leader",0.3
+683,meeting-management,Business,Intermediate,"Manager, Executive Assistant, Project Manager",0.35
+684,presentation-skills,Business,Intermediate,"Presenter, Sales, Executive",0.4
+685,public-speaking,Communication,Intermediate,"Speaker, Trainer, Executive",0.35
+686,storytelling,Communication,Intermediate,"Marketer, Content Creator, Presenter",0.4
+687,visual-communication,Design,Intermediate,"Designer, Presenter, Marketer",0.35
+688,data-visualization,Data Science,Intermediate,"Data Analyst, Designer, Business Intelligence",0.45
+689,infographic-design,Design,Intermediate,"Designer, Content Creator, Marketer",0.3
+690,dashboard-design,Data Visualization,Intermediate,"BI Developer, Data Analyst, Product Manager",0.35
+691,reporting,Business,Intermediate,"Analyst, Manager, Executive",0.4
+692,business-intelligence,Business,Intermediate,"BI Analyst, Data Analyst, Business Analyst",0.45
+693,data-analytics,Data Science,Intermediate,"Data Analyst, Business Analyst, Scientist",0.5
+694,predictive-analytics,Data Science,Advanced,"Data Scientist, Statistician, Business Analyst",0.45
+695,prescriptive-analytics,Data Science,Advanced,"Data Scientist, Operations Researcher, Consultant",0.4
+696,diagnostic-analytics,Data Science,Intermediate,"Data Analyst, Business Analyst, Troubleshooter",0.35
+697,descriptive-analytics,Data Science,Intermediate,"Data Analyst, Business Intelligence, Reporter",0.4
+698,real-time-analytics,Data Science,Advanced,"Data Engineer, System Architect, Business Analyst",0.35
+699,big-data-analytics,Big Data,Advanced,"Data Scientist, Data Engineer, Business Analyst",0.4
+700,streaming-analytics,Big Data,Advanced,"Data Engineer, System Architect, Real-time Analyst",0.35
+701,spatial-analytics,Geospatial,Intermediate,"GIS Analyst, Data Scientist, Urban Planner",0.3
+702,text-analytics,Natural Language Processing,Intermediate,"NLP Engineer, Data Scientist, Content Analyst",0.35
+703,sentiment-analysis,Natural Language Processing,Intermediate,"NLP Engineer, Social Media Analyst, Market Researcher",0.4
+704,network-analysis,Data Science,Advanced,"Data Scientist, Social Researcher, Security Analyst",0.3
+705,time-series-analysis,Data Science,Intermediate,"Data Scientist, Quantitative Analyst, Financial Analyst",0.4
+706,cluster-analysis,Data Science,Intermediate,"Data Scientist, Market Researcher, Statistician",0.35
+707,factor-analysis,Statistics,Advanced,"Statistician, Psychometrician, Data Scientist",0.3
+708,regression-analysis,Statistics,Intermediate,"Statistician, Data Scientist, Economist",0.4
+709,correlation-analysis,Statistics,Intermediate,"Statistician, Data Analyst, Researcher",0.35
+710,hypothesis-testing,Statistics,Intermediate,"Statistician, Researcher, Data Scientist",0.4
+711,anova,Statistics,Advanced,"Statistician, Researcher, Data Scientist",0.3
+712,chi-square-test,Statistics,Intermediate,"Statistician, Researcher, Data Analyst",0.25
+713,t-test,Statistics,Intermediate,"Statistician, Researcher, Data Analyst",0.3
+714,nonparametric-tests,Statistics,Advanced,"Statistician, Researcher, Data Scientist",0.25
+715,bayesian-statistics,Statistics,Advanced,"Statistician, Data Scientist, Researcher",0.35
+716,monte-carlo-simulation,Statistics,Advanced,"Quantitative Analyst, Researcher, Data Scientist",0.3
+717,machine-learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, Researcher",0.5
+718,deep-learning,AI/ML,Advanced,"Deep Learning Engineer, Researcher, Data Scientist",0.45
+719,neural-networks,AI/ML,Advanced,"AI Researcher, Data Scientist, Engineer",0.4
+720,convolutional-networks,AI/ML,Advanced,"Computer Vision Engineer, Researcher, Data Scientist",0.35
+721,recurrent-networks,AI/ML,Advanced,"NLP Engineer, Time Series Analyst, Researcher",0.3
+722,transformer-networks,AI/ML,Advanced,"NLP Engineer, Researcher, Data Scientist",0.4
+723,generative-adversarial-networks,AI/ML,Advanced,"AI Researcher, Creative Technologist, Data Scientist",0.35
+724,autoencoders,AI/ML,Advanced,"Data Scientist, Researcher, Anomaly Detection Specialist",0.3
+725,reinforcement-learning,AI/ML,Advanced,"AI Researcher, Robotics Engineer, Game Developer",0.35
+726,q-learning,AI/ML,Advanced,"AI Researcher, Data Scientist, Algorithm Developer",0.3
+727,policy-gradients,AI/ML,Advanced,"AI Researcher, Robotics Engineer, Control Engineer",0.25
+728,multi-agent-systems,AI/ML,Advanced,"AI Researcher, Game Developer, Simulation Engineer",0.2
+729,transfer-learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, Researcher",0.4
+730,few-shot-learning,AI/ML,Advanced,"AI Researcher, Data Scientist, Machine Learning Engineer",0.35
+731,meta-learning,AI/ML,Advanced,"AI Researcher, Data Scientist, Algorithm Developer",0.3
+732,self-supervised-learning,AI/ML,Advanced,"AI Researcher, Data Scientist, Computer Vision Engineer",0.25
+733,semi-supervised-learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, Researcher",0.3
+734,unsupervised-learning,AI/ML,Intermediate,"Data Scientist, Researcher, Machine Learning Engineer",0.35
+735,supervised-learning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, Researcher",0.4
+736,online-learning,AI/ML,Advanced,"AI Researcher, Data Scientist, System Architect",0.25
+737,active-learning,AI/ML,Intermediate,"Data Scientist, Researcher, Machine Learning Engineer",0.3
+738,ensemble-methods,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.35
+739,random-forests,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.4
+740,gradient-boosting,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.45
+741,xgboost,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.4
+742,lightgbm,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.35
+743,catboost,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+744,clustering,AI/ML,Intermediate,"Data Scientist, Researcher, Market Analyst",0.35
+745,dimensionality-reduction,AI/ML,Intermediate,"Data Scientist, Researcher, Machine Learning Engineer",0.3
+746,feature-engineering,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Data Engineer",0.4
+747,feature-selection,AI/ML,Intermediate,"Data Scientist, Researcher, Machine Learning Engineer",0.35
+748,hyperparameter-tuning,AI/ML,Intermediate,"Machine Learning Engineer, Data Scientist, Researcher",0.4
+749,cross-validation,AI/ML,Intermediate,"Data Scientist, Researcher, Machine Learning Engineer",0.35
+750,model-evaluation,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.4
+751,model-selection,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.35
+752,auc-roc,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+753,precision-recall,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+754,confusion-matrix,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+755,f1-score,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+756,accuracy,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+757,log-loss,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+758,mean-squared-error,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+759,mean-absolute-error,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+760,r-squared,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+761,explainable-ai,AI/ML,Advanced,"AI Researcher, Data Scientist, Product Manager",0.35
+762,model-interpretability,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+763,feature-importance,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+764,shap-values,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.3
+765,lime,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.25
+766,partial-dependence-plots,AI/ML,Intermediate,"Data Scientist, Machine Learning Engineer, Researcher",0.2
+767,model-monitoring,AI/ML,Intermediate,"ML Engineer, Data Scientist, DevOps Engineer",0.35
+768,model-drift,AI/ML,Intermediate,"ML Engineer, Data Scientist, SRE",0.3
+769,data-drift,AI/ML,Intermediate,"Data Scientist, ML Engineer, Data Engineer",0.25
+770,concept-drift,AI/ML,Intermediate,"Data Scientist, ML Engineer, Researcher",0.3
+771,model-retraining,AI/ML,Intermediate,"ML Engineer, Data Scientist, DevOps Engineer",0.35
+772,continuous-integration-ml,MLOps,Intermediate,"ML Engineer, DevOps Engineer, Data Scientist",0.3
+773,continuous-deployment-ml,MLOps,Intermediate,"ML Engineer, DevOps Engineer, Data Scientist",0.25
+774,model-registry,MLOps,Intermediate,"ML Engineer, Data Scientist, DevOps Engineer",0.3
+775,feature-store,MLOps,Intermediate,"ML Engineer, Data Engineer, Data Scientist",0.25
+776,model-serving,MLOps,Intermediate,"ML Engineer, Backend Developer, DevOps Engineer",0.3
+777,model-versioning,MLOps,Intermediate,"ML Engineer, Data Scientist, DevOps Engineer",0.25
+778,experiment-tracking,MLOps,Intermediate,"ML Engineer, Data Scientist, Researcher",0.3
+779,ml-pipelines,MLOps,Intermediate,"ML Engineer, Data Engineer, DevOps Engineer",0.35
+780,data-pipelines,Data Engineering,Intermediate,"Data Engineer, ML Engineer, DevOps Engineer",0.4
+781,etl-pipelines,Data Engineering,Intermediate,"Data Engineer, Business Intelligence Developer, Analyst",0.35
+782,elt-pipelines,Data Engineering,Intermediate,"Data Engineer, Data Analyst, Business Intelligence",0.3
+783,data-ingestion,Data Engineering,Intermediate,"Data Engineer, System Architect, Backend Developer",0.4
+784,data-transformation,Data Engineering,Intermediate,"Data Engineer, Data Analyst, Business Intelligence",0.35
+785,data-validation,Data Engineering,Intermediate,"Data Engineer, Quality Assurance, Data Analyst",0.3
+786,data-orchestration,Data Engineering,Intermediate,"Data Engineer, DevOps Engineer, System Architect",0.25
+787,workflow-management,Data Engineering,Intermediate,"Data Engineer, DevOps Engineer, Business Analyst",0.3
+788,scheduling,Data Engineering,Intermediate,"Data Engineer, System Administrator, DevOps Engineer",0.25
+789,monitoring,Data Engineering,Intermediate,"Data Engineer, DevOps Engineer, SRE",0.3
+790,alerting,Data Engineering,Intermediate,"Data Engineer, DevOps Engineer, SRE",0.25
+791,logging,Data Engineering,Intermediate,"Data Engineer, Software Developer, DevOps Engineer",0.3
+792,metrics,Data Engineering,Intermediate,"Data Engineer, Business Analyst, DevOps Engineer",0.25
+793,dashboards,Data Engineering,Intermediate,"Data Engineer, Business Intelligence, Product Manager",0.3
+794,reporting,Data Engineering,Intermediate,"Data Engineer, Business Analyst, Manager",0.25
+795,data-quality,Data Engineering,Intermediate,"Data Engineer, Data Analyst, Business Intelligence",0.35
+796,data-governance,Data Management,Intermediate,"Data Architect, Data Manager, Compliance Officer",0.3
+797,data-catalog,Data Management,Intermediate,"Data Engineer, Data Architect, Business Analyst",0.25
+798,data-lineage,Data Management,Intermediate,"Data Engineer, Data Architect, Compliance Officer",0.2
+799,data-privacy,Data Management,Intermediate,"Privacy Officer, Data Engineer, Compliance Manager",0.3
+800,data-security,Data Management,Intermediate,"Security Engineer, Data Engineer, Compliance Officer",0.35
+801,data-encryption,Data Security,Intermediate,"Security Engineer, Data Engineer, System Administrator",0.3
+802,data-masking,Data Security,Intermediate,"Data Engineer, Security Engineer, QA Tester",0.25
+803,data-anonymization,Data Privacy,Intermediate,"Data Scientist, Privacy Engineer, Data Analyst",0.2
+804,data-retention,Data Management,Intermediate,"Data Architect, Compliance Officer, System Administrator",0.25
+805,data-archiving,Data Management,Intermediate,"Data Architect, System Administrator, Compliance Officer",0.2
+806,data-backup,Data Management,Intermediate,"System Administrator, Data Engineer, Database Administrator",0.3
+807,data-recovery,Data Management,Intermediate,"System Administrator, Data Engineer, Database Administrator",0.25
+808,disaster-recovery,Data Management,Intermediate,"System Administrator, DevOps Engineer, IT Manager",0.3
+809,business-continuity,Data Management,Intermediate,"Business Manager, IT Manager, Risk Manager",0.25
+810,high-availability,System Architecture,Advanced,"System Architect, DevOps Engineer, SRE",0.35
+811,fault-tolerance,System Architecture,Advanced,"System Architect, Software Engineer, DevOps Engineer",0.3
+812,load-balancing,System Architecture,Intermediate,"DevOps Engineer, System Administrator, Network Engineer",0.35
+813,auto-scaling,Cloud Computing,Intermediate,"Cloud Engineer, DevOps Engineer, System Architect",0.3
+814,capacity-planning,System Architecture,Intermediate,"System Architect, DevOps Engineer, Business Analyst",0.25
+815,performance-optimization,System Architecture,Intermediate,"Software Engineer, DevOps Engineer, System Architect",0.35
+816,latency-optimization,System Architecture,Advanced,"System Architect, Network Engineer, Backend Developer",0.3
+817,throughput-optimization,System Architecture,Advanced,"System Architect, Data Engineer, Backend Developer",0.25
+818,caching,System Architecture,Intermediate,"Backend Developer, System Architect, DevOps Engineer",0.4
+819,cdn,System Architecture,Intermediate,"DevOps Engineer, Frontend Developer, System Administrator",0.3
+820,content-delivery,System Architecture,Intermediate,"DevOps Engineer, System Administrator, Network Engineer",0.25
+821,edge-computing,System Architecture,Advanced,"System Architect, IoT Developer, Network Engineer",0.3
+822,fog-computing,System Architecture,Advanced,"System Architect, IoT Developer, Cloud Engineer",0.25
+823,grid-computing,System Architecture,Advanced,"System Architect, Researcher, Data Scientist",0.2
+824,cluster-computing,System Architecture,Advanced,"System Architect, Data Engineer, Researcher",0.25
+825,high-performance-computing,System Architecture,Advanced,"HPC Engineer, Research Scientist, Data Scientist",0.3
+826,quantum-computing,Quantum Computing,Advanced,"Quantum Researcher, Algorithm Developer, Physicist",0.2
+827,neuromorphic-computing,Advanced Computing,Advanced,"Research Scientist, AI Engineer, Hardware Developer",0.15
+828,optical-computing,Advanced Computing,Advanced,"Research Scientist, Physicist, Hardware Engineer",0.1
+829,dna-computing,Advanced Computing,Advanced,"Research Scientist, Biologist, Computer Scientist",0.05
+830,reversible-computing,Advanced Computing,Advanced,"Research Scientist, Physicist, Computer Scientist",0.05
+831,approximate-computing,Advanced Computing,Advanced,"Research Scientist, Algorithm Developer, Hardware Engineer",0.1
+832,biological-computing,Advanced Computing,Advanced,"Research Scientist, Biologist, Computer Scientist",0.05
+833,chemical-computing,Advanced Computing,Advanced,"Research Scientist, Chemist, Computer Scientist",0.05
+834,fluid-computing,Advanced Computing,Advanced,"Research Scientist, Physicist, Engineer",0.05
+835,analog-computing,Advanced Computing,Advanced,"Research Scientist, Engineer, Physicist",0.1
+836,digital-computing,Computer Science,Beginner,"All Technical Roles, IT Professional, Engineer",0.9
+837,mixed-signal,Electronics,Advanced,"Electronics Engineer, Hardware Developer, Research Scientist",0.2
+838,embedded-linux,Embedded Systems,Intermediate,"Embedded Engineer, Linux Developer, IoT Developer",0.3
+839,real-time-os,Embedded Systems,Advanced,"Embedded Engineer, System Programmer, Automotive Developer",0.25
+840,bare-metal,Embedded Systems,Advanced,"Embedded Engineer, Firmware Developer, Hardware Engineer",0.2
+841,fpga,Hardware,Advanced,"Hardware Engineer, Research Scientist, Embedded Engineer",0.25
+842,asic,Hardware,Advanced,"Hardware Engineer, Chip Designer, Electronics Engineer",0.2
+843,pld,Hardware,Advanced,"Hardware Engineer, Electronics Engineer, Embedded Engineer",0.15
+844,vhdl,Hardware,Advanced,"Hardware Engineer, Electronics Engineer, Embedded Engineer",0.2
+845,verilog,Hardware,Advanced,"Hardware Engineer, Electronics Engineer, Embedded Engineer",0.25
+846,system-verilog,Hardware,Advanced,"Hardware Engineer, Verification Engineer, Electronics Engineer",0.2
+847,uvm,Hardware,Advanced,"Verification Engineer, Hardware Engineer, Quality Assurance",0.15
+848,formal-verification,Hardware,Advanced,"Verification Engineer, Research Scientist, Hardware Engineer",0.1
+849,hardware-description-languages,Hardware,Advanced,"Hardware Engineer, Electronics Engineer, Embedded Engineer",0.2
+850,circuit-design,Electronics,Intermediate,"Electronics Engineer, Hardware Developer, Electrical Engineer",0.25
+851,pcb-design,Electronics,Intermediate,"Electronics Engineer, Hardware Developer, PCB Designer",0.2
+852,schematic-capture,Electronics,Intermediate,"Electronics Engineer, Hardware Developer, PCB Designer",0.15
+853,layout-design,Electronics,Intermediate,"PCB Designer, Electronics Engineer, Hardware Developer",0.2
+854,signal-integrity,Electronics,Advanced,"Electronics Engineer, Signal Integrity Engineer, Hardware Developer",0.15
+855,power-integrity,Electronics,Advanced,"Power Engineer, Electronics Engineer, Hardware Developer",0.1
+856,electromagnetic-compatibility,Electronics,Advanced,"EMC Engineer, Electronics Engineer, Compliance Officer",0.15
+857,thermal-analysis,Engineering,Intermediate,"Mechanical Engineer, Electronics Engineer, Hardware Developer",0.2
+858,structural-analysis,Engineering,Advanced,"Mechanical Engineer, Civil Engineer, Structural Engineer",0.15
+859,fluid-dynamics,Engineering,Advanced,"Mechanical Engineer, Aerospace Engineer, Chemical Engineer",0.1
+860,finite-element-analysis,Engineering,Advanced,"Mechanical Engineer, Structural Engineer, Simulation Engineer",0.15
+861,computational-fluid-dynamics,Engineering,Advanced,"Mechanical Engineer, Aerospace Engineer, Research Scientist",0.1
+862,multiphysics-simulation,Engineering,Advanced,"Simulation Engineer, Research Scientist, Mechanical Engineer",0.05
+863,product-lifecycle-management,Engineering,Intermediate,"Product Manager, Mechanical Engineer, Operations Manager",0.2
+864,computer-aided-design,Engineering,Intermediate,"Mechanical Engineer, Architect, Product Designer",0.25
+865,computer-aided-engineering,Engineering,Intermediate,"Mechanical Engineer, Simulation Engineer, Analyst",0.2
+866,computer-aided-manufacturing,Manufacturing,Intermediate,"Manufacturing Engineer, Mechanical Engineer, CNC Programmer",0.15
+867,additive-manufacturing,Manufacturing,Intermediate,"3D Printing Engineer, Mechanical Engineer, Product Designer",0.2
+868,subtractive-manufacturing,Manufacturing,Intermediate,"CNC Machinist, Manufacturing Engineer, Mechanical Engineer",0.15
+869,injection-molding,Manufacturing,Intermediate,"Manufacturing Engineer, Mechanical Engineer, Tooling Designer",0.1
+870,cnc-programming,Manufacturing,Intermediate,"CNC Programmer, Manufacturing Engineer, Mechanical Engineer",0.15
+871,robotics-programming,Robotics,Intermediate,"Robotics Engineer, Automation Engineer, Software Developer",0.2
+872,robot-operating-system,Robotics,Intermediate,"Robotics Engineer, Research Scientist, Software Developer",0.15
+873,motion-planning,Robotics,Advanced,"Robotics Engineer, Research Scientist, Algorithm Developer",0.1
+874,computer-vision,Robotics,Advanced,"Robotics Engineer, Computer Vision Engineer, AI Researcher",0.2
+875,sensor-fusion,Robotics,Advanced,"Robotics Engineer, Sensor Engineer, Data Scientist",0.15
+876,control-systems,Engineering,Advanced,"Control Engineer, Robotics Engineer, Automotive Engineer",0.2
+877,pid-control,Engineering,Intermediate,"Control Engineer, Automation Engineer, Process Engineer",0.15
+878,adaptive-control,Engineering,Advanced,"Control Engineer, Research Scientist, Robotics Engineer",0.1
+879,robust-control,Engineering,Advanced,"Control Engineer, Research Scientist, Aerospace Engineer",0.05
+880,optimal-control,Engineering,Advanced,"Control Engineer, Research Scientist, Quantitative Analyst",0.1
+881,nonlinear-control,Engineering,Advanced,"Control Engineer, Research Scientist, Mathematician",0.05
+882,fuzzy-control,Engineering,Advanced,"Control Engineer, Research Scientist, AI Engineer",0.05
+883,neural-control,Engineering,Advanced,"Control Engineer, AI Researcher, Robotics Engineer",0.05
+884,system-identification,Engineering,Advanced,"Control Engineer, Research Scientist, Data Scientist",0.1
+885,model-predictive-control,Engineering,Advanced,"Control Engineer, Research Scientist, Process Engineer",0.15
+886,digital-twin,Engineering,Advanced,"Simulation Engineer, Data Scientist, Mechanical Engineer",0.2
+887,industrial-iot,IIoT,Intermediate,"IIoT Engineer, Automation Engineer, Data Scientist",0.25
+888,industry-4.0,Manufacturing,Intermediate,"Manufacturing Engineer, Automation Engineer, Data Scientist",0.2
+889,smart-factory,Manufacturing,Advanced,"Manufacturing Engineer, Automation Engineer, System Architect",0.15
+890,predictive-maintenance,Maintenance,Intermediate,"Maintenance Engineer, Data Scientist, Operations Manager",0.2
+891,condition-monitoring,Maintenance,Intermediate,"Maintenance Engineer, Sensor Engineer, Data Analyst",0.15
+892,reliability-engineering,Engineering,Advanced,"Reliability Engineer, Quality Manager, Risk Analyst",0.2
+893,safety-engineering,Engineering,Advanced,"Safety Engineer, Risk Manager, Compliance Officer",0.15
+894,human-factors,Engineering,Intermediate,"UX Researcher, Ergonomist, Product Designer",0.2
+895,ergonomics,Engineering,Intermediate,"Ergonomist, Product Designer, Safety Officer",0.15
+896,usability-engineering,Engineering,Intermediate,"UX Designer, Product Designer, Ergonomist",0.2
+897,accessibility-engineering,Engineering,Intermediate,"Accessibility Specialist, UX Designer, Frontend Developer",0.15
+898,environmental-engineering,Environmental,Advanced,"Environmental Engineer, Sustainability Manager, Compliance Officer",0.2
+899,water-resources-engineering,Environmental,Advanced,"Water Engineer, Environmental Manager, Civil Engineer",0.1
+900,wastewater-engineering,Environmental,Advanced,"Environmental Engineer, Civil Engineer, Municipal Engineer",0.15
+901,air-quality-engineering,Environmental,Advanced,"Environmental Engineer, Chemical Engineer, Compliance Officer",0.1
+902,noise-control-engineering,Environmental,Advanced,"Acoustician, Environmental Engineer, Safety Officer",0.05
+903,geotechnical-engineering,Civil Engineering,Advanced,"Geotechnical Engineer, Civil Engineer, Structural Engineer",0.15
+904,transportation-engineering,Civil Engineering,Advanced,"Transportation Engineer, Urban Planner, Civil Engineer",0.1
+905,structural-engineering,Civil Engineering,Advanced,"Structural Engineer, Civil Engineer, Architect",0.2
+906,earthquake-engineering,Civil Engineering,Advanced,"Structural Engineer, Geotechnical Engineer, Risk Analyst",0.05
+907,wind-engineering,Civil Engineering,Advanced,"Structural Engineer, Mechanical Engineer, Aerospace Engineer",0.05
+908,fire-engineering,Civil Engineering,Advanced,"Structural Engineer, Safety Engineer, Architect",0.1
+909,construction-management,Construction,Intermediate,"Construction Manager, Project Manager, Civil Engineer",0.25
+910,project-management-construction,Construction,Intermediate,"Project Manager, Construction Manager, Engineer",0.2
+911,cost-estimating,Construction,Intermediate,"Cost Estimator, Project Manager, Quantity Surveyor",0.15
+912,scheduling-construction,Construction,Intermediate,"Project Manager, Construction Manager, Scheduler",0.2
+913,risk-management-construction,Construction,Intermediate,"Risk Manager, Project Manager, Safety Officer",0.15
+914,safety-management-construction,Construction,Intermediate,"Safety Manager, Construction Manager, Project Manager",0.2
+915,quality-management-construction,Construction,Intermediate,"Quality Manager, Construction Manager, Project Manager",0.15
+916,building-information-modeling,Construction,Intermediate,"BIM Manager, Architect, Engineer",0.25
+917,green-building,Construction,Intermediate,"Sustainability Manager, Architect, Construction Manager",0.2
+918,leed-certification,Construction,Intermediate,"Sustainability Manager, Architect, Construction Manager",0.15
+919,breeam-certification,Construction,Intermediate,"Sustainability Manager, Architect, Construction Manager",0.1
+920,well-certification,Construction,Intermediate,"Sustainability Manager, Architect, Interior Designer",0.1
+921,energy-modeling,Engineering,Advanced,"Energy Engineer, Sustainability Manager, Mechanical Engineer",0.15
+922,daylight-analysis,Architecture,Intermediate,"Architect, Lighting Designer, Sustainability Manager",0.1
+923,acoustic-analysis,Architecture,Intermediate,"Acoustician, Architect, Interior Designer",0.05
+924,thermal-comfort,Architecture,Intermediate,"Architect, Mechanical Engineer, Sustainability Manager",0.1
+925,indoor-air-quality,Architecture,Intermediate,"Architect, Mechanical Engineer, Sustainability Manager",0.05
+926,urban-planning,Urban Planning,Intermediate,"Urban Planner, Architect, Policy Analyst",0.15
+927,land-use-planning,Urban Planning,Intermediate,"Urban Planner, Policy Analyst, Real Estate Developer",0.1
+928,transportation-planning,Urban Planning,Intermediate,"Transportation Planner, Urban Planner, Civil Engineer",0.15
+929,environmental-planning,Urban Planning,Intermediate,"Environmental Planner, Urban Planner, Sustainability Manager",0.1
+930,regional-planning,Urban Planning,Intermediate,"Regional Planner, Policy Analyst, Urban Planner",0.05
+931,gis-planning,Urban Planning,Intermediate,"GIS Analyst, Urban Planner, Environmental Planner",0.15
+932,community-development,Social Planning,Intermediate,"Community Developer, Urban Planner, Social Worker",0.1
+933,economic-development,Economic Development,Intermediate,"Economic Developer, Policy Analyst, Business Developer",0.15
+934,housing-policy,Policy,Intermediate,"Policy Analyst, Urban Planner, Housing Manager",0.1
+935,real-estate-development,Real Estate,Intermediate,"Real Estate Developer, Investor, Project Manager",0.2
+936,property-management,Real Estate,Intermediate,"Property Manager, Real Estate Agent, Facility Manager",0.15
+937,real-estate-investment,Real Estate,Intermediate,"Real Estate Investor, Financial Analyst, Portfolio Manager",0.2
+938,commercial-real-estate,Real Estate,Intermediate,"Commercial Broker, Real Estate Developer, Investor",0.15
+939,residential-real-estate,Real Estate,Intermediate,"Residential Broker, Real Estate Agent, Property Manager",0.2
+940,real-estate-finance,Real Estate,Intermediate,"Real Estate Analyst, Financial Analyst, Investment Banker",0.15
+941,real-estate-law,Legal,Intermediate,"Real Estate Lawyer, Title Agent, Closing Coordinator",0.1
+942,property-valuation,Real Estate,Intermediate,"Appraiser, Real Estate Analyst, Financial Analyst",0.15
+943,real-estate-marketing,Real Estate,Intermediate,"Real Estate Marketer, Agent, Broker",0.1
+944,property-technology,Proptech,Intermediate,"Proptech Developer, Real Estate Professional, Software Engineer",0.2
+945,facility-management,Facility Management,Intermediate,"Facility Manager, Property Manager, Operations Manager",0.15
+946,maintenance-management,Facility Management,Intermediate,"Maintenance Manager, Facility Manager, Operations Manager",0.1
+947,space-planning,Facility Management,Intermediate,"Facility Manager, Interior Designer, Architect",0.15
+948,workplace-strategy,Facility Management,Intermediate,"Workplace Manager, HR Manager, Facility Manager",0.1
+949,move-management,Facility Management,Intermediate,"Move Coordinator, Facility Manager, Project Manager",0.05
+950,asset-management,Facility Management,Intermediate,"Asset Manager, Facility Manager, Financial Analyst",0.15
+951,energy-management,Facility Management,Intermediate,"Energy Manager, Facility Manager, Sustainability Manager",0.1
+952,sustainability-reporting,Facility Management,Intermediate,"Sustainability Manager, Facility Manager, Compliance Officer",0.15
+953,waste-management,Facility Management,Intermediate,"Waste Manager, Facility Manager, Sustainability Manager",0.1
+954,water-management,Facility Management,Intermediate,"Water Manager, Facility Manager, Sustainability Manager",0.05
+955,security-management,Facility Management,Intermediate,"Security Manager, Facility Manager, Safety Officer",0.15
+956,emergency-preparedness,Facility Management,Intermediate,"Emergency Manager, Facility Manager, Safety Officer",0.1
+957,business-continuity,Facility Management,Intermediate,"Business Continuity Manager, Facility Manager, Risk Manager",0.15
+958,disaster-recovery,Facility Management,Intermediate,"Disaster Recovery Manager, Facility Manager, IT Manager",0.1
+959,crisis-management,Facility Management,Intermediate,"Crisis Manager, Facility Manager, PR Manager",0.05
+960,incident-management,Facility Management,Intermediate,"Incident Manager, Facility Manager, Security Manager",0.1
+961,event-management,Event Management,Intermediate,"Event Planner, Coordinator, Marketing Manager",0.15
+962,meeting-planning,Event Management,Intermediate,"Meeting Planner, Executive Assistant, Project Manager",0.1
+963,conference-management,Event Management,Intermediate,"Conference Manager, Event Planner, Marketing Manager",0.15
+964,trade-show-management,Event Management,Intermediate,"Exhibit Manager, Marketing Manager, Sales Manager",0.1
+965,venue-management,Event Management,Intermediate,"Venue Manager, Event Planner, Facility Manager",0.05
+966,catering-management,Event Management,Intermediate,"Catering Manager, Event Planner, Restaurant Manager",0.1
+967,audiovisual-production,Event Management,Intermediate,"AV Technician, Event Planner, Production Manager",0.05
+968,event-marketing,Event Management,Intermediate,"Event Marketer, Marketing Manager, PR Manager",0.1
+969,event-technology,Event Management,Intermediate,"Event Technologist, Software Developer, Event Planner",0.15
+970,virtual-event-management,Event Management,Intermediate,"Virtual Event Producer, Event Planner, Technology Manager",0.2
+971,hybrid-event-management,Event Management,Intermediate,"Event Producer, Technology Manager, Event Planner",0.15
+972,event-analytics,Event Management,Intermediate,"Event Analyst, Marketing Analyst, Data Analyst",0.1
+973,registration-management,Event Management,Intermediate,"Registration Manager, Event Planner, Data Manager",0.05
+974,attendee-engagement,Event Management,Intermediate,"Event Planner, Marketing Manager, Community Manager",0.1
+975,sponsorship-management,Event Management,Intermediate,"Sponsorship Manager, Sales Manager, Event Planner",0.15
+976,budget-management,Event Management,Intermediate,"Event Planner, Project Manager, Financial Analyst",0.1
+977,contract-management,Event Management,Intermediate,"Contract Manager, Event Planner, Lawyer",0.05
+978,risk-management-event,Event Management,Intermediate,"Risk Manager, Event Planner, Safety Officer",0.1
+979,insurance-event,Event Management,Intermediate,"Insurance Broker, Event Planner, Risk Manager",0.05
+980,permit-management,Event Management,Intermediate,"Permit Coordinator, Event Planner, Government Relations",0.05
+981,community-engagement,Event Management,Intermediate,"Community Manager, Event Planner, PR Manager",0.1
+982,stakeholder-management,Event Management,Intermediate,"Stakeholder Manager, Event Planner, Project Manager",0.15
+983,vendor-management,Event Management,Intermediate,"Vendor Manager, Event Planner, Procurement Manager",0.1
+984,supplier-management,Event Management,Intermediate,"Supplier Manager, Event Planner, Operations Manager",0.05
+985,logistics-management,Event Management,Intermediate,"Logistics Manager, Event Planner, Operations Manager",0.1
+986,transportation-management,Event Management,Intermediate,"Transportation Manager, Event Planner, Logistics Manager",0.05
+987,accommodation-management,Event Management,Intermediate,"Accommodation Manager, Event Planner, Travel Coordinator",0.05
+988,travel-management,Event Management,Intermediate,"Travel Manager, Event Planner, Executive Assistant",0.1
+989,incentive-travel,Event Management,Intermediate,"Incentive Manager, Sales Manager, Event Planner",0.05
+990,corporate-travel,Event Management,Intermediate,"Travel Manager, Executive Assistant, Office Manager",0.1
+991,meeting-management,Event Management,Intermediate,"Meeting Manager, Executive Assistant, Project Manager",0.15
+992,board-meeting-management,Event Management,Intermediate,"Executive Assistant, Corporate Secretary, Board Liaison",0.05
+993,virtual-meeting-management,Event Management,Intermediate,"Technology Manager, Executive Assistant, Project Manager",0.2
+994,hybrid-meeting-management,Event Management,Intermediate,"Technology Manager, Event Planner, Executive Assistant",0.15
+995,meeting-technology,Event Management,Intermediate,"Technology Manager, IT Support, Executive Assistant",0.1
+996,collaboration-tools,Technology,Intermediate,"IT Manager, Project Manager, Team Lead",0.25
+997,video-conferencing,Technology,Intermediate,"IT Support, Executive Assistant, Project Manager",0.2
+998,webinar-platforms,Technology,Intermediate,"Marketing Manager, Event Planner, Technology Manager",0.15
+999,virtual-event-platforms,Technology,Intermediate,"Event Producer, Technology Manager, Marketing Manager",0.2
+1000,event-app-development,Technology,Intermediate,"App Developer, Event Planner, Technology Manager",0.15

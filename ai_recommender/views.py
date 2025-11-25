@@ -356,7 +356,7 @@ def resume_upload(request):
                 messages.success(request, 'Resume deleted successfully!')
             else:
                 messages.info(request, 'No resume found to delete.')
-            return redirect('resume_upload')
+            return redirect('resume')
         
         # --- UPLOAD/REPLACE LOGIC ---
         if 'resume_file' in request.FILES:
@@ -364,12 +364,12 @@ def resume_upload(request):
             
             if resume_file.size > 10 * 1024 * 1024:
                 messages.error(request, 'File size too large. Maximum 10MB allowed.')
-                return redirect('resume_upload')
+                return redirect('resume')
             
             valid_extensions = ('.pdf', '.docx')
             if not resume_file.name.lower().endswith(valid_extensions):
                 messages.error(request, 'Invalid file type. Only PDF and DOCX files are supported.')
-                return redirect('resume_upload')
+                return redirect('resume')
 
             try:
                 # Analyze resume
@@ -393,12 +393,12 @@ def resume_upload(request):
                     messages.warning(request, f'Resume uploaded but analysis failed: {analysis_result["error"]}')
                 
                 profile.save()
-                return redirect('resume_upload')
+                return redirect('resume')
                 
             except Exception as e:
                 error_msg = f'Error saving resume: {str(e)}'
                 messages.error(request, error_msg)
-                return redirect('resume_upload')
+                return redirect('resume')
         else:
             messages.error(request, 'No file selected. Please choose a file to upload.')
     
@@ -428,7 +428,7 @@ def resume_upload(request):
 @login_required
 def analyze_resume(request):
     """Analyze resume view (Used by the /resume/analyze/ URL path)"""
-    return redirect('resume_upload') # Redirect to the main upload page for simplicity
+    return redirect('resume') # Redirect to the main upload page for simplicity
 
 @login_required
 def personality_assessment(request):
@@ -447,30 +447,84 @@ def personality_assessment(request):
     return redirect('take_personality_test')
 
 def personality_result(request):
-    """Handles logic for displaying personality test results."""
+    """Handles logic for displaying personality test results (UI + logic improved)."""
     profile = request.user.userprofile
 
     latest_assessment = PersonalityAssessment.objects.filter(user_profile=profile).order_by('-assessment_date').first()
-
     if not latest_assessment:
         messages.error(request, "No assessment data found. Please take the test first.")
         return redirect('take_personality_test')
 
-    scores = {
-        'extraversion': latest_assessment.question_1,
-        'agreeableness': latest_assessment.question_2,
-        'conscientiousness': latest_assessment.question_3,
-        'emotional_stability': latest_assessment.question_4,
-        'openness': latest_assessment.question_5
+    # Compute Big Five scores from the 10 questions (1-5 Likert)
+    # Map two questions per trait for better distribution
+    trait_map = {
+        'extraversion': [1, 6],
+        'agreeableness': [2, 7],
+        'conscientiousness': [3, 8],
+        'emotional_stability': [4, 9],
+        'openness': [5, 10],
     }
+    raw = {
+        1: latest_assessment.question_1,
+        2: latest_assessment.question_2,
+        3: latest_assessment.question_3,
+        4: latest_assessment.question_4,
+        5: latest_assessment.question_5,
+        6: latest_assessment.question_6,
+        7: latest_assessment.question_7,
+        8: latest_assessment.question_8,
+        9: latest_assessment.question_9,
+        10: latest_assessment.question_10,
+    }
+    scores = {}
+    for trait, qs in trait_map.items():
+        total = sum(int(raw[q]) for q in qs)  # range 2-10
+        # normalize to 1-10 scale already, but ensure bounds
+        scores[trait] = max(1, min(10, total))
 
-    personality_type = profile.personality_type or 'INFP'
+    # Determine personality type from scores
+    personality_type = profile.personality_type or determine_mbti_type(scores)
+
+    # Build enriched recommended careers using datasets
+    recs_basic = get_career_recommendations(personality_type, scores)
+    enriched_recs = []
+    for r in recs_basic:
+        title = r.get('title', 'Role')
+        clean = clean_title_for_merge(title)
+        # attach salary/growth from datasets if available
+        md = MARKET_DF[MARKET_DF['clean_key'] == clean].head(1) if not MARKET_DF.empty and 'clean_key' in MARKET_DF.columns else pd.DataFrame()
+        cd = CAREER_DF[CAREER_DF['clean_key'] == clean].head(1) if not CAREER_DF.empty and 'clean_key' in CAREER_DF.columns else pd.DataFrame()
+        salary = None
+        growth = None
+        if not md.empty:
+            salary = format_salary(md.iloc[0].get('average_salary', 0))
+            gr = md.iloc[0].get('job_growth_rate', 0)
+            growth = round(float(gr) * 100, 1) if pd.notna(gr) else get_default_growth_by_title(title)
+        elif not cd.empty:
+            salary = format_salary(cd.iloc[0].get('average_salary', 0))
+            growth = get_default_growth_by_title(title)
+        else:
+            salary = get_default_salary_by_title(title)
+            growth = get_default_growth_by_title(title)
+        enriched_recs.append({
+            'title': title,
+            'description': r.get('description', ''),
+            'salary': salary,
+            'growth': growth,
+            'category': r.get('category', ''),
+        })
 
     context = {
         'personality_type': personality_type,
         'key_strengths': get_key_strengths(personality_type, scores),
-        'recommended_careers': get_career_recommendations(personality_type, scores),
-        'overall_match_score': 85
+        'recommended_careers': enriched_recs,
+        'overall_match_score': 85,
+        # expose scores for UI progress bars
+        'extraversion_score': scores['extraversion'],
+        'agreeableness_score': scores['agreeableness'],
+        'conscientiousness_score': scores['conscientiousness'],
+        'emotional_stability_score': scores['emotional_stability'],
+        'openness_score': scores['openness'],
     }
 
     return render(request, 'personality_result.html', context)
@@ -663,25 +717,28 @@ def calculate_profile_completion(profile):
     return min(completion, 100)
 
 def generate_personalized_insights(profile):
-    """Generate personalized insights for dashboard"""
+    """Generate personalized insights for dashboard with correct skill counting by words."""
     insights = []
-    
+
     if profile.experience_years and profile.experience_years >= 5:
         insights.append(f"With {profile.experience_years} years of experience, you're well-positioned for senior roles.")
-    
+
+    # Count skills by words/tokens, not by raw characters
+    skills_count = 0
     if profile.skills:
-        skills_count = len(profile.skills.split(','))
+        tokens = [s.strip() for s in re.split(r'[;,\n]', profile.skills) if s.strip()]
+        skills_count = len(tokens)
         if skills_count >= 8:
             insights.append(f"You have a strong skill set with {skills_count} documented skills.")
         elif skills_count <= 3:
             insights.append("Consider adding more skills to enhance your career opportunities.")
-    
+
     if profile.personality_type and profile.personality_type != 'Not assessed':
         insights.append(f"Your {profile.personality_type} personality suggests strengths in creative problem-solving.")
-    
+
     if not insights:
         insights.append("Complete your profile to get personalized career insights.")
-    
+
     return insights
 
 # --- RESUME ANALYSIS FUNCTIONS ---
@@ -721,7 +778,7 @@ def analyze_resume_file(resume_file):
         else:
             # Fallback hardcoded list (used if ML files are missing)
             analysis_method = 'keyword_fallback'
-            for s in ['python','java','javascript','sql','html','css','react','node','django','flask','machine learning','data analysis']:
+            for s in ['python','java','javascript','sql','html','css','react.js','node.js','django','flask','machine learning','data analysis']:
                 if s in text_for_skills:
                     skills_found.add(s)
 
