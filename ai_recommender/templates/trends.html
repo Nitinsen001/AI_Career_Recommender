@@ -589,14 +589,16 @@
                                                 </td>
                                                 <td class="salary-trend">${{ trend.average_salary|floatformat:"0" }}</td>
                                                 <td>
-                                                    {% for location in trend.top_locations.split %}
-                                                    <span class="location-badge">{{ location }}</span>
+                                                    {% for location in trend.top_locations %}
+                                                         <span class="location-badge">{{ location }}</span>
                                                     {% endfor %}
+
                                                 </td>
                                                 <td>
-                                                    {% for skill in trend.key_skills_in_demand.split %}
-                                                    <span class="skill-tag">{{ skill }}</span>
+                                                    {% for skill in trend.key_skills_in_demand %}
+                                                        <span class="skill-tag">{{ skill }}</span>
                                                     {% endfor %}
+
                                                 </td>
                                             </tr>
                                             {% endfor %}

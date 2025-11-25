@@ -595,6 +595,52 @@ def career_detail(request, career_id):
     career = get_object_or_404(Career, pk=career_id)
     return render(request, 'career_detail.html', {'career': career})
 
+
+# --- SMART SPLIT FUNCTION (Bracket safe) ---
+def smart_split_skills(text):
+    """
+    Split skills by commas BUT DO NOT split commas inside brackets.
+    Supports: (…) , {…} , […].
+    """
+    if not text:
+        return []
+
+    skills = []
+    current = []
+    depth_round = 0   # ()
+    depth_square = 0  # []
+    depth_curly = 0   # {}
+
+    for char in text:
+        if char == '(':
+            depth_round += 1
+        elif char == ')':
+            depth_round -= 1
+        elif char == '[':
+            depth_square += 1
+        elif char == ']':
+            depth_square -= 1
+        elif char == '{':
+            depth_curly += 1
+        elif char == '}':
+            depth_curly -= 1
+
+        # COMMA OUTSIDE bracket = SPLIT
+        if char == ',' and depth_round == 0 and depth_square == 0 and depth_curly == 0:
+            skill = ''.join(current).strip()
+            if skill:
+                skills.append(skill)
+            current = []
+        else:
+            current.append(char)
+
+    # Add last item
+    last = ''.join(current).strip()
+    if last:
+        skills.append(last)
+
+    return skills
+
 @login_required
 def job_trends(request):
     """Job market trends view"""
@@ -635,19 +681,33 @@ def job_trends(request):
     avg_salary = valid_salaries.mean() if not valid_salaries.empty else 0
     
     all_locations = set()
-    trends_df['location'].astype(str).apply(lambda x: all_locations.update(loc.strip() for loc in x.split(',') if loc.strip()))
+    trends_df['location'].astype(str).apply(
+        lambda x: all_locations.update(loc.strip() for loc in x.split(',') if loc.strip())
+    )
 
     processed_trends = trends_df.to_dict('records')
     
     final_trends_list = []
     for trend in processed_trends:
+
+        # === FIXED: BRACKET SAFE SKILL SPLIT ===
+        raw_skills = str(trend.get('required_skills', ''))
+        skills_list = smart_split_skills(raw_skills)
+
+        # LOCATIONS normal split
+        location_list = [l.strip() for l in str(trend.get('location', '')).split(',') if l.strip()]
+
         final_trends_list.append({
             'career_title': trend.get('job_title', 'Unknown'),
             'growth_rate': round(float(trend.get('job_growth_rate', 0)) * 100, 1),
             'average_salary': round(float(trend.get('average_salary', 0)), 0),
-            'top_locations': trend.get('location', 'Global'),
-            'key_skills_in_demand': trend.get('required_skills', 'Python, SQL'),
-            'demand_level': 'High' if trend.get('job_growth_rate', 0) > 0.10 else ('Medium' if trend.get('job_growth_rate', 0) > 0.05 else 'Low'),
+
+            # CLEAN LISTS
+            'top_locations': location_list,
+            'key_skills_in_demand': skills_list,
+
+            'demand_level': 'High' if trend.get('job_growth_rate', 0) > 0.10 
+                             else ('Medium' if trend.get('job_growth_rate', 0) > 0.05 else 'Low'),
             'avg_hiring_time_days': trend.get('avg_hiring_time_days', 'N/A'),
             'year': 2025
         })
@@ -661,7 +721,8 @@ def job_trends(request):
     }
     return render(request, 'trends.html', context)
 
-@login_required
+
+
 @login_required
 def skill_gap_analysis(request):
     """Skill gap analysis view - FIXED VERSION"""

@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* CSS is the same as before */
         :root {
             --primary: #8B5FBF;
             --secondary: #D4A5A5;
@@ -80,7 +81,6 @@
         .main-content {
             background: #F5F7FA;
             padding: 2rem;
-            min-height: 100vh;
         }
 
         .dashboard-header {
@@ -217,23 +217,7 @@
         .skill-meta {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
         }
-
-        .skill-level-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: capitalize;
-        }
-
-        .level-beginner { background: rgba(239, 71, 111, 0.1); color: var(--danger); }
-        .level-intermediate { background: rgba(255, 209, 102, 0.1); color: #B38B00; }
-        .level-advanced { background: rgba(6, 214, 160, 0.1); color: var(--success); }
-        .level-expert { background: rgba(139, 95, 191, 0.1); color: var(--primary); }
 
         .skill-level {
             text-align: center;
@@ -330,7 +314,6 @@
             font-weight: 500;
             border: 1px solid rgba(255, 209, 102, 0.3);
             transition: all 0.2s ease;
-            cursor: pointer;
         }
 
         .recommended-skill:hover {
@@ -381,18 +364,6 @@
             color: var(--secondary);
         }
 
-        .form-control, .form-select {
-            border-radius: 10px;
-            padding: 12px 15px;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.2rem rgba(139, 95, 191, 0.25);
-        }
-
         .progress-ring {
             width: 70px;
             height: 70px;
@@ -402,21 +373,6 @@
             transition: stroke-dashoffset 0.35s;
             transform: rotate(-90deg);
             transform-origin: 50% 50%;
-        }
-
-        /* Skill level indicators */
-        .skill-progress {
-            height: 8px;
-            border-radius: 4px;
-            background: #e9ecef;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .skill-progress-bar {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.5s ease;
         }
 
         @media (max-width: 768px) {
@@ -445,10 +401,6 @@
             .skill-actions {
                 justify-content: center;
             }
-            
-            .skill-meta {
-                justify-content: center;
-            }
         }
 
         @media (max-width: 480px) {
@@ -461,7 +413,6 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <div class="col-md-3 col-lg-2 sidebar p-0">
                 <div class="p-3">
                     <h5 class="text-white mb-4 pt-3">
@@ -500,9 +451,7 @@
                 </div>
             </div>
 
-            <!-- Main Content -->
             <div class="col-md-9 col-lg-10 main-content p-0">
-                <!-- Header -->
                 <div class="dashboard-header">
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
@@ -529,7 +478,6 @@
                 </div>
 
                 <div class="px-3">
-                    <!-- Skills Overview Cards -->
                     <div class="stats-grid">
                         <div class="stat-card total">
                             <i class="fas fa-tools stat-icon"></i>
@@ -538,50 +486,43 @@
                         </div>
                         <div class="stat-card proficiency">
                             <i class="fas fa-chart-line stat-icon"></i>
-                            <div class="stat-number">{{ avg_proficiency|default:"0%" }}</div>
-                            <div class="stat-label">Avg Proficiency</div>
+                            <div class="stat-number">{{ avg_experience|default:0|floatformat:1 }}</div>
+                            <div class="stat-label">Avg Experience (Years)</div>
                         </div>
                         <div class="stat-card category">
                             <i class="fas fa-tags stat-icon"></i>
-                            <div class="stat-number">{{ top_category|default:"N/A" }}</div>
-                            <div class="stat-label">Top Category</div>
+                            <div class="stat-number">{{ top_category|default:"General" }}</div>
+                            <div class="stat-label">Most Common Level</div>
                         </div>
                         <div class="stat-card experience">
                             <i class="fas fa-clock stat-icon"></i>
-                            <div class="stat-number">{{ total_experience|default:0 }}</div>
-                            <div class="stat-label">Total Years Experience</div>
+                            <div class="stat-number">{{ total_experience|default:0|floatformat:1 }}</div>
+                            <div class="stat-label">Total Experience (Years)</div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <!-- Skills List -->
                         <div class="col-md-8">
-                            <div class="content-card">
+                            <div class="content-card mb-4">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0"><i class="fas fa-list me-2" style="color: var(--primary);"></i>Your Skills Inventory</h5>
                                     <button class="btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addSkillModal">
                                         <i class="fas fa-plus"></i> Add New Skill
                                     </button>
                                 </div>
-                                <div class="card-body">
+                                <div class="p-3">
                                     {% if user_skills %}
                                         {% for skill in user_skills %}
                                         <div class="skill-item">
                                             <div class="skill-level">
-                                                <div class="proficiency-badge" style="background: {% if skill.skill_level == 'beginner' %}var(--danger){% elif skill.skill_level == 'intermediate' %}var(--warning){% elif skill.skill_level == 'advanced' %}var(--info){% else %}var(--success){% endif %};">
-                                                    {{ skill.skill_level|slice:":1"|upper }}
+                                                <div class="proficiency-badge" data-level="intermediate">
+                                                    {{ skill.skill_name|slice:":1"|upper }}
                                                 </div>
                                             </div>
                                             <div class="skill-info">
                                                 <div class="skill-name">{{ skill.skill_name }}</div>
                                                 <div class="skill-meta">
-                                                    <span><i class="fas fa-clock me-1"></i>{{ skill.years_of_experience|default:0 }} years</span>
-                                                    <span class="skill-level-badge level-{{ skill.skill_level|default:'beginner' }}">
-                                                        {{ skill.skill_level|default:"Beginner"|title }}
-                                                    </span>
-                                                    {% if skill.category %}
-                                                    <span><i class="fas fa-tag me-1"></i>{{ skill.category }}</span>
-                                                    {% endif %}
+                                                    <i class="fas fa-clock me-1"></i>{{ skill.years_of_experience|default:0 }} years experience
                                                 </div>
                                             </div>
                                             <div class="skill-actions">
@@ -606,11 +547,8 @@
                                     {% endif %}
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Sidebar Content -->
+                        </div> 
                         <div class="col-md-4">
-                            <!-- Skills Categories -->
                             <div class="content-card">
                                 <div class="card-header">
                                     <h5 class="mb-0"><i class="fas fa-tags me-2" style="color: var(--primary);"></i>Skill Levels Distribution</h5>
@@ -619,11 +557,7 @@
                                     {% if skill_levels %}
                                         {% for level in skill_levels %}
                                         <div class="category-item">
-                                            <span class="category-name">
-                                                <span class="skill-level-badge level-{{ level.skill_level|lower }} me-2">
-                                                    {{ level.skill_level|title }}
-                                                </span>
-                                            </span>
+                                            <span class="category-name">{{ level.skill_level|title }}</span>
                                             <span class="category-count">{{ level.count }}</span>
                                         </div>
                                         {% endfor %}
@@ -635,60 +569,68 @@
                                     {% endif %}
                                 </div>
                             </div>
-
-                            <!-- Skill Recommendations -->
-                            <div class="content-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-lightbulb me-2" style="color: var(--warning);"></i>Recommended Skills</h5>
-                                </div>
-                                <div class="card-body">
-                                    {% if recommended_skills %}
-                                        <p class="text-muted mb-3">Based on your profile and career goals</p>
-                                        {% for skill in recommended_skills %}
-                                        <span class="recommended-skill" onclick="quickAddSkill('{{ skill }}')">{{ skill }}</span>
-                                        {% endfor %}
-                                        <div class="mt-3">
-                                            <small class="text-muted">
-                                                <i class="fas fa-info-circle me-1"></i>
-                                                Click on skills to quickly add them
-                                            </small>
+                        </div> 
+                        </div> 
+                    <hr>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="content-card h-100">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="fas fa-lightbulb me-2" style="color: var(--warning);"></i>Recommended Skills</h5>
                                         </div>
-                                    {% else %}
-                                        <div class="empty-state" style="padding: 1.5rem 0;">
-                                            <i class="fas fa-lightbulb"></i>
-                                            <p class="mb-0 mt-2">Add skills to get personalized recommendations</p>
+                                        <div class="card-body">
+                                            {% if recommended_skills %}
+                                                <p class="text-muted mb-3">Based on your profile and career goals</p>
+                                                {% for skill in recommended_skills %}
+                                                <span class="recommended-skill">{{ skill }}</span>
+                                                {% endfor %}
+                                                <div class="mt-3">
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-info-circle me-1"></i>
+                                                        These skills will improve your career matches
+                                                    </small>
+                                                </div>
+                                            {% else %}
+                                                <div class="empty-state" style="padding: 1.5rem 0;">
+                                                    <i class="fas fa-lightbulb"></i>
+                                                    <p class="mb-0 mt-2">Add skills to get personalized recommendations</p>
+                                                </div>
+                                            {% endif %}
                                         </div>
-                                    {% endif %}
+                                    </div>
                                 </div>
-                            </div>
-
-                            <!-- Quick Actions -->
-                            <div class="content-card">
-                                <div class="card-header">
-                                    <h5 class="mb-0"><i class="fas fa-bolt me-2" style="color: var(--info);"></i>Quick Actions</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-grid gap-2">
-                                        <a href="{% url 'career_recommendations' %}" class="btn btn-outline-primary">
-                                            <i class="fas fa-briefcase me-2"></i>View Career Matches
-                                        </a>
-                                        <a href="{% url 'resume' %}" class="btn btn-outline-success">
-                                            <i class="fas fa-file-alt me-2"></i>Update Resume
-                                        </a>
-                                        <a href="{% url 'trends' %}" class="btn btn-outline-warning">
-                                            <i class="fas fa-chart-line me-2"></i>Market Trends
-                                        </a>
+                                
+                                <div class="col-md-6">
+                                    <div class="content-card h-100">
+                                        <div class="card-header">
+                                            <h5 class="mb-0"><i class="fas fa-bolt me-2" style="color: var(--info);"></i>Quick Actions</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="d-grid gap-2">
+                                                <a href="{% url 'career_recommendations' %}" class="btn btn-outline-primary">
+                                                    <i class="fas fa-briefcase me-2"></i>View Career Matches
+                                                </a>
+                                                <a href="{% url 'resume' %}" class="btn btn-outline-success">
+                                                    <i class="fas fa-file-alt me-2"></i>Update Resume
+                                                </a>
+                                                <a href="{% url 'trends' %}" class="btn btn-outline-warning">
+                                                    <i class="fas fa-chart-line me-2"></i>Market Trends
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                    </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Skill Modal -->
     <div class="modal fade" id="addSkillModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -699,14 +641,13 @@
                 <form method="post" action="{% url 'skills' %}">
                     {% csrf_token %}
                     <div class="modal-body">
-                        <!-- Display form errors -->
                         {% if form.errors %}
                         <div class="alert alert-danger">
                             <strong>Please correct the errors below:</strong>
                             <ul class="mb-0">
                                 {% for field in form %}
                                     {% for error in field.errors %}
-                                        <li>{{ field.label }}: {{ error }}</li>
+                                        <li>{{ error }}</li>
                                     {% endfor %}
                                 {% endfor %}
                                 {% for error in form.non_field_errors %}
@@ -716,7 +657,6 @@
                         </div>
                         {% endif %}
 
-                        <!-- Display messages -->
                         {% if messages %}
                         <div class="messages">
                             {% for message in messages %}
@@ -732,21 +672,16 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="id_skill_name" class="form-label">Skill Name *</label>
-                                    <input type="text" name="skill_name" class="form-control" id="id_skill_name" 
-                                           placeholder="e.g., Python, Project Management" required
-                                           value="{{ form.skill_name.value|default:'' }}">
+                                    {{ form.skill_name }}
+                                    {% if form.skill_name.help_text %}
+                                    <div class="form-text">{{ form.skill_name.help_text }}</div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="id_skill_level" class="form-label">Skill Level *</label>
-                                    <select name="skill_level" class="form-select" id="id_skill_level" required>
-                                        <option value="">Select Level</option>
-                                        <option value="beginner" {% if form.skill_level.value == 'beginner' %}selected{% endif %}>Beginner</option>
-                                        <option value="intermediate" {% if form.skill_level.value == 'intermediate' %}selected{% endif %}>Intermediate</option>
-                                        <option value="advanced" {% if form.skill_level.value == 'advanced' %}selected{% endif %}>Advanced</option>
-                                        <option value="expert" {% if form.skill_level.value == 'expert' %}selected{% endif %}>Expert</option>
-                                    </select>
+                                    {{ form.skill_level }}
                                 </div>
                             </div>
                         </div>
@@ -754,9 +689,7 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="id_years_of_experience" class="form-label">Years of Experience</label>
-                                    <input type="number" name="years_of_experience" class="form-control" 
-                                           id="id_years_of_experience" min="0" max="50" step="0.5"
-                                           placeholder="e.g., 2.5" value="{{ form.years_of_experience.value|default:'' }}">
+                                    {{ form.years_of_experience }}
                                     <div class="form-text">Enter your experience with this skill</div>
                                 </div>
                             </div>
@@ -765,10 +698,10 @@
                                     <label class="form-label">Quick Level Guide</label>
                                     <div class="bg-light p-3 rounded">
                                         <small>
-                                            <strong><span class="level-beginner skill-level-badge">Beginner</span>:</strong> Basic understanding<br>
-                                            <strong><span class="level-intermediate skill-level-badge">Intermediate</span>:</strong> Can work independently<br>
-                                            <strong><span class="level-advanced skill-level-badge">Advanced</span>:</strong> Can teach others<br>
-                                            <strong><span class="level-expert skill-level-badge">Expert</span>:</strong> Industry authority
+                                            <strong>Beginner:</strong> Basic understanding<br>
+                                            <strong>Intermediate:</strong> Can work independently<br>
+                                            <strong>Advanced:</strong> Can teach others<br>
+                                            <strong>Expert:</strong> Industry authority
                                         </small>
                                     </div>
                                 </div>
@@ -791,8 +724,10 @@
             </div>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
     <script>
         // Auto-show modal if there are form errors
         document.addEventListener('DOMContentLoaded', function() {
@@ -802,13 +737,12 @@
             {% endif %}
 
             // Update proficiency badge colors based on skill level
-            const skillItems = document.querySelectorAll('.skill-item');
-            skillItems.forEach(item => {
-                const badge = item.querySelector('.proficiency-badge');
-                const levelText = item.querySelector('.skill-level-badge').textContent.toLowerCase();
+            const badges = document.querySelectorAll('.proficiency-badge');
+            badges.forEach(badge => {
+                const level = badge.getAttribute('data-level');
                 let color = 'var(--primary)'; // default
                 
-                switch(levelText) {
+                switch(level) {
                     case 'beginner':
                         color = 'var(--danger)';
                         break;
@@ -823,9 +757,7 @@
                         break;
                 }
                 
-                if (badge) {
-                    badge.style.background = color;
-                }
+                badge.style.background = color;
             });
 
             // Auto-focus on skill name field when modal opens
@@ -837,19 +769,19 @@
             }
         });
 
+        // Confirm before deleting skill
+        function confirmDelete(skillId, skillName) {
+            if (confirm('Are you sure you want to delete "' + skillName + '"?')) {
+                window.location.href = "{% url 'delete_skill' 0 %}".replace('0', skillId);
+            }
+            return false;
+        }
+
         // Quick add skill function
         function quickAddSkill(skillName) {
             document.getElementById('id_skill_name').value = skillName;
             const modal = new bootstrap.Modal(document.getElementById('addSkillModal'));
             modal.show();
-        }
-
-        // Enhanced delete confirmation
-        function confirmDelete(skillId, skillName) {
-            if (confirm('Are you sure you want to delete "' + skillName + '"? This action cannot be undone.')) {
-                window.location.href = "{% url 'delete_skill' 0 %}".replace('0', skillId);
-            }
-            return false;
         }
     </script>
 </body>
