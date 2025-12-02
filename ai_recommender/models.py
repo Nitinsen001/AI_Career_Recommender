@@ -126,6 +126,12 @@ class CareerRoadmap(models.Model):
     def __str__(self):
         return f"{self.career.title} - Step {self.step_number}: {self.title}"
 
+class Skill(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class LearningResource(models.Model):
     RESOURCE_TYPES = [
         ('video', 'Video'),
@@ -139,6 +145,9 @@ class LearningResource(models.Model):
     resource_type = models.CharField(max_length=20, choices=RESOURCE_TYPES)
     platform = models.CharField(max_length=100) # e.g., YouTube, Udemy, Coursera
     skill_tag = models.CharField(max_length=100) # e.g., Python, Machine Learning
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE, null=True, blank=True)
+    level = models.CharField(max_length=50, blank=True)
+    recommendation_note = models.TextField(blank=True)
     thumbnail_url = models.URLField(blank=True, null=True)
     is_free = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
