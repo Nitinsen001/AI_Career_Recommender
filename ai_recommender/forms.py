@@ -57,6 +57,15 @@ class UserRegistrationForm(UserCreationForm):
                   "age", "gender", "education_level", "current_field", "interests",
                   "skills", "experience_years", "personality_type", "resume_file")
 
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=100, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -91,7 +100,6 @@ class PersonalityAssessmentForm(forms.ModelForm):
             'question_10': forms.Select(attrs={'class': 'form-control'}, choices=[(i, i) for i in range(1, 6)]),
         }
 
-# ai_recommender/forms.py
 class SkillAssessmentForm(forms.ModelForm):
     class Meta:
         model = SkillAssessment
@@ -115,8 +123,6 @@ class SkillAssessmentForm(forms.ModelForm):
         if not skill_name:
             raise forms.ValidationError("Skill name is required.")
         return skill_name.strip().title()
-    
-    
     
 class CareerForm(forms.ModelForm):
     class Meta:

@@ -1,5 +1,3 @@
-
-
 {% load static %}
 {% include "logo.html" %}
 <!DOCTYPE html>
@@ -437,11 +435,13 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                {% if error %}
-                    <div class="error">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <div>{{ error }}</div>
-                    </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="error" {% if message.tags == 'success' %}style="background: rgba(6, 214, 160, 0.1); color: var(--success); border-color: rgba(6, 214, 160, 0.3);"{% endif %}>
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-triangle{% endif %}"></i>
+                            <div>{{ message }}</div>
+                        </div>
+                    {% endfor %}
                 {% endif %}
 
                 <!-- Personal Information Section -->
@@ -452,75 +452,133 @@
                         </div>
                         <h3 class="section-title">Personal Information</h3>
                     </div>
+                    
+                    <!-- User Model Fields -->
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.age.id_for_label }}" class="form-label">Age</label>
-                            <input type="number" class="form-control" id="{{ form.age.id_for_label }}" name="{{ form.age.name }}" value="{{ form.age.value|default:'' }}" placeholder="Enter your age">
+                            <label for="{{ user_form.first_name.id_for_label }}" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="{{ user_form.first_name.id_for_label }}" name="{{ user_form.first_name.name }}" value="{{ user_form.first_name.value|default:'' }}" placeholder="First Name">
+                            {% if user_form.first_name.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ user_form.first_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ user_form.last_name.id_for_label }}" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="{{ user_form.last_name.id_for_label }}" name="{{ user_form.last_name.name }}" value="{{ user_form.last_name.value|default:'' }}" placeholder="Last Name">
+                            {% if user_form.last_name.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ user_form.last_name.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ user_form.email.id_for_label }}" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="{{ user_form.email.id_for_label }}" name="{{ user_form.email.name }}" value="{{ user_form.email.value|default:'' }}" placeholder="Email Address">
+                            {% if user_form.email.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ user_form.email.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ profile_form.age.id_for_label }}" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="{{ profile_form.age.id_for_label }}" name="{{ profile_form.age.name }}" value="{{ profile_form.age.value|default:'' }}" placeholder="Enter your age">
+                            {% if profile_form.age.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.age.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">Your age helps us provide age-appropriate career guidance</div>
                         </div>
-                        <div class="form-group">
-                            <label for="{{ form.gender.id_for_label }}" class="form-label">Gender</label>
-                            <select class="form-control" id="{{ form.gender.id_for_label }}" name="{{ form.gender.name }}">
-                                <option value="">Select Gender</option>
-                                <option value="M" {% if form.gender.value == "M" %}selected{% endif %}>Male</option>
-                                <option value="F" {% if form.gender.value == "F" %}selected{% endif %}>Female</option>
-                                <option value="O" {% if form.gender.value == "O" %}selected{% endif %}>Other</option>
-                                <option value="P" {% if form.gender.value == "P" %}selected{% endif %}>Prefer not to say</option>
-                            </select>
-                        </div>
                     </div>
+
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.education_level.id_for_label }}" class="form-label">Education Level</label>
-                            <select class="form-control" id="{{ form.education_level.id_for_label }}" name="{{ form.education_level.name }}">
-                                <option value="">Select Education Level</option>
-                                <option value="high_school" {% if form.education_level.value == "high_school" %}selected{% endif %}>High School</option>
-                                <option value="associate" {% if form.education_level.value == "associate" %}selected{% endif %}>Associate Degree</option>
-                                <option value="bachelor" {% if form.education_level.value == "bachelor" %}selected{% endif %}>Bachelor's Degree</option>
-                                <option value="master" {% if form.education_level.value == "master" %}selected{% endif %}>Master's Degree</option>
-                                <option value="phd" {% if form.education_level.value == "phd" %}selected{% endif %}>PhD/Doctorate</option>
-                                <option value="other" {% if form.education_level.value == "other" %}selected{% endif %}>Other</option>
+                            <label for="{{ profile_form.gender.id_for_label }}" class="form-label">Gender</label>
+                            <select class="form-control" id="{{ profile_form.gender.id_for_label }}" name="{{ profile_form.gender.name }}">
+                                <option value="">Select Gender</option>
+                                <option value="M" {% if profile_form.gender.value == "M" %}selected{% endif %}>Male</option>
+                                <option value="F" {% if profile_form.gender.value == "F" %}selected{% endif %}>Female</option>
+                                <option value="O" {% if profile_form.gender.value == "O" %}selected{% endif %}>Other</option>
                             </select>
+                            {% if profile_form.gender.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.gender.errors|join:", " }}
+                                </div>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="{{ form.experience_years.id_for_label }}" class="form-label">Years of Experience</label>
-                            <input type="number" class="form-control" id="{{ form.experience_years.id_for_label }}" name="{{ form.experience_years.name }}" value="{{ form.experience_years.value|default:0 }}" min="0" max="50" placeholder="Years of professional experience">
+                            <label for="{{ profile_form.education_level.id_for_label }}" class="form-label">Education Level</label>
+                            <select class="form-control" id="{{ profile_form.education_level.id_for_label }}" name="{{ profile_form.education_level.name }}">
+                                <option value="">Select Education Level</option>
+                                <option value="HS" {% if profile_form.education_level.value == "HS" %}selected{% endif %}>High School</option>
+                                <option value="UG" {% if profile_form.education_level.value == "UG" %}selected{% endif %}>Undergraduate</option>
+                                <option value="PG" {% if profile_form.education_level.value == "PG" %}selected{% endif %}>Postgraduate</option>
+                                <option value="PHD" {% if profile_form.education_level.value == "PHD" %}selected{% endif %}>PhD</option>
+                            </select>
+                            {% if profile_form.education_level.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.education_level.errors|join:", " }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="{{ profile_form.experience_years.id_for_label }}" class="form-label">Years of Experience</label>
+                            <input type="number" class="form-control" id="{{ profile_form.experience_years.id_for_label }}" name="{{ profile_form.experience_years.name }}" value="{{ profile_form.experience_years.value|default:0 }}" min="0" max="50" placeholder="Years of professional experience">
+                            {% if profile_form.experience_years.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.experience_years.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">Total years in professional work environments</div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Professional Information Section -->
-                <div class="form-section">
-                    <div class="section-header">
-                        <div class="section-icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <h3 class="section-title">Professional Information</h3>
-                    </div>
-                    <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.current_field.id_for_label }}" class="form-label">Current Field/Industry</label>
-                            <input type="text" class="form-control" id="{{ form.current_field.id_for_label }}" name="{{ form.current_field.name }}" value="{{ form.current_field.value|default:'' }}" placeholder="e.g., Technology, Healthcare, Finance">
+                            <label for="{{ profile_form.current_field.id_for_label }}" class="form-label">Current Field/Industry</label>
+                            <input type="text" class="form-control" id="{{ profile_form.current_field.id_for_label }}" name="{{ profile_form.current_field.name }}" value="{{ profile_form.current_field.value|default:'' }}" placeholder="e.g., Technology, Healthcare, Finance">
+                            {% if profile_form.current_field.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.current_field.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">Your current industry or field of work</div>
                         </div>
                     </div>
+
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.skills.id_for_label }}" class="form-label">Skills</label>
-                            <textarea class="form-control" id="{{ form.skills.id_for_label }}" name="{{ form.skills.name }}" placeholder="List your skills separated by commas (e.g., Python, Project Management, Data Analysis)">{{ form.skills.value|default:'' }}</textarea>
+                            <label for="{{ profile_form.skills.id_for_label }}" class="form-label">Skills</label>
+                            <textarea class="form-control" id="{{ profile_form.skills.id_for_label }}" name="{{ profile_form.skills.name }}" placeholder="List your skills separated by commas (e.g., Python, Project Management, Data Analysis)">{{ profile_form.skills.value|default:'' }}</textarea>
+                            {% if profile_form.skills.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.skills.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">Separate multiple skills with commas</div>
-                            {% if form.skills.value %}
+                            {% if profile_form.skills.value %}
                             <div class="skill-tags" id="skillsPreview">
                                 <!-- Skills will be populated by JavaScript -->
                             </div>
                             {% endif %}
                         </div>
                     </div>
+
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.interests.id_for_label }}" class="form-label">Career Interests</label>
-                            <textarea class="form-control" id="{{ form.interests.id_for_label }}" name="{{ form.interests.name }}" placeholder="Describe your career interests and goals">{{ form.interests.value|default:'' }}</textarea>
+                            <label for="{{ profile_form.interests.id_for_label }}" class="form-label">Career Interests</label>
+                            <textarea class="form-control" id="{{ profile_form.interests.id_for_label }}" name="{{ profile_form.interests.name }}" placeholder="Describe your career interests and goals">{{ profile_form.interests.value|default:'' }}</textarea>
+                            {% if profile_form.interests.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.interests.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">What type of work are you most interested in?</div>
                         </div>
                     </div>
@@ -536,26 +594,31 @@
                     </div>
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="{{ form.personality_type.id_for_label }}" class="form-label">Personality Type (MBTI)</label>
-                            <select class="form-control" id="{{ form.personality_type.id_for_label }}" name="{{ form.personality_type.name }}">
+                            <label for="{{ profile_form.personality_type.id_for_label }}" class="form-label">Personality Type (MBTI)</label>
+                            <select class="form-control" id="{{ profile_form.personality_type.id_for_label }}" name="{{ profile_form.personality_type.name }}">
                                 <option value="">Select Personality Type</option>
-                                <option value="INTJ" {% if form.personality_type.value == "INTJ" %}selected{% endif %}>INTJ - Architect</option>
-                                <option value="INTP" {% if form.personality_type.value == "INTP" %}selected{% endif %}>INTP - Logician</option>
-                                <option value="ENTJ" {% if form.personality_type.value == "ENTJ" %}selected{% endif %}>ENTJ - Commander</option>
-                                <option value="ENTP" {% if form.personality_type.value == "ENTP" %}selected{% endif %}>ENTP - Debater</option>
-                                <option value="INFJ" {% if form.personality_type.value == "INFJ" %}selected{% endif %}>INFJ - Advocate</option>
-                                <option value="INFP" {% if form.personality_type.value == "INFP" %}selected{% endif %}>INFP - Mediator</option>
-                                <option value="ENFJ" {% if form.personality_type.value == "ENFJ" %}selected{% endif %}>ENFJ - Protagonist</option>
-                                <option value="ENFP" {% if form.personality_type.value == "ENFP" %}selected{% endif %}>ENFP - Campaigner</option>
-                                <option value="ISTJ" {% if form.personality_type.value == "ISTJ" %}selected{% endif %}>ISTJ - Logistician</option>
-                                <option value="ISFJ" {% if form.personality_type.value == "ISFJ" %}selected{% endif %}>ISFJ - Defender</option>
-                                <option value="ESTJ" {% if form.personality_type.value == "ESTJ" %}selected{% endif %}>ESTJ - Executive</option>
-                                <option value="ESFJ" {% if form.personality_type.value == "ESFJ" %}selected{% endif %}>ESFJ - Consul</option>
-                                <option value="ISTP" {% if form.personality_type.value == "ISTP" %}selected{% endif %}>ISTP - Virtuoso</option>
-                                <option value="ISFP" {% if form.personality_type.value == "ISFP" %}selected{% endif %}>ISFP - Adventurer</option>
-                                <option value="ESTP" {% if form.personality_type.value == "ESTP" %}selected{% endif %}>ESTP - Entrepreneur</option>
-                                <option value="ESFP" {% if form.personality_type.value == "ESFP" %}selected{% endif %}>ESFP - Entertainer</option>
+                                <option value="INTJ" {% if profile_form.personality_type.value == "INTJ" %}selected{% endif %}>INTJ - Architect</option>
+                                <option value="INTP" {% if profile_form.personality_type.value == "INTP" %}selected{% endif %}>INTP - Logician</option>
+                                <option value="ENTJ" {% if profile_form.personality_type.value == "ENTJ" %}selected{% endif %}>ENTJ - Commander</option>
+                                <option value="ENTP" {% if profile_form.personality_type.value == "ENTP" %}selected{% endif %}>ENTP - Debater</option>
+                                <option value="INFJ" {% if profile_form.personality_type.value == "INFJ" %}selected{% endif %}>INFJ - Advocate</option>
+                                <option value="INFP" {% if profile_form.personality_type.value == "INFP" %}selected{% endif %}>INFP - Mediator</option>
+                                <option value="ENFJ" {% if profile_form.personality_type.value == "ENFJ" %}selected{% endif %}>ENFJ - Protagonist</option>
+                                <option value="ENFP" {% if profile_form.personality_type.value == "ENFP" %}selected{% endif %}>ENFP - Campaigner</option>
+                                <option value="ISTJ" {% if profile_form.personality_type.value == "ISTJ" %}selected{% endif %}>ISTJ - Logistician</option>
+                                <option value="ISFJ" {% if profile_form.personality_type.value == "ISFJ" %}selected{% endif %}>ISFJ - Defender</option>
+                                <option value="ESTJ" {% if profile_form.personality_type.value == "ESTJ" %}selected{% endif %}>ESTJ - Executive</option>
+                                <option value="ESFJ" {% if profile_form.personality_type.value == "ESFJ" %}selected{% endif %}>ESFJ - Consul</option>
+                                <option value="ISTP" {% if profile_form.personality_type.value == "ISTP" %}selected{% endif %}>ISTP - Virtuoso</option>
+                                <option value="ISFP" {% if profile_form.personality_type.value == "ISFP" %}selected{% endif %}>ISFP - Adventurer</option>
+                                <option value="ESTP" {% if profile_form.personality_type.value == "ESTP" %}selected{% endif %}>ESTP - Entrepreneur</option>
+                                <option value="ESFP" {% if profile_form.personality_type.value == "ESFP" %}selected{% endif %}>ESFP - Entertainer</option>
                             </select>
+                            {% if profile_form.personality_type.errors %}
+                                <div class="text-danger" style="color: var(--danger); font-size: 0.85rem; margin-top: 5px;">
+                                    {{ profile_form.personality_type.errors|join:", " }}
+                                </div>
+                            {% endif %}
                             <div class="form-hint">Knowing your personality type helps match you with suitable careers</div>
                         </div>
                     </div>
@@ -569,8 +632,8 @@
                                 </div>
                             {% endif %}
                             <div class="file-upload">
-                                <input type="file" class="file-input" id="{{ form.resume_file.id_for_label }}" name="{{ form.resume_file.name }}" accept=".pdf,.doc,.docx">
-                                <label for="{{ form.resume_file.id_for_label }}" class="file-label">
+                                <input type="file" class="file-input" id="{{ profile_form.resume_file.id_for_label }}" name="{{ profile_form.resume_file.name }}" accept=".pdf,.doc,.docx">
+                                <label for="{{ profile_form.resume_file.id_for_label }}" class="file-label">
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     {% if user.userprofile.resume_file %}Update Resume{% else %}Upload Resume{% endif %}
                                 </label>
@@ -594,7 +657,7 @@
 
     <script>
         // File upload label text update
-        document.getElementById('{{ form.resume_file.id_for_label }}').addEventListener('change', function(e) {
+        document.getElementById('{{ profile_form.resume_file.id_for_label }}').addEventListener('change', function(e) {
             const fileName = e.target.files[0] ? e.target.files[0].name : 'Choose file';
             document.querySelector('.file-label').innerHTML = `<i class="fas fa-cloud-upload-alt"></i> ${fileName}`;
         });
@@ -602,7 +665,7 @@
         // Skills tag preview - Initialize with existing skills
         function updateSkillsPreview() {
             const skillsContainer = document.getElementById('skillsPreview');
-            const skillsTextarea = document.getElementById('{{ form.skills.id_for_label }}');
+            const skillsTextarea = document.getElementById('{{ profile_form.skills.id_for_label }}');
             
             if (skillsContainer && skillsTextarea) {
                 const skills = skillsTextarea.value.split(',').map(skill => skill.trim()).filter(skill => skill);
@@ -624,7 +687,7 @@
             updateSkillsPreview();
             
             // Add event listener for skills input
-            const skillsTextarea = document.getElementById('{{ form.skills.id_for_label }}');
+            const skillsTextarea = document.getElementById('{{ profile_form.skills.id_for_label }}');
             if (skillsTextarea) {
                 skillsTextarea.addEventListener('input', updateSkillsPreview);
             }

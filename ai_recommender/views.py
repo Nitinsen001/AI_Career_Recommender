@@ -7,206 +7,25 @@ from django.utils import timezone
 from django.core.files.storage import default_storage
 
 import pandas as pd
-import numpy as np
-import joblib
-import json
-import re
-from sklearn.metrics.pairwise import cosine_similarity
-from functools import wraps
-import string 
-
-# Resume Parsing Libraries
-import PyPDF2
-from docx import Document
 
 from .models import UserProfile, Career, PersonalityAssessment, SkillAssessment, CareerRecommendation
-from .forms import UserRegistrationForm, UserProfileForm, PersonalityAssessmentForm, SkillAssessmentForm, ResumeUploadForm
+from .forms import UserRegistrationForm, UserProfileForm, UserUpdateForm, PersonalityAssessmentForm, SkillAssessmentForm, ResumeUploadForm
 
-# --- 1. CONFIGURATION AND MODEL/DATA LOADING ---
+# Import from new modules
+from .utils import (
+    clean_skill_list, smart_split_skills, format_salary
+)
+from .services import (
+    analyze_resume_file, generate_career_recommendations, predict_skill_gaps,
+    calculate_profile_completion, generate_personalized_insights,
+    calculate_personality_scores, determine_mbti_type, get_key_strengths,
+    get_career_recommendations, enhance_recommendation_with_market_data,
+    update_user_profile_skills, generate_skill_recommendations_based_on_profile,
+    group_skills_by_category,
+    CAREER_DF, MARKET_DF, SKILLS_DF
+)
 
-def clean_skill_list(skills):
-    """Utility to clean and normalize skill names for display/storage."""
-    try:
-        keep_single_letter = {'c', 'r'}
-        acronyms = {'SQL', 'HTML', 'CSS', 'REST', 'AWS', 'GCP', 'NLP', 'ETL', 'API', 'CI/CD', 'C++', 'C#', 'R', 'AI', 'IOT'}
-        cleaned = []
-        seen = set()
-        for s in skills:
-            if not isinstance(s, str):
-                continue
-            s = s.strip()
-            if not s:
-                continue
-            
-            s = re.sub(r'[\u2010\u2011\u2012\u2013\u2014\-]+', ' ', s)
-            s = re.sub(r'\s+', ' ', s).strip()
-
-            sl = s.lower()
-            if len(sl) < 2 and sl not in keep_single_letter:
-                continue
-            if len(sl.split()) > 4:
-                continue
-            if re.fullmatch(r'[\W_]+', sl):
-                continue
-
-            # Title case, then restore acronyms and special tokens
-            nice = s.title()
-            tokens = []
-            for token in re.split(r'(\/|\+\+|#)', nice):
-                up = token.upper().strip()
-                if up in acronyms or token in ('/','++', '#'):
-                    tokens.append(up)
-                elif token.strip():
-                    tokens.append(token.strip())
-            nice = ' '.join(tokens).replace(' / ', '/').replace('Ci/Cd', 'CI/CD').replace('C++', 'C++').replace('C#', 'C#')
-            
-            key = nice.lower()
-            if key not in seen:
-                seen.add(key)
-                cleaned.append(nice)
-        return cleaned
-    except Exception:
-        return list(dict.fromkeys([str(s).strip() for s in skills if str(s).strip()]))
-
-def clean_title_for_merge(title):
-    """Clean job/career title: lowercase, remove quotes, remove special chars, trim spaces."""
-    if pd.isna(title) or not isinstance(title, str):
-        return ""
-    text = title.lower().replace('"', '').replace("'", '').strip()
-    text = re.sub(r'[^a-z0-9\s]', '', text) 
-    text = re.sub(r'\s+', ' ', text).strip()
-    return text
-
-def safe_load_df(filename):
-    """Generic safe loader for CSVs with column normalization."""
-    try:
-        df = pd.read_csv(f'datasets/{filename}')
-        # CRITICAL FIX: Normalize column names (e.g., 'Skill Name' -> 'skill_name')
-        df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_')
-        return df
-    except FileNotFoundError:
-        return None
-    except Exception as e:
-        print(f"Error loading {filename}: {e}")
-        return None
-
-try:
-    # --- HERE ARE THE GLOBAL DATA FRAMES (WITH COLUMN NORMALIZATION) ---
-    CAREER_DF = safe_load_df('career_dataset.csv')
-    if CAREER_DF is None:
-        CAREER_DF = safe_load_df('career_dataset_final.csv')
-
-    if CAREER_DF is None or CAREER_DF.empty:
-        raise FileNotFoundError("Career data not found!")
-    
-    CAREER_DF['clean_key'] = CAREER_DF.get('career_name', pd.Series(['Unknown'] * len(CAREER_DF))).apply(clean_title_for_merge)
-
-    MARKET_DF = safe_load_df('job_market.csv')
-    if MARKET_DF is not None and not MARKET_DF.empty and 'job_title' in MARKET_DF.columns:
-        MARKET_DF['clean_key'] = MARKET_DF['job_title'].apply(clean_title_for_merge)
-    else:
-        MARKET_DF = pd.DataFrame(columns=['job_title', 'job_growth_rate', 'location', 'avg_hiring_time_days', 'clean_key']) 
-
-    SKILLS_DF = safe_load_df('skills_dataset.csv')
-    PERSONALITY_DF = safe_load_df('personality.csv')
-
-    # ----------------------------------------
-except Exception as e:
-    print(f"FATAL ERROR: Could not load core datasets: {e}")
-    CAREER_DF = pd.DataFrame(columns=['career_name', 'required_skills', 'description', 'career_id', 'education_required', 'average_salary', 'clean_key']) 
-    MARKET_DF = pd.DataFrame(columns=['job_title', 'job_growth_rate', 'location', 'avg_hiring_time_days', 'clean_key']) 
-    SKILLS_DF = pd.DataFrame(columns=['skill_id', 'skill_name', 'category'])
-
-
-# Load ML models (with error handling)
-models_loaded = False
-try:
-    # Use the 'enhanced' models from the training script
-    SKILL_EXTRACTOR_DATA = joblib.load('enhanced_models/enhanced_skill_extractor.pkl')
-    CONFIDENCE_SCORER_DATA = joblib.load('enhanced_models/enhanced_confidence_scorer.pkl')
-    
-    # The skill extractor is now just a clean list of skills
-    SKILL_LIST = SKILL_EXTRACTOR_DATA['all_skills_list']
-    
-    VECTORIZER = CONFIDENCE_SCORER_DATA['vectorizer']
-    CAREER_VECTORS = CONFIDENCE_SCORER_DATA['career_vectors']
-    
-    models_loaded = True
-    print("All ENHANCED ML components loaded successfully!")
-except Exception as e:
-    print(f"Warning: Could not load ENHANCED ML models: {e}")
-    print("Some features will be limited. Please run 'python train_models.py'.")
-
-
-# --- HELPER FUNCTIONS FOR SKILL CATEGORIZATION ---
-
-def get_skill_category_map():
-    """Builds a map from cleaned skill name (lowercase) to its Category."""
-    global SKILLS_DF
-    category_map = {}
-    
-    # Ensure SKILLS_DF has the required normalized columns
-    if SKILLS_DF is not None and not SKILLS_DF.empty and 'skill_name' in SKILLS_DF.columns and 'category' in SKILLS_DF.columns:
-        for _, row in SKILLS_DF.iterrows():
-            skill = str(row['skill_name']).strip().lower()
-            category = str(row['category']).strip()
-            if skill and category:
-                category_map[skill] = category
-    return category_map
-
-# Define Category Metadata for HTML styling
-CATEGORY_METADATA = {
-    'Programming Languages': {'icon': 'code', 'color_class': 'prog'},
-    'Frameworks': {'icon': 'microchip', 'color_class': 'info'},
-    'Databases': {'icon': 'database', 'color_class': 'db'},
-    'Cloud Platforms': {'icon': 'cloud', 'color_class': 'cloud'},
-    'DevOps': {'icon': 'cogs', 'color_class': 'tools'},
-    'Soft Skills': {'icon': 'handshake', 'color_class': 'secondary'},
-    # Add your specific categories here if needed
-    'Other': {'icon': 'tag', 'color_class': 'secondary'},
-}
-
-def group_skills_by_category(profile_skills_list):
-    """Groups user's extracted skills based on the CSV map."""
-    skill_to_category_map = get_skill_category_map()
-    categorized_skills = {}
-
-    for skill_display_name in profile_skills_list:
-        # Use lowercased version for lookup in the map
-        skill_key = skill_display_name.lower()
-        # Fallback to general category if exact match not found
-        category_name = skill_to_category_map.get(skill_key, 'Other')
-        
-        # Get metadata for styling (for HTML use)
-        category_info = CATEGORY_METADATA.get(category_name, CATEGORY_METADATA['Other'])
-
-        if category_name not in categorized_skills:
-            categorized_skills[category_name] = {
-                'info': category_info,
-                'skills': []
-            }
-        
-        # Append the display name (Title Cased)
-        categorized_skills[category_name]['skills'].append(skill_display_name)
-    
-    # Sort categories alphabetically
-    return dict(sorted(categorized_skills.items()))
-
-
-# --- 2. DECORATOR FOR FALLBACK ---
-
-def fallback_if_models_fail(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if not models_loaded:
-            if func.__name__ == 'predict_personality_type_ml':
-                return {'type': 'INFP', 'confidence': 0.5, 'error': 'Models not loaded.'}
-            if func.__name__ == 'calculate_confidence_score':
-                return 0.5
-        return func(*args, **kwargs)
-    return wrapper
-
-# --- 3. CORE DJANGO VIEWS ---
+# --- CORE DJANGO VIEWS ---
 
 def home(request):
     """Home/Landing page view"""
@@ -250,7 +69,11 @@ def register(request):
                 profile.resume_uploaded_at = timezone.now()
                 if 'error' not in analysis_result:
                     profile.skills = ', '.join(analysis_result.get('skills', []))
-                    profile.experience_years = analysis_result.get('experience_years', 0)
+                    # FIXED: Keep manual experience if it's greater than extracted experience
+                    extracted_exp = analysis_result.get('experience_years', 0)
+                    manual_exp = form.cleaned_data.get('experience_years', 0)
+                    profile.experience_years = max(manual_exp, extracted_exp)
+                    
                     profile.resume_text = f"Skills: {profile.skills}; Exp: {profile.experience_years} years"
             
             profile.save()
@@ -276,19 +99,20 @@ def dashboard(request):
 
     top_recommendations = CareerRecommendation.objects.filter(user_profile=profile).order_by('-match_score')[:3]
     
-    skill_gap_score = 0
+    skill_match_score = 0
     if top_recommendations:
         target_career_title = top_recommendations[0].recommended_career.title 
         user_skills_text = profile.skills
         skill_gaps_data = predict_skill_gaps(user_skills_text, target_career_title)
-        skill_gap_score = skill_gaps_data.get('gap_score', 0) * 100
+        # FIXED: Use coverage_percentage for "Match Score" (Higher is better)
+        skill_match_score = skill_gaps_data.get('coverage_percentage', 0)
         
     context = {
         'profile_completion': calculate_profile_completion(profile),
         'top_recommendations': top_recommendations,
         'experience_years': profile.experience_years or 0,
         'skills_count': SkillAssessment.objects.filter(user_profile=profile).count(),
-        'skill_gap_score': round(skill_gap_score, 1),
+        'skill_match_score': round(skill_match_score, 1),
         'personality_type': profile.personality_type or 'Not assessed',
         'personalized_insights': generate_personalized_insights(profile),
     }
@@ -321,14 +145,43 @@ def edit_profile(request):
     """Edit user profile view"""
     profile = request.user.userprofile
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Profile updated successfully!')
-            return redirect('profile')
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile = profile_form.save(commit=False)
+            
+            # FIXED: Update resume_text to reflect manual changes so UI stays consistent
+            current_skills = profile_form.cleaned_data.get('skills', '')
+            current_exp = profile_form.cleaned_data.get('experience_years', 0)
+            
+            # Preserve existing resume info if available, just update the stats part
+            base_text = "Manual Update"
+            if profile.resume_filename:
+                base_text = f"Resume: {profile.resume_filename}"
+                
+            profile.resume_text = f"{base_text} | Skills: {current_skills}; Exp: {current_exp} years"
+            profile.save()
+            
+            # FIXED: Regenerate recommendations based on new profile data
+            generate_career_recommendations(profile)
+            
+            messages.success(request, 'Profile updated successfully! Recommendations refreshed.')
+            return redirect('dashboard')
+        else:
+            print("User Form Errors:", user_form.errors)
+            print("Profile Form Errors:", profile_form.errors)
+            messages.error(request, 'Please correct the errors below.')
     else:
-        form = UserProfileForm(instance=profile)
-    return render(request, 'edit_profile.html', {'form': form})
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = UserProfileForm(instance=profile)
+    
+    context = {
+        'user_form': user_form,
+        'profile_form': profile_form
+    }
+    return render(request, 'edit_profile.html', context)
 
 @login_required
 def resume_upload(request):
@@ -427,19 +280,27 @@ def resume_upload(request):
     })
 
 @login_required
-def analyze_resume(request):
-    """Analyze resume view (Used by the /resume/analyze/ URL path)"""
-    return redirect('resume') # Redirect to the main upload page for simplicity
-
-@login_required
 def personality_assessment(request):
     """Personality assessment view (Used by /personality/ URL path)"""
     if request.method == 'POST':
         form = PersonalityAssessmentForm(request.POST)
         if form.is_valid():
             assessment = form.save(commit=False)
-            assessment.user_profile = request.user.userprofile
+            profile = request.user.userprofile
+            assessment.user_profile = profile
             assessment.save()
+            
+            # --- FIXED: Calculate and Save Personality Type ---
+            scores = calculate_personality_scores(request.POST)
+            personality_type = determine_mbti_type(scores)
+            
+            profile.personality_type = personality_type
+            profile.save()
+            
+            # --- FIXED: Refresh Recommendations based on new personality ---
+            generate_career_recommendations(profile)
+            
+            messages.success(request, f"Personality type determined: {personality_type}. Recommendations updated!")
             return redirect('personality_result')
 
         messages.error(request, 'Please correct the errors in the assessment form.')
@@ -456,41 +317,35 @@ def personality_result(request):
         messages.error(request, "No assessment data found. Please take the test first.")
         return redirect('take_personality_test')
 
-    # Compute Big Five scores from the 10 questions (1-5 Likert)
-    # Map two questions per trait for better distribution
-    trait_map = {
-        'extraversion': [1, 6],
-        'agreeableness': [2, 7],
-        'conscientiousness': [3, 8],
-        'emotional_stability': [4, 9],
-        'openness': [5, 10],
+    # Compute Big Five scores using shared logic
+    # Construct a dict similar to request.POST
+    post_data = {
+        f'question_{i}': getattr(latest_assessment, f'question_{i}')
+        for i in range(1, 11)
     }
-    raw = {
-        1: latest_assessment.question_1,
-        2: latest_assessment.question_2,
-        3: latest_assessment.question_3,
-        4: latest_assessment.question_4,
-        5: latest_assessment.question_5,
-        6: latest_assessment.question_6,
-        7: latest_assessment.question_7,
-        8: latest_assessment.question_8,
-        9: latest_assessment.question_9,
-        10: latest_assessment.question_10,
-    }
-    scores = {}
-    for trait, qs in trait_map.items():
-        total = sum(int(raw[q]) for q in qs)  # range 2-10
-        # normalize to 1-10 scale already, but ensure bounds
-        scores[trait] = max(1, min(10, total))
+    scores = calculate_personality_scores(post_data)
 
     # Determine personality type from scores
-    personality_type = profile.personality_type or determine_mbti_type(scores)
+    personality_type = profile.personality_type
+    
+    # Fallback: If profile doesn't have type but we have assessment, save it!
+    if not personality_type:
+        personality_type = determine_mbti_type(scores)
+        profile.personality_type = personality_type
+        profile.save()
+        
+        # Also refresh recommendations since we have new data
+        generate_career_recommendations(profile)
 
     # Build enriched recommended careers using datasets
     recs_basic = get_career_recommendations(personality_type, scores)
     enriched_recs = []
     for r in recs_basic:
         title = r.get('title', 'Role')
+        # We need clean_title_for_merge but it's not imported directly, wait it is in utils but not imported?
+        # Ah, I imported it from .utils
+        from .utils import clean_title_for_merge, format_salary, get_default_growth_by_title, get_default_salary_by_title
+        
         clean = clean_title_for_merge(title)
         # attach salary/growth from datasets if available
         md = MARKET_DF[MARKET_DF['clean_key'] == clean].head(1) if not MARKET_DF.empty and 'clean_key' in MARKET_DF.columns else pd.DataFrame()
@@ -548,13 +403,21 @@ def take_personality_test(request):
             profile.personality_type = personality_type
             profile.save()
 
+            # --- FIXED: Refresh Recommendations ---
+            generate_career_recommendations(profile)
+
             messages.success(request, f"Personality assessment complete! Type: {personality_type}")
-            return redirect('personality_result')
+            return redirect('personality_test_success')
 
         messages.error(request, 'Please correct the errors in the assessment form.')
         return render(request, 'personality_test.html', {'form': form, 'profile': profile})
     else:
         return render(request, 'personality_test.html', {'form': PersonalityAssessmentForm(), 'profile': profile})
+
+@login_required
+def personality_test_success(request):
+    """Success page after submitting personality test"""
+    return render(request, 'personality_success.html')
 
 # --- CAREER RECOMMENDATIONS VIEWS ---
 
@@ -595,52 +458,6 @@ def career_detail(request, career_id):
     """Career detail view"""
     career = get_object_or_404(Career, pk=career_id)
     return render(request, 'career_detail.html', {'career': career})
-
-
-# --- SMART SPLIT FUNCTION (Bracket safe) ---
-def smart_split_skills(text):
-    """
-    Split skills by commas BUT DO NOT split commas inside brackets.
-    Supports: (…) , {…} , […].
-    """
-    if not text:
-        return []
-
-    skills = []
-    current = []
-    depth_round = 0    # ()
-    depth_square = 0  # []
-    depth_curly = 0   # {}
-
-    for char in text:
-        if char == '(':
-            depth_round += 1
-        elif char == ')':
-            depth_round -= 1
-        elif char == '[':
-            depth_square += 1
-        elif char == ']':
-            depth_square -= 1
-        elif char == '{':
-            depth_curly += 1
-        elif char == '}':
-            depth_curly -= 1
-
-        # COMMA OUTSIDE bracket = SPLIT
-        if char == ',' and depth_round == 0 and depth_square == 0 and depth_curly == 0:
-            skill = ''.join(current).strip()
-            if skill:
-                skills.append(skill)
-            current = []
-        else:
-            current.append(char)
-
-    # Add last item
-    last = ''.join(current).strip()
-    if last:
-        skills.append(last)
-
-    return skills
 
 @login_required
 def job_trends(request):
@@ -722,8 +539,6 @@ def job_trends(request):
     }
     return render(request, 'trends.html', context)
 
-
-
 @login_required
 def skill_gap_analysis(request):
     """Skill gap analysis view - FIXED VERSION"""
@@ -756,608 +571,91 @@ def skill_gap_analysis(request):
     })
 
 def chatbot(request):
-    """Chatbot interface view"""
-    return render(request, 'chatbot.html')
+    """Chatbot interface view - Dynamic Version"""
+    profile = request.user.userprofile
+    
+    # 1. Get Career Recommendations
+    if not CareerRecommendation.objects.filter(user_profile=profile).exists():
+        generate_career_recommendations(profile)
+    
+    recommendations = CareerRecommendation.objects.filter(user_profile=profile).order_by('-match_score')[:3]
+    top_careers = []
+    for rec in recommendations:
+        top_careers.append({
+            'title': rec.recommended_career.title,
+            'match': round(rec.match_score ),
+            'salary': format_salary(rec.recommended_career.average_salary)
+        })
+
+    # 2. Get Missing Skills for Top Career
+    missing_skills = []
+    if recommendations:
+        top_rec = recommendations[0]
+        target_career_title = top_rec.recommended_career.title
+        user_skills_text = profile.skills
+        skill_gaps_data = predict_skill_gaps(user_skills_text, target_career_title)
+        missing_skills = skill_gaps_data.get('missing_skills', [])[:3]
+
+    # 3. Get Market Trends (Top 3 by growth)
+    trending_careers = []
+    if not MARKET_DF.empty:
+        trends = MARKET_DF.sort_values(by='job_growth_rate', ascending=False).head(3)
+        for _, row in trends.iterrows():
+            trending_careers.append({
+                'title': row.get('job_title', 'Unknown'),
+                'growth': round(row.get('job_growth_rate', 0) * 100, 1)
+            })
+
+    # 4. Personality
+    personality_type = profile.personality_type or "Unknown"
+
+    chatbot_data = {
+        'user_name': request.user.username,
+        'top_careers': top_careers,
+        'missing_skills': missing_skills,
+        'trending_careers': trending_careers,
+        'personality_type': personality_type
+    }
+
+    import json
+    return render(request, 'chatbot.html', {'chatbot_data': json.dumps(chatbot_data)})
 
 def about(request):
-    """About page view"""
-    return render(request, 'about.html')
+    """About page view - Dynamic Version"""
+    total_careers = len(CAREER_DF) if not CAREER_DF.empty else 1000
+    
+    unique_industries = 0
+    if not CAREER_DF.empty and 'category' in CAREER_DF.columns:
+         unique_industries = CAREER_DF['category'].nunique()
+    else:
+        unique_industries = 50
+
+    context = {
+        'total_careers': total_careers,
+        'unique_industries': unique_industries
+    }
+    return render(request, 'about.html', context)
 
 def contact(request):
     """Contact page view"""
     return render(request, 'contact.html')
 
-# --- 4. ML / HELPER FUNCTIONS ---
-
-def simple_clean_text(text):
-    """Common cleaning function for text inputs (used by ML models)"""
-    if pd.isna(text) or not isinstance(text, str): return ""
-    text = str(text).lower()
-    text = re.sub(r'http\S+|www\S+|[0-9]+', ' ', text, flags=re.MULTILINE)
-    text = text.translate(str.maketrans('', '', string.punctuation))
-    words = text.split()
-    return ' '.join(words).strip()
-
-def calculate_profile_completion(profile):
-    """Calculate profile completion percentage"""
-    completion = 0
-    fields_to_check = [
-        ('age', 15), ('gender', 15), ('education_level', 15), 
-        ('skills', 20), ('personality_type', 15), ('resume_file', 20)
-    ]
-
-    for field, percentage in fields_to_check:
-        if getattr(profile, field, None) and getattr(profile, field, None) not in ['', 'Not assessed']:
-            completion += percentage
-    return min(completion, 100)
-
-def generate_personalized_insights(profile):
-    """Generate personalized insights for dashboard with correct skill counting by words."""
-    insights = []
-
-    if profile.experience_years and profile.experience_years >= 5:
-        insights.append(f"With {profile.experience_years} years of experience, you're well-positioned for senior roles.")
-
-    # Count skills by words/tokens, not by raw characters
-    skills_count = 0
-    if profile.skills:
-        tokens = [s.strip() for s in re.split(r'[;,\n]', profile.skills) if s.strip()]
-        skills_count = len(tokens)
-        if skills_count >= 8:
-            insights.append(f"You have a strong skill set with {skills_count} documented skills.")
-        elif skills_count <= 3:
-            insights.append("Consider adding more skills to enhance your career opportunities.")
-
-    if profile.personality_type and profile.personality_type != 'Not assessed':
-        insights.append(f"Your {profile.personality_type} personality suggests strengths in creative problem-solving.")
-
-    if not insights:
-        insights.append("Complete your profile to get personalized career insights.")
-
-    return insights
-
-
-
-
-
-
-# --- RESUME ANALYSIS FUNCTIONS ---
-
-def analyze_resume_file(resume_file):
-    """Analyze uploaded resume file using trained models (SKILL_LIST)"""
-    text = ''
-    try:
-        if resume_file.name.endswith('.pdf'):
-            reader = PyPDF2.PdfReader(resume_file)
-            text = ' '.join([page.extract_text() for page in reader.pages if page.extract_text()])
-        elif resume_file.name.endswith('.docx'):
-            doc = Document(resume_file)
-            text = ' '.join([paragraph.text for paragraph in doc.paragraphs])
-        else:
-            return {'error': 'Unsupported file type.'}
-
-        if not text.strip():
-            return {'error': 'No text could be extracted from the file'}
-
-        # Prepare text for skill matching (allows C++, C#, etc.)
-        text_for_skills = text.lower()
-        text_for_skills = re.sub(r'http\S+|www\S+|[0-9]+', ' ', text_for_skills, flags=re.MULTILINE)
-        text_for_skills = re.sub(r'[^\w\s\+\.\#\-]', ' ', text_for_skills) # Keep C++, C#, .NET etc.
-
-        skills_found = set()
-        analysis_method = 'enhanced_rule_match'
-        
-        # Use the clean, extracted skill list from the joblib file
-        if models_loaded and 'SKILL_LIST' in globals():
-            for skill_name in SKILL_LIST:
-                s = str(skill_name).strip().lower()
-                # Check for exact word match using regex boundary \b
-                pattern = r'\b' + re.escape(s) + r'\b'
-                if re.search(pattern, text_for_skills):
-                    skills_found.add(s)
-        else:
-            # Fallback hardcoded list (used if ML files are missing)
-            analysis_method = 'keyword_fallback'
-            for s in ['python','java','javascript','sql','html','css','react.js','node.js','django','flask','machine learning','data analysis']:
-                if s in text_for_skills:
-                    skills_found.add(s)
-
-        # Clean and normalize skills (converts 'python' to 'Python', 'c++' to 'C++')
-        skills_clean = clean_skill_list(list(skills_found))
-
-        experience_years = 0
-        matches = re.findall(r'(\d+)\s*(?:year|yr|years|yrs)\s*(?:of)?\s*(?:exp|experience)', text, re.IGNORECASE)
-        if matches:
-            experience_years = max(int(m) for m in matches)
-
-        return {
-            'skills': skills_clean,
-            'experience_years': experience_years,
-            'analysis_method': analysis_method
-        }
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return {'error': f'Analysis error: {str(e)}'}
-
-# --- PERSONALITY ASSESSMENT FUNCTIONS ---
-
-@fallback_if_models_fail
-def predict_personality_type_ml(user_text):
-    """Predict MBTI type using the trained Logistic Regression model"""
-    # NOTE: This function relies on a model that was not present in the original code,
-    # so it will likely always use the fallback if no model is defined/loaded.
-    cleaned_text = simple_clean_text(user_text)
-    prediction_encoded = PERSONALITY_MODEL.predict([cleaned_text])[0]
-    personality_type = PERSONALITY_LABEL_ENCODER.inverse_transform([prediction_encoded])[0]
-    probabilities = PERSONALITY_MODEL.predict_proba([cleaned_text])[0]
-    confidence = float(max(probabilities))
-
-    return {
-        'type': personality_type,
-        'confidence': round(confidence, 2),
-        'message': f"Based on your input, your type is {personality_type}."
-    }
-
-def calculate_personality_scores(post_data):
-    """Calculate Big Five personality scores based on questionnaire responses"""
-    scores = {
-        'extraversion': 0,
-        'agreeableness': 0,
-        'conscientiousness': 0,
-        'emotional_stability': 0,
-        'openness': 0
-    }
-    
-    positive_questions = {
-        'extraversion': [1, 2], 'agreeableness': [9], 'conscientiousness': [5, 8], 
-        'emotional_stability': [3], 'openness': [4, 10]
-    }
-    
-    # Correct mapping for the 10 questions to the Big Five traits
-    trait_map = {
-        'extraversion': [1, 6],
-        'agreeableness': [2, 7],
-        'conscientiousness': [3, 8],
-        'emotional_stability': [4, 9],
-        'openness': [5, 10],
-    }
-    
-    # Calculate scores based on the actual question numbers
-    for trait, q_nums in trait_map.items():
-        for q_num in q_nums:
-            # Safely get the score (default to 3 if missing or invalid)
-            score = int(post_data.get(f'question_{q_num}', 3))
-            scores[trait] += score
-    
-    # Normalize scores to 1-10 scale (since total is 10 max per trait)
-    for trait in scores.keys():
-        scores[trait] = max(1, min(10, scores[trait])) 
-
-    return scores
-
-def determine_mbti_type(scores):
-    """Determine MBTI personality type based on Big Five scores"""
-    # Simplified mapping (not scientifically accurate but functional for this app)
-    # E/I based on Extraversion (score >= 6 for E)
-    e_i = 'E' if scores['extraversion'] >= 6 else 'I'
-    # S/N based on Openness (score >= 6 for N)
-    s_n = 'N' if scores['openness'] >= 6 else 'S'
-    # T/F based on Conscientiousness/Agreeableness (High Conscientiousness/Low Agreeableness for T)
-    t_f = 'T' if scores['conscientiousness'] >= 6 and scores['agreeableness'] < 6 else 'F'
-    # J/P based on Conscientiousness (score >= 6 for J)
-    j_p = 'J' if scores['conscientiousness'] >= 6 else 'P'
-    
-    return f"{e_i}{s_n}{t_f}{j_p}"
-
-def get_key_strengths(personality_type, scores):
-    """Get key strengths based on personality type and scores"""
-    strengths_map = {
-        'INTJ': ['Strategic Thinking', 'Analytical Mind', 'Independent Worker'],
-        'ENTP': ['Innovative Thinking', 'Adaptability', 'Creative Problem Solving'],
-        'INFP': ['Creativity', 'Empathy', 'Authenticity'],
-        'ISTJ': ['Reliability', 'Attention to Detail', 'Practical Thinking']
-    }
-    return strengths_map.get(personality_type, ['Adaptability', 'Problem Solving', 'Learning Ability'])
-
-def get_career_recommendations(personality_type, scores):
-    """Get career recommendations based on personality type and scores (Used for personality_result page only)"""
-    career_map = {
-        'INTJ': [{'title': 'Data Scientist'}, {'title': 'Software Architect'}],
-        'ENTP': [{'title': 'Entrepreneur'}, {'title': 'Product Manager'}],
-        'INFP': [{'title': 'Graphic Designer'}, {'title': 'UX Designer'}],
-        'ISTJ': [{'title': 'Financial Analyst'}, {'title': 'Systems Analyst'}]
-    }
-    return career_map.get(personality_type, [{'title': 'Business Analyst'}, {'title': 'Project Coordinator'}])
-
-# --- CAREER MATCHING FUNCTIONS (DEPRECATED - REMOVED FOR CLEANLINESS) ---
-# The logic here was moved to enhanced_find_career_matches
-# def find_career_matches(user_profile): 
-#     ...
-
-def generate_career_recommendations(profile):
-    """Generate and save career recommendations for the user - UPDATED with Data Sync"""
-    
-    # 1. Clear existing recommendations to avoid duplicates in DB
-    CareerRecommendation.objects.filter(user_profile=profile).delete()
-
-    # 2. Get matches using the enhanced ML function
-    matches = enhanced_find_career_matches(profile)
-    
-    # 3. Save top 10 recommendations
-    for match in matches[:10]:
-        try:
-            career_title = match['title']
-            
-            # --- DATA SYNC: Find full details from Global DataFrame (CAREER_DF) ---
-            # This ensures we store Skills, Description, etc., not just the Title.
-            career_data_row = {}
-            if 'CAREER_DF' in globals() and not CAREER_DF.empty:
-                # Find the row in CSV matching this title
-                found_rows = CAREER_DF[CAREER_DF['career_name'] == career_title]
-                if not found_rows.empty:
-                    career_data_row = found_rows.iloc[0].to_dict()
-
-            # Extract fields safely (handle missing data)
-            description = match.get('description') or career_data_row.get('description', 'A highly recommended career path.')
-            req_skills = career_data_row.get('required_skills', '')
-            category = career_data_row.get('category', 'Technology') # Default if missing
-            education = career_data_row.get('education_required', '')
-
-            # --- DB UPDATE: Get or Create Career Object ---
-            career_obj, created = Career.objects.get_or_create(title=career_title)
-
-            # Update fields to ensure they aren't empty (Sync CSV data to Database)
-            # This fixes the issue of "Empty Description" in frontend
-            career_obj.description = description
-            if req_skills:
-                career_obj.required_skills = req_skills
-            if category:
-                career_obj.category = category
-            if education:
-                career_obj.education_required = education
-            
-            career_obj.save()
-            
-            # --- CREATE RECOMMENDATION ENTRY ---
-            CareerRecommendation.objects.create(
-                user_profile=profile,
-                recommended_career=career_obj,
-                match_score=match['match_score'],
-                reasoning=f"Match based on skills ({round(match.get('skills_match', 0), 1)}%), experience, and market fit."
-            )
-            
-        except Exception as e:
-            print(f"Error creating recommendation for {match.get('title', 'Unknown')}: {e}")
-            continue
-        
-def simple_match_fallback(user_profile):
-    """Fallback logic if ML models are not loaded"""
-    user_skills_set = set(user_profile.get('skills', '').lower().split(','))
-    matches = []
-    
-    for _, career in CAREER_DF.iterrows():
-        score = 0
-        required_skills = set(str(career.get('required_skills', '')).lower().split(','))
-        overlap = len(user_skills_set.intersection(required_skills))
-        
-        if required_skills:
-            score = (overlap / len(required_skills)) * 80
-            
-        if user_profile.get('experience_years', 0) >= 3:
-            score += 20
-            
-        matches.append({
-            'title': career['career_name'],
-            'match_score': round(score, 2),
-            'description': career.get('description', '')[:100] + '...',
-        })
-        
-    return sorted(matches, key=lambda x: x['match_score'], reverse=True)[:10]
-
-def predict_skill_gaps(user_skills, target_career):
-    """Predict skill gaps for a target career - FIXED VERSION"""
-    if target_career not in CAREER_DF['career_name'].values: 
-        return {
-            'gap_score': 1.0, 
-            'missing_skills': [],
-            'required_skills': [],
-            'current_skills': [],
-            'required_skills_count': 0,
-            'current_skills_count': 0,
-            'missing_skills_count': 0,
-            'coverage_percentage': 0
-        }
-
-    career_info = CAREER_DF[CAREER_DF['career_name'] == target_career].iloc[0]
-    
-    # Get required skills and clean them using the new smart splitter
-    required_skills_raw = career_info.get('required_skills', '')
-    if pd.isna(required_skills_raw):
-        required_skills_raw = ''
-    
-    required_skills = set()
-    if required_skills_raw:
-        # Use smart split logic here
-        for skill in smart_split_skills(str(required_skills_raw)):
-            cleaned_skill = skill.strip()
-            if cleaned_skill:
-                required_skills.add(cleaned_skill.lower())
-
-    # Get user skills and clean them
-    user_skills_set = set()
-    if user_skills:
-        for skill in user_skills.split(','):
-            cleaned_skill = skill.strip()
-            if cleaned_skill:
-                user_skills_set.add(cleaned_skill.lower())
-
-    # Find matching skills (skills user has that are required)
-    matching_skills = required_skills.intersection(user_skills_set)
-    
-    # Find missing skills (skills required but user doesn't have)
-    missing_skills = required_skills - user_skills_set
-
-    # Calculate metrics
-    required_skills_count = len(required_skills)
-    current_skills_count = len(matching_skills)
-    missing_skills_count = len(missing_skills)
-    
-    gap_score = missing_skills_count / required_skills_count if required_skills_count > 0 else 0
-    coverage_percentage = (current_skills_count / required_skills_count * 100) if required_skills_count > 0 else 0
-
-    # Convert sets to lists of dictionaries for template
-    required_skills_list = [{'name': skill.title()} for skill in required_skills]
-    current_skills_list = [{'name': skill.title()} for skill in matching_skills]
-    missing_skills_list = [{'name': skill.title()} for skill in missing_skills]
-
-    return {
-        'required_skills': required_skills_list,
-        'current_skills': current_skills_list,
-        'missing_skills': missing_skills_list,
-        'gap_score': round(gap_score, 2),
-        'required_skills_count': required_skills_count,
-        'current_skills_count': current_skills_count,
-        'missing_skills_count': missing_skills_count,
-        'coverage_percentage': round(coverage_percentage, 1)
-    }
-# --- MARKET DATA ENHANCEMENT FUNCTIONS ---
-
-def enhance_recommendation_with_market_data(recommendation):
-    """Add market data to recommendation object - IMPROVED VERSION"""
-    career_title = recommendation.recommended_career.title
-    
-    # Get market data
-    market_data = get_market_data_for_career(career_title)
-    
-    # Add market data to recommendation object as dynamic attribute
-    recommendation.market_data = market_data
-    return recommendation
-
-def get_market_data_for_career(career_title):
-    """Extract market data for a specific career - IMPROVED VERSION"""
-    clean_title = clean_title_for_merge(career_title)
-    
-    # Look in MARKET_DF first
-    market_info = MARKET_DF[MARKET_DF['clean_key'] == clean_title]
-    
-    if not market_info.empty:
-        market_row = market_info.iloc[0]
-        growth_rate = market_row.get('job_growth_rate', 0)
-        
-        demand_level = calculate_demand_level(growth_rate)
-        
-        return {
-            'salary': format_salary(market_row.get('average_salary', 0)),
-            'growth_rate': round(float(growth_rate) * 100, 2) if growth_rate else 8.5,
-            'demand_level': demand_level,
-            'locations': market_row.get('location', 'Global'),
-            'hiring_time': market_row.get('avg_hiring_time_days', '30-45 days')
-        }
-    
-    # Fallback to CAREER_DF if market data not found
-    career_info = CAREER_DF[CAREER_DF['clean_key'] == clean_title]
-    if not career_info.empty:
-        career_row = career_info.iloc[0]
-        
-        # Generate realistic demand level based on career type
-        demand_level = generate_demand_level_by_title(career_title)
-        
-        return {
-            'salary': format_salary(career_row.get('average_salary', 0)),
-            'growth_rate': 12.5 if 'data' in career_title.lower() or 'ai' in career_title.lower() else 8.5,
-            'demand_level': demand_level,
-            'locations': 'Global',
-            'hiring_time': '30-45 days'
-        }
-    
-    # Final fallback - Smart defaults based on career title
-    default_salary = get_default_salary_by_title(career_title)
-    demand_level = generate_demand_level_by_title(career_title)
-    
-    return {
-        'salary': default_salary,
-        'growth_rate': get_default_growth_by_title(career_title),
-        'demand_level': demand_level,
-        'locations': 'Global',
-        'hiring_time': '30-60 days'
-    }
-
-def generate_demand_level_by_title(title):
-    """Generate realistic demand level based on career title"""
-    title_lower = title.lower()
-    
-    # High demand careers
-    high_demand_keywords = [
-        'software', 'developer', 'engineer', 'data scientist', 'ai', 
-        'machine learning', 'cybersecurity', 'cloud', 'devops'
-    ]
-    
-    # Medium demand careers  
-    medium_demand_keywords = [
-        'analyst', 'consultant', 'manager', 'designer', 'marketing',
-        'product', 'project', 'business'
-    ]
-    
-    for keyword in high_demand_keywords:
-        if keyword in title_lower:
-            return 'High'
-    
-    for keyword in medium_demand_keywords:
-        if keyword in title_lower:
-            return 'Medium'
-    
-    return 'Low'
-
-def get_default_growth_by_title(title):
-    """Get default growth rate based on career title"""
-    title_lower = title.lower()
-    
-    if any(word in title_lower for word in ['data', 'ai', 'machine learning', 'software']):
-        return 15.5
-    elif any(word in title_lower for word in ['developer', 'engineer', 'cloud']):
-        return 12.5
-    elif any(word in title_lower for word in ['analyst', 'consultant']):
-        return 9.5
-    else:
-        return 7.5
-
-def calculate_demand_level(growth_rate):
-    """Calculate demand level based on growth rate - IMPROVED"""
-    if not growth_rate or pd.isna(growth_rate):
-        return 'Medium'
-    
-    try:
-        growth = float(growth_rate)
-        if growth > 0.20: 
-            return 'High'
-        elif growth > 0.10:
-            return 'Medium'
-        else:
-            return 'Low'
-    except (ValueError, TypeError):
-        return 'Medium'
-
-def format_salary(salary_value):
-    """Format salary to proper string format"""
-    try:
-        if pd.isna(salary_value) or salary_value == 0 or salary_value == '0':
-            return get_default_salary()
-        
-        salary_num = float(salary_value)
-        if salary_num >= 1000:
-            return f"{salary_num:,.0f}"
-        else:
-            return f"{salary_num:.0f}"
-    except (ValueError, TypeError):
-        return get_default_salary()
-
-def get_default_salary():
-    """Get realistic default salary"""
-    return "85,000"
-
-def get_default_salary_by_title(title):
-    """Get default salary based on career title"""
-    title_lower = title.lower()
-    
-    salary_ranges = {
-        'software': "120,000",
-        'developer': "110,000", 
-        'engineer': "115,000",
-        'data': "105,000",
-        'scientist': "120,000",
-        'analyst': "75,000",
-        'manager': "95,000",
-        'designer': "85,000",
-        'marketing': "70,000",
-        'sales': "65,000",
-        'financial': "80,000",
-        'consultant': "90,000"
-    }
-    
-    for key, salary in salary_ranges.items():
-        if key in title_lower:
-            return salary
-    
-    return "85,000"
-
 # --- SKILLS ASSESSMENT FIXED VIEWS ---
 
 @login_required
 def skills_assessment(request):
-    """Skills assessment view (Add and view) - FIXED VERSION"""
+    """
+    [HINGLISH]
+    Use: Ab ye 'Learning Resources Hub' ban gaya h.
+    Why: User ne request kiya ki skills add karne ki jagah resources dikhao.
+    Effect: User ko roadmap, videos, aur courses milte h.
+    """
     profile = request.user.userprofile
-    user_skills = SkillAssessment.objects.filter(user_profile=profile).order_by('-created_at')
-
-    if request.method == 'POST':
-        form = SkillAssessmentForm(request.POST)
-        if form.is_valid():
-            skill = form.save(commit=False)
-            skill.user_profile = profile
-            
-            # Check for duplicate skills
-            existing_skill = SkillAssessment.objects.filter(
-                user_profile=profile, 
-                skill_name__iexact=skill.skill_name
-            ).first()
-            
-            if existing_skill:
-                messages.warning(request, f'Skill "{skill.skill_name}" already exists in your profile.')
-                return redirect('skills')
-            
-            skill.save()
-            
-            # Update user profile skills string
-            update_user_profile_skills(profile)
-            
-            messages.success(request, f'Skill "{skill.skill_name}" added successfully!')
-            return redirect('skills')
-        else:
-            messages.error(request, 'Please correct the errors below.')
-    else:
-        form = SkillAssessmentForm()
-
-    # Calculate skills statistics
-    total_skills = user_skills.count()
     
-    # Calculate skill levels distribution
-    try:
-        skill_levels = user_skills.values('skill_level').annotate(count=Count('skill_level'))
-    except Exception:
-        skill_levels = []
+    # Fetch learning resources using the new service
+    from .services import get_learning_resources
+    context = get_learning_resources(profile)
     
-    # Calculate average experience
-    try:
-        avg_experience = user_skills.aggregate(avg=Avg('years_of_experience'))['avg'] or 0
-    except Exception:
-        avg_experience = 0
-    
-    # Calculate total experience
-    try:
-        total_experience = user_skills.aggregate(total=Sum('years_of_experience'))['total'] or 0
-    except Exception:
-        total_experience = 0
-    
-    # Find most common skill level
-    try:
-        top_category_data = user_skills.values('skill_level').annotate(count=Count('skill_level')).order_by('-count').first()
-        top_category = top_category_data['skill_level'].title() if top_category_data else "Beginner"
-    except Exception:
-        top_category = "Beginner"
-    
-    # Get skill recommendations based on current skills
-    recommended_skills = generate_skill_recommendations_based_on_profile(profile)
-
-    context = {
-        'form': form,
-        'user_skills': user_skills,
-        'total_skills': total_skills,
-        'skill_levels': skill_levels,
-        'avg_experience': round(avg_experience, 1),
-        'total_experience': round(total_experience, 1),
-        'top_category': top_category,
-        'recommended_skills': recommended_skills,
-    }
     return render(request, 'skills.html', context)
 
 @login_required
@@ -1428,351 +726,3 @@ def edit_skill(request, skill_id):
         form = SkillAssessmentForm(instance=skill)
     
     return render(request, 'edit_skill.html', {'form': form, 'skill': skill})
-
-# --- SKILLS HELPER FUNCTIONS ---
-
-def update_user_profile_skills(profile):
-    """Update UserProfile skills field with current skills"""
-    try:
-        user_skills = SkillAssessment.objects.filter(user_profile=profile)
-        skills_list = [skill.skill_name for skill in user_skills]
-        profile.skills = ', '.join(skills_list)
-        profile.save()
-    except Exception as e:
-        print(f"❌ Error updating profile skills: {e}")
-
-def generate_skill_recommendations_based_on_profile(profile):
-    """Generate intelligent skill recommendations based on user profile and current skills"""
-    try:
-        current_skills = {skill.skill_name.lower() for skill in SkillAssessment.objects.filter(user_profile=profile)}
-        
-        # Get trending skills from dataset (using SKILLS_DF if available)
-        trending_skills = []
-        if SKILLS_DF is not None and not SKILLS_DF.empty and 'skill_name' in SKILLS_DF.columns:
-            trending_skills = SKILLS_DF['skill_name'].tolist()
-        
-        # Fallback if no data or SKILLS_DF is missing
-        if not trending_skills:
-            trending_skills = [
-                'Python', 'JavaScript', 'Machine Learning', 'Data Analysis', 
-                'Cloud Computing', 'React', 'SQL', 'Project Management',
-                'Communication', 'Problem Solving', 'Team Leadership'
-            ]
-        
-        # Get career-based recommendations
-        career_based_skills = generate_career_based_skill_recommendations(profile)
-        
-        # Combine and remove duplicates
-        all_recommendations = list(set(trending_skills + career_based_skills))
-        
-        # Filter out skills user already has
-        recommended_skills = []
-        for skill in all_recommendations:
-            if skill.lower() not in current_skills:
-                recommended_skills.append(skill)
-            if len(recommended_skills) >= 8: # Limit to 8 recommendations
-                break
-        
-        return recommended_skills
-    except Exception as e:
-        print(f"Error generating skill recommendations: {e}")
-        return ['Python', 'Data Analysis', 'Communication', 'Problem Solving']
-
-def generate_career_based_skill_recommendations(profile):
-    """Generate skill recommendations based on user's career interests and personality"""
-    try:
-        career_based_skills = []
-        
-        # Get user's top career matches
-        top_careers = CareerRecommendation.objects.filter(
-            user_profile=profile
-        ).order_by('-match_score')[:3]
-        
-        for career_rec in top_careers:
-            career = career_rec.recommended_career
-            # Use smart_split_skills here if career.required_skills stores data with complex formatting
-            required_skills = smart_split_skills(career.required_skills) if career.required_skills else []
-            career_based_skills.extend([skill.strip() for skill in required_skills if skill.strip()])
-        
-        # Add skills based on personality type
-        personality_skills = get_skills_by_personality(profile.personality_type)
-        career_based_skills.extend(personality_skills)
-        
-        return list(set(career_based_skills)) 
-    except Exception as e:
-        print(f"Error generating career-based skills: {e}")
-        return []
-
-def get_skills_by_personality(personality_type):
-    """Get recommended skills based on MBTI personality type"""
-    if not personality_type:
-        return ['Communication', 'Problem Solving', 'Teamwork']
-        
-    personality_skill_map = {
-        'INTJ': ['Strategic Planning', 'Data Analysis', 'Research', 'Systems Thinking', 'Problem Solving'],
-        'INTP': ['Research', 'Theoretical Analysis', 'Innovation', 'Technical Writing', 'Programming'],
-        'ENTJ': ['Leadership', 'Project Management', 'Strategic Planning', 'Decision Making', 'Public Speaking'],
-        'ENTP': ['Innovation', 'Brainstorming', 'Sales', 'Marketing', 'Creative Problem Solving'],
-        'INFJ': ['Counseling', 'Writing', 'Research', 'Teaching', 'Conflict Resolution'],
-        'INFP': ['Creative Writing', 'Design', 'Counseling', 'Research', 'Languages'],
-        'ENFJ': ['Teaching', 'Mentoring', 'Public Speaking', 'Team Building', 'Communication'],
-        'ENFP': ['Creative Thinking', 'Networking', 'Marketing', 'Writing', 'Public Relations'],
-        'ISTJ': ['Organization', 'Accounting', 'Data Management', 'Quality Control', 'Administration'],
-        'ISFJ': ['Healthcare', 'Teaching', 'Social Work', 'Customer Service', 'Organization'],
-        'ESTJ': ['Management', 'Administration', 'Operations', 'Logistics', 'Supervision'],
-        'ESFJ': ['Healthcare', 'Teaching', 'Customer Service', 'Event Planning', 'Team Coordination'],
-        'ISTP': ['Technical Skills', 'Troubleshooting', 'Mechanical Skills', 'Analysis', 'Hands-on Work'],
-        'ISFP': ['Design', 'Art', 'Healthcare', 'Customer Service', 'Creative Arts'],
-        'ESTP': ['Sales', 'Marketing', 'Entrepreneurship', 'Networking', 'Action Planning'],
-        'ESFP': ['Entertainment', 'Hospitality', 'Sales', 'Customer Service', 'Event Planning'],
-    }
-    
-    return personality_skill_map.get(personality_type, [
-        'Communication', 'Problem Solving', 'Teamwork', 'Adaptability', 'Time Management'
-    ])
-
-# --- ENHANCED CAREER MATCHING FUNCTIONS (ML Core) ---
-
-# views.py के अंदर इस फंक्शन को रिप्लेस करें
-
-def enhanced_find_career_matches(user_profile):
-    """
-    Enhanced career matching with Strict Filtering:
-    1. No Duplicates
-    2. Minimum Score Threshold (Low matches removed)
-    3. Skills Priority
-    """
-    profile = user_profile
-    
-    # Get user skills
-    user_skills = SkillAssessment.objects.filter(user_profile=profile)
-    
-    # अगर यूजर के पास कोई स्किल नहीं है, तो फॉलबैक पर भेज दें
-    if not user_skills.exists() and not profile.skills:
-        return enhanced_simple_match_fallback(profile, user_skills)
-
-    # Prepare text for ML
-    user_skills_text = ' '.join([f"{skill.skill_name} " * (skill.years_of_experience + 1) for skill in user_skills])
-    profile_text = f"{profile.education_level} {profile.gender} {profile.personality_type or ''} {user_skills_text}"
-    
-    # ML Model Check
-    if not models_loaded or not profile_text.strip():
-        return enhanced_simple_match_fallback(profile, user_skills)
-    
-    try:
-        user_vector = VECTORIZER.transform([profile_text])
-        similarity_scores = cosine_similarity(user_vector, CAREER_VECTORS).flatten()
-        
-        # Sort scores high to low
-        ranked_indices = np.argsort(similarity_scores)[::-1]
-        
-        matches = []
-        seen_titles = set()  # <--- DUPLICATE ROKNE KE LIYE SET
-        
-        # Top 100 entries scan karein par select wahi karein jo unique aur high score ho
-        for index in ranked_indices[:100]: 
-            career = CAREER_DF.iloc[index]
-            career_title = career['career_name'].strip()
-            
-            # --- 1. DUPLICATE CHECK ---
-            # Agar ye title pehle aa chuka h, to skip karein
-            clean_check_title = career_title.lower()
-            if clean_check_title in seen_titles:
-                continue
-            
-            # --- SCORE CALCULATION ---
-            # Base Score from ML
-            base_score = similarity_scores[index] * 50 
-            
-            # Skills Bonus
-            skills_match_bonus = calculate_skills_match_bonus(user_skills, career)
-            base_score += skills_match_bonus
-            
-            # Experience Bonus
-            total_experience = user_skills.aggregate(total=Sum('years_of_experience'))['total'] or 0
-            experience_multiplier = calculate_experience_bonus(total_experience)
-            base_score *= experience_multiplier
-            
-            # Personality Bonus
-            personality_multiplier = calculate_personality_bonus(profile.personality_type, career)
-            base_score *= personality_multiplier
-
-            # --- 2. STRICT FILTERING (Sirf Kaam ki cheezein) ---
-            
-            # Rule A: Agar Skills Match 0 hai aur ML score bhi kam hai, to hatao
-            if skills_match_bonus == 0 and base_score < 40:
-                continue
-                
-            # Rule B: Agar Final Score 50 se kam hai, to recommend mat karo (Garbage filter)
-            final_score = max(0, min(98, base_score))
-            
-            if final_score < 50:  # Threshold: 50% se neeche wale mat dikhao
-                continue
-
-            # Agar yahan tak aa gya, to valid match hai -> List me add karo
-            seen_titles.add(clean_check_title)
-            
-            matches.append({
-                'career_id': career.get('career_id', index),
-                'title': career_title, 
-                'match_score': round(final_score, 1),
-                'description': career.get('description', 'No description available')[:150] + '...',
-                'skills_match': skills_match_bonus, 
-            })
-            
-            # Sirf Top 10 unique careers chahiye
-            if len(matches) >= 10:
-                break
-            
-        return matches
-        
-    except Exception as e:
-        print(f"Error in enhanced_find_career_matches: {e}")
-        return enhanced_simple_match_fallback(profile, user_skills)
-    
-def calculate_skills_match_bonus(user_skills, career):
-    """Calculate bonus based on skills match. (Max 30 points)"""
-    if not user_skills:
-        return 0
-    
-    career_required_skills = set()
-    if career.get('required_skills'):
-        # FIXED: Use the smart_split_skills function here for accurate required skills extraction
-        required_skills_list = smart_split_skills(career['required_skills'])
-        career_required_skills = set([s.strip().lower() for s in required_skills_list])
-    
-    user_skill_names = {skill.skill_name.lower() for skill in user_skills}
-    
-    if not career_required_skills:
-        return 0 # No required skills defined for the career
-    
-    # Calculate overlap
-    overlap = len(user_skill_names.intersection(career_required_skills))
-    
-    # Scale bonus based on overlap proportion and mastery level (Simple implementation)
-    # Max bonus of 30 points.
-    match_percentage = (overlap / len(career_required_skills)) * 30 
-    
-    # Add a small bonus based on user's average skill experience/level for the matching skills
-    # Simple logic: +0.5 point per matching skill with level 'Expert'
-    extra_mastery_bonus = 0
-    for skill in user_skills:
-        if skill.skill_name.lower() in career_required_skills and skill.skill_level.lower() == 'expert':
-            extra_mastery_bonus += 0.5
-            
-    return min(30, match_percentage + extra_mastery_bonus) # Ensure max bonus is 30
-
-def calculate_experience_bonus(total_experience):
-    """Calculate experience bonus multiplier"""
-    if total_experience >= 10:
-        return 1.25
-    elif total_experience >= 5:
-        return 1.15
-    elif total_experience >= 3:
-        return 1.10
-    elif total_experience >= 1:
-        return 1.05
-    else:
-        return 1.0
-
-def calculate_personality_bonus(personality_type, career):
-    """Calculate personality compatibility bonus (Max 1.15x multiplier)"""
-    if not personality_type or personality_type == 'Not assessed':
-        return 1.0
-    
-    career_title = career['career_name'].lower()
-    
-    # Define primary personality alignments for different career categories
-    type_career_map = {
-        # Analytical, Strategic, Technical (INTx, ENTx, ISTJ)
-        'tech_analyt': ['INTJ', 'INTP', 'ENTJ', 'ENTP', 'ISTJ'],
-        # Creative, People-focused (INFx, ENFx, ISFP, ESFP)
-        'creative_huma': ['INFJ', 'INFP', 'ENFJ', 'ENFP', 'ISFP', 'ESFP'],
-        # Practical, Organized, Management (ESTJ, ISFJ, ISTP, ESTP)
-        'admin_opera': ['ESTJ', 'ISFJ', 'ISTP', 'ESTP'],
-    }
-    
-    # Define career category keywords
-    career_keywords = {
-        'tech_analyt': ['software', 'developer', 'engineer', 'data', 'ai', 'machine learning', 'cybersecurity', 'analyst', 'cloud'],
-        'creative_huma': ['designer', 'writer', 'ux', 'ui', 'counselor', 'hr', 'marketing', 'product manager'],
-        'admin_opera': ['manager', 'finance', 'logistics', 'supervisor', 'admin', 'operations', 'project coordinator'],
-    }
-    
-    # Determine career category
-    career_category = 'none'
-    for cat, keywords in career_keywords.items():
-        if any(keyword in career_title for keyword in keywords):
-            career_category = cat
-            break
-            
-    # Apply bonus based on alignment (Max multiplier 1.15)
-    if (career_category == 'tech_analyt' and personality_type in type_career_map['tech_analyt']):
-        return 1.15 
-    elif (career_category == 'creative_huma' and personality_type in type_career_map['creative_huma']):
-        return 1.15
-    elif (career_category == 'admin_opera' and personality_type in type_career_map['admin_opera']):
-        return 1.15
-    
-    # Secondary match (e.g., Creative in Tech)
-    if (career_category == 'tech_analyt' and personality_type in type_career_map['creative_huma'] and 'designer' in career_title):
-        return 1.10 # UX Designer (Creative in Tech)
-        
-    return 1.0
-
-def calculate_market_boost(career):
-    """Calculate market demand boost (returns raw growth rate)"""
-    career_merge_key = career['clean_key']
-    market_info = MARKET_DF[MARKET_DF['clean_key'] == career_merge_key]
-    
-    if not market_info.empty:
-        growth_rate = market_info['job_growth_rate'].iloc[0]
-        if not pd.isna(growth_rate):
-            return float(growth_rate) * 50 # Raw market value (will be scaled down by 0.1 in caller)
-    
-    # Fallback to smart default for consistency
-    return get_default_growth_by_title(career.get('career_name', '')) / 100 * 50 # Scaled default market boost
-
-def enhanced_simple_match_fallback(profile, user_skills):
-    """Enhanced fallback matching with skills (If ML Models Fail)"""
-    user_skill_names = {skill.skill_name.lower() for skill in user_skills}
-    matches = []
-    
-    for _, career in CAREER_DF.iterrows():
-        score = 0
-        
-        # Skills matching (60 points max)
-        if career.get('required_skills'):
-            # Use smart_split_skills here for accuracy
-            required_skills = set([s.strip().lower() for s in smart_split_skills(career['required_skills'])])
-            overlap = len(user_skill_names.intersection(required_skills))
-            if required_skills:
-                score += (overlap / len(required_skills)) * 60
-        
-        # Experience bonus (20 points max)
-        total_experience = user_skills.aggregate(total=Sum('years_of_experience'))['total'] or 0
-        if total_experience >= 3:
-            score += 20
-        elif total_experience >= 1:
-            score += 10
-        
-        # Education bonus (10 points max)
-        if profile.education_level and 'bachelor' in profile.education_level.lower():
-            score += 10
-        
-        # Personality bonus (10 points max)
-        if profile.personality_type and profile.personality_type != 'Not assessed':
-            # Use personality bonus logic to check for a match
-            if calculate_personality_bonus(profile.personality_type, career) > 1.0:
-                 score += 10
-        
-        final_score = max(45, min(98, round(score, 2)))
-            
-        matches.append({
-            'title': career['career_name'],
-            'match_score': final_score,
-            'description': career.get('description', '')[:100] + '...',
-            'skills_match': 0, # Cannot calculate accurately in fallback
-        })
-        
-    return sorted(matches, key=lambda x: x['match_score'], reverse=True)[:10]

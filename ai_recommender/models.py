@@ -111,3 +111,37 @@ class JobMarketTrend(models.Model):
 
     def __str__(self):
         return f"{self.career.title} - {self.trend_year}"
+
+class CareerRoadmap(models.Model):
+    career = models.ForeignKey(Career, on_delete=models.CASCADE, related_name='roadmaps')
+    step_number = models.IntegerField()
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['step_number']
+        unique_together = ['career', 'step_number']
+
+    def __str__(self):
+        return f"{self.career.title} - Step {self.step_number}: {self.title}"
+
+class LearningResource(models.Model):
+    RESOURCE_TYPES = [
+        ('video', 'Video'),
+        ('course', 'Course'),
+        ('article', 'Article'),
+        ('book', 'Book'),
+    ]
+    
+    title = models.CharField(max_length=255)
+    url = models.URLField()
+    resource_type = models.CharField(max_length=20, choices=RESOURCE_TYPES)
+    platform = models.CharField(max_length=100) # e.g., YouTube, Udemy, Coursera
+    skill_tag = models.CharField(max_length=100) # e.g., Python, Machine Learning
+    thumbnail_url = models.URLField(blank=True, null=True)
+    is_free = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.platform})"

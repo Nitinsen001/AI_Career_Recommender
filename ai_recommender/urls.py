@@ -10,7 +10,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('resume/', views.resume_upload, name='resume'),
-    # REMOVE THIS LINE: path('resume/analyze/', views.analyze_resume, name='analyze_resume'),
+
     
     
     path('skills/', views.skills_assessment, name='skills'),
@@ -22,6 +22,7 @@ urlpatterns = [
     path('personality/', views.personality_assessment, name='personality'),
     path('personality/assess/', views.take_personality_test, name='take_personality_test'),
     path('personality/result/', views.personality_result, name='personality_result'),
+    path('personality/success/', views.personality_test_success, name='personality_test_success'),
     
     path('career-recommendations/', views.career_recommendations, name='career_recommendations'),
     path('career/<int:career_id>/', views.career_detail, name='career_detail'),

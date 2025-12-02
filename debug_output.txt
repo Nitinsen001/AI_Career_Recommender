@@ -1,0 +1,35 @@
+DEBUG: Starting Recommendation Logic Analysis
+--------------------------------------------------
+Found existing user debug_user
+Profile Configured: Skills=Python, Django, Machine Learning, Interests=AI, Web Development, Type=INTJ
+
+Combined Skills Found (3):
+ - Python (Lvl: intermediate, Exp: 2)
+ - Django (Lvl: intermediate, Exp: 2)
+ - Machine Learning (Lvl: intermediate, Exp: 2)
+
+Profile Text for ML:
+'Bachelor O INTJ Python Python Python  Django Django Django  Machine Learning Machine Learning Machine Learning  AI, Web Development Computer Science'
+Vector Shape: (1, 5000)
+Non-zero elements in vector: 9
+
+Max Similarity Score: 0.37096469619240263
+Mean Similarity Score: 0.06894684491398255
+
+Top 5 ML Matches (Raw):
+ - Index 131153 out of bounds (DF len: 2286)
+ - Index 2736 out of bounds (DF len: 2286)
+ - Index 122189 out of bounds (DF len: 2286)
+ - Index 122199 out of bounds (DF len: 2286)
+ - Index 122165 out of bounds (DF len: 2286)
+
+Running enhanced_find_career_matches...
+
+Final Matches Returned (1):
+ - Software Engineer: Score=38.0, SkillsMatch=40
+
+   --- Deep Dive into Top Match ---
+   DB Required Skills: Proficiency in one or more backend programming languages (e.g., Java, Python, Node.js, Ruby) API development Database management (SQL or NoSQL) Server management and deployment Security best practices Knowledge of web frameworks (e.g., Express, Django)
+   User Skills: {'machine learning', 'django', 'python'}
+   Required Set: {'proficiency in one or more backend programming languages (e.g., java, python, node.js, ruby) api development database management (sql or nosql) server management and deployment security best practices knowledge of web frameworks (e.g., express, django)'}
+   Overlap: set()

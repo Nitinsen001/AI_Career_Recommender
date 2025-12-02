@@ -1,1556 +1,228 @@
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - AI Career Recommendation</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0a0e27, #1a1d3f, #16213e, #0f3460);
-            color: #e8f1f5;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(94, 243, 255, 0.15);
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(45deg, #5ef3ff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(94, 243, 255, 0.3);
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 30px;
-        }
-
-        nav ul li a {
-            color: #b8dfe6;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 15px;
-            border-radius: 20px;
-        }
-
-        nav ul li a:hover {
-            color: #5ef3ff;
-            background: rgba(94, 243, 255, 0.1);
-            box-shadow: 0 0 15px rgba(94, 243, 255, 0.2);
-        }
-
-        nav ul li a.active {
-            color: #5ef3ff;
-            background: rgba(94, 243, 255, 0.15);
-            box-shadow: 0 0 20px rgba(94, 243, 255, 0.25);
-        }
-
-        .hero {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            padding: 60px 0;
-            min-height: 80vh;
-        }
-
-        .content {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-        }
-
-        .model-container {
-            flex: 1;
-            min-width: 300px;
-            height: 550px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 212, 255, 0.2), 0 0 40px rgba(94, 243, 255, 0.1);
-            background: rgba(22, 33, 62, 0.4);
-            backdrop-filter: blur(10px);
-            position: relative;
-            border: 1px solid rgba(94, 243, 255, 0.2);
-        }
-
-        /* Improved 3D model styling */
-        .model-container spline-viewer {
-            width: 100% !important;
-            height: 100% !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            transform: scale(1.1) !important;
-            border: none !important;
-            outline: none !important;
-        }
-
-        /* Loading state ke liye */
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #5ef3ff;
-            font-size: 18px;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #5ef3ff, #ffffff, #00d4ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            line-height: 1.2;
-            text-shadow: 0 0 40px rgba(94, 243, 255, 0.3);
-        }
-
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            opacity: 0.9;
-            color: #b8dfe6;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 40px 0;
-        }
-
-        .feature-card {
-            flex: 1;
-            min-width: 250px;
-            background: rgba(22, 33, 62, 0.5);
-            padding: 25px;
-            border-radius: 15px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(94, 243, 255, 0.2);
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(22, 33, 62, 0.7);
-            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3), 0 0 30px rgba(94, 243, 255, 0.2);
-            border-color: rgba(94, 243, 255, 0.4);
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #5ef3ff;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 15px 35px;
-            background: linear-gradient(45deg, #00d4ff, #5ef3ff);
-            color: #0a0e27;
-            border: none;
-            border-radius: 30px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 10px;
-            font-size: 16px;
-            box-shadow: 0 5px 25px rgba(94, 243, 255, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(94, 243, 255, 0.6);
-            background: linear-gradient(45deg, #5ef3ff, #00d4ff);
-        }
-
-        .stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 40px 0;
-        }
-
-        .stat-card {
-            flex: 1;
-            min-width: 150px;
-            text-align: center;
-            padding: 20px;
-            background: rgba(22, 33, 62, 0.4);
-            border-radius: 15px;
-            border: 1px solid rgba(94, 243, 255, 0.2);
-            transition: all 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: #5ef3ff;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(94, 243, 255, 0.5);
-        }
-
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.8;
-            color: #b8dfe6;
-        }
-
-        footer {
-            text-align: center;
-            padding: 30px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(94, 243, 255, 0.15);
-            font-size: 14px;
-            opacity: 0.7;
-            color: #b8dfe6;
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-            }
-            
-            .model-container {
-                width: 100%;
-                height: 400px;
-                margin-top: 30px;
-            }
-            
-            .model-container spline-viewer {
-                transform: scale(1) !important;
-            }
-            
-            h1 {
-                font-size: 36px;
-            }
-            
-            nav ul li {
-                margin-left: 15px;
-            }
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">AI Career Guide</div>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about/" class="active">About</a></li>
-                    <li><a href="/recommendations/">Recommendations</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <section class="hero">
-            <div class="content">
-                <h1>Revolutionizing Career Guidance with AI</h1>
-                <p>Our AI-powered career recommendation system analyzes your skills, interests, and market trends to suggest the perfect career path tailored just for you.</p>
-                <p>Using advanced machine learning algorithms, we match your profile with thousands of career options to find your ideal professional journey.</p>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-number">10K+</div>
-                        <div class="stat-label">Career Paths</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">95%</div>
-                        <div class="stat-label">Accuracy Rate</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Industries</div>
-                    </div>
-                </div>
-                
-                <div class="features">
-                    <div class="feature-card">
-                        <h3>Personalized Matching</h3>
-                        <p>Our AI understands your unique strengths and preferences to suggest careers that truly fit you.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>Market Insights</h3>
-                        <p>Get real-time data on job market trends, salary expectations, and future growth opportunities.</p>
-                    </div>
-                </div>
-                
-                <a href="/recommendations/" class="btn">Get Your Career Recommendations</a>
-            </div>
-            
-            <div class="model-container">
-                <!-- Spline 3D Model -->
-                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.10/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/g-95OinkkL5Z3X6D/scene.splinecode"></spline-viewer>
-                <div class="loading">Loading 3D Model...</div>
-            </div>
-        </section>
-
-        <footer>
-            <p>&copy; 2023 AI Career Recommendation System. All rights reserved.</p>
-        </footer>
-    </div>
-
-    <script>
-        // Model load hone ke baad loading message hide karo
-        document.addEventListener('DOMContentLoaded', function() {
-            const splineViewer = document.querySelector('spline-viewer');
-            const loading = document.querySelector('.loading');
-            
-            if (splineViewer) {
-                splineViewer.addEventListener('load', function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                });
-                
-                // Fallback - agar 5 seconds mein load na ho to hide karo
-                setTimeout(function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                }, 5000);
-            }
-        });
-    </script>
-</body>
-</html> {% endcomment %}
-
-{% comment %} ======================================================================================== {% endcomment%}
-
-{% comment %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - AI Career Guide</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #0c0f1d, #1a1d3f, #0f172a);
-            color: #f1f5f9;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px 0;
-            position: relative;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 28px;
-            font-weight: 700;
-            color: #10b981;
-            text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .logo i {
-            font-size: 32px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 10px;
-        }
-
-        nav ul li a {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 10px 20px;
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        nav ul li a:hover {
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.1);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
-        }
-
-        nav ul li a.active {
-            color: #10b981;
-            background: rgba(16, 185, 129, 0.15);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.25);
-        }
-
-        .hero {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            padding: 60px 0;
-            min-height: 85vh;
-        }
-
-        .content {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-        }
-
-        .model-container {
-            flex: 1;
-            min-width: 300px;
-            height: 550px;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(16, 185, 129, 0.2), 0 0 40px rgba(16, 185, 129, 0.1);
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(10px);
-            position: relative;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .model-container spline-viewer {
-            width: 100% !important;
-            height: 100% !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            transform: scale(1.1) !important;
-            border: none !important;
-            outline: none !important;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #10b981;
-            font-size: 18px;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 52px;
-            margin-bottom: 25px;
-            line-height: 1.2;
-            background: linear-gradient(45deg, #10b981, #34d399, #6ee7b7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(16, 185, 129, 0.3);
-        }
-
-        .subtitle {
-            font-size: 20px;
-            color: #94a3b8;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
-
-        p {
-            font-size: 17px;
-            line-height: 1.7;
-            margin-bottom: 20px;
-            color: #cbd5e1;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            margin: 50px 0;
-        }
-
-        .feature-card {
-            flex: 1;
-            min-width: 250px;
-            background: rgba(15, 23, 42, 0.7);
-            padding: 30px;
-            border-radius: 16px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            transition: all 0.4s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #10b981, #34d399);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-10px);
-            background: rgba(15, 23, 42, 0.9);
-            box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3), 0 0 30px rgba(16, 185, 129, 0.2);
-            border-color: rgba(16, 185, 129, 0.4);
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-            color: #10b981;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .feature-card h3 i {
-            font-size: 24px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
-            padding: 16px 40px;
-            background: linear-gradient(45deg, #10b981, #34d399);
-            color: #0f172a;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            margin-top: 10px;
-            font-size: 17px;
-            box-shadow: 0 5px 25px rgba(16, 185, 129, 0.4);
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.6);
-            background: linear-gradient(45deg, #34d399, #10b981);
-        }
-
-        .stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            margin: 50px 0;
-        }
-
-        .stat-card {
-            flex: 1;
-            min-width: 150px;
-            text-align: center;
-            padding: 25px 20px;
-            background: rgba(15, 23, 42, 0.6);
-            border-radius: 16px;
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stat-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #10b981, #34d399);
-            transform: scaleX(0);
-            transition: transform 0.3s;
-        }
-
-        .stat-card:hover::after {
-            transform: scaleX(1);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
-        }
-
-        .stat-number {
-            font-size: 42px;
-            font-weight: 700;
-            color: #10b981;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-        }
-
-        .stat-label {
-            font-size: 15px;
-            color: #94a3b8;
-            font-weight: 500;
-        }
-
-        footer {
-            text-align: center;
-            padding: 40px 0;
-            margin-top: 70px;
-            border-top: 1px solid rgba(16, 185, 129, 0.15);
-            font-size: 15px;
-            color: #94a3b8;
-        }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 20px;
-        }
-
-        .social-links a {
-            color: #94a3b8;
-            font-size: 20px;
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            color: #10b981;
-            transform: translateY(-3px);
-        }
-
-        @media (max-width: 768px) {
-            .hero {
-                flex-direction: column;
-            }
-            
-            .model-container {
-                width: 100%;
-                height: 400px;
-                margin-top: 30px;
-            }
-            
-            .model-container spline-viewer {
-                transform: scale(1) !important;
-            }
-            
-            h1 {
-                font-size: 38px;
-            }
-            
-            nav ul {
-                gap: 5px;
-            }
-            
-            nav ul li a {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
-            
-            .footer-content {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* Floating elements for visual interest */
-        .floating-element {
-            position: absolute;
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #10b981, #34d399);
-            opacity: 0.1;
-            filter: blur(20px);
-            z-index: -1;
-            animation: float 15s infinite linear;
-        }
-
-        .floating-element:nth-child(1) {
-            top: 10%;
-            left: 5%;
-            width: 120px;
-            height: 120px;
-            animation-delay: 0s;
-        }
-
-        .floating-element:nth-child(2) {
-            top: 60%;
-            right: 10%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 5s;
-        }
-
-        .floating-element:nth-child(3) {
-            bottom: 20%;
-            left: 15%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 10s;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translate(0, 0) rotate(0deg);
-            }
-            25% {
-                transform: translate(20px, 30px) rotate(90deg);
-            }
-            50% {
-                transform: translate(0, 60px) rotate(180deg);
-            }
-            75% {
-                transform: translate(-20px, 30px) rotate(270deg);
-            }
-            100% {
-                transform: translate(0, 0) rotate(360deg);
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
-    <div class="floating-element"></div>
-    
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-robot"></i>
-                <span>AI Career Guide</span>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="/about/" class="active"><i class="fas fa-info-circle"></i> About</a></li>
-                    <li><a href="/recommendations/"><i class="fas fa-chart-line"></i> Recommendations</a></li>
-                    <li><a href="/contact/"><i class="fas fa-envelope"></i> Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <section class="hero">
-            <div class="content">
-                <h1>Intelligent Career Path Discovery</h1>
-                <p class="subtitle">Harness the power of AI to find your perfect career match based on your unique skills, interests, and aspirations.</p>
-                <p>Our advanced AI algorithms analyze thousands of data points to match your profile with the most suitable career paths in today's dynamic job market.</p>
-                <p>We combine your personal preferences with real-time labor market insights to provide recommendations that are both personally fulfilling and professionally viable.</p>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-number">10K+</div>
-                        <div class="stat-label">Career Paths Analyzed</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">95%</div>
-                        <div class="stat-label">User Satisfaction</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Industries Covered</div>
-                    </div>
-                </div>
-                
-                <div class="features">
-                    <div class="feature-card">
-                        <h3><i class="fas fa-user-check"></i> Personalized Matching</h3>
-                        <p>Our AI understands your unique strengths, preferences, and goals to suggest careers that align with your personality and aspirations.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3><i class="fas fa-chart-bar"></i> Market Insights</h3>
-                        <p>Access real-time data on job market trends, salary expectations, growth projections, and emerging opportunities.</p>
-                    </div>
-                </div>
-                
-                <a href="/recommendations/" class="btn">
-                    <i class="fas fa-rocket"></i>
-                    Discover Your Career Path
-                </a>
-            </div>
-            
-            <div class="model-container">
-                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.10/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/g-95OinkkL5Z3X6D/scene.splinecode"></spline-viewer>
-                <div class="loading">Loading Interactive Career Model...</div>
-            </div>
-        </section>
-
-        <footer>
-            <div class="footer-content">
-                <p>&copy; 2023 AI Career Recommendation System. All rights reserved.</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-linkedin"></i></a>
-                    <a href="#"><i class="fab fa-github"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const splineViewer = document.querySelector('spline-viewer');
-            const loading = document.querySelector('.loading');
-            
-            if (splineViewer) {
-                splineViewer.addEventListener('load', function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                }); 
-                
-                setTimeout(function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                }, 5000);
-            }
-        });
-    </script>
-</body>
-</html>
-
- {% endcomment %}
-
-
- {% comment %} =================================================================== {% endcomment %}
- {% comment %} =================================================================== {% endcomment %}
- {% comment %} =================================================================== {% endcomment %}
- {% comment %} =================================================================== {% endcomment %}
-{% comment %} <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - AI Career Recommendation</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes gentleGlow {
-            0%, 100% { 
-                box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
-            }
-            50% { 
-                box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
-            }
-        }
-
-        body {
-            background: #0f0f0f;
-            color: #ffffff;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
-            animation: fadeIn 0.5s ease;
-        }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 25px 35px;
-            background: #1a1a1a;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            border-radius: 12px;
-            margin-bottom: 40px;
-            animation: slideUp 0.6s ease;
-        }
-
-        .logo {
-            font-size: 26px;
-            font-weight: 700;
-            color: #38bdf8;
-            letter-spacing: 1px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 10px;
-        }
-
-        nav ul li a {
-            color: #e0e0e0;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 10px 22px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid transparent;
-            display: inline-block;
-        }
-
-        nav ul li a:hover {
-            background: rgba(56, 189, 248, 0.1);
-            border-color: rgba(56, 189, 248, 0.3);
-            color: #38bdf8;
-        }
-
-        nav ul li a.active {
-            background: #38bdf8;
-            color: #000000;
-            font-weight: 600;
-            border-color: #38bdf8;
-        }
-
-        .hero {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-            padding: 40px 0;
-            min-height: 75vh;
-        }
-
-        .content {
-            flex: 1;
-            min-width: 320px;
-            animation: slideUp 0.7s ease;
-        }
-
-        .model-container {
-            flex: 1;
-            min-width: 320px;
-            height: 500px;
-            border-radius: 20px;
-            overflow: hidden;
-            background: #000000;
-            position: relative;
-            border: 2px solid #38bdf8;
-            animation: slideUp 0.8s ease, gentleGlow 3s ease infinite;
-        }
-
-        .model-container spline-viewer {
-            width: 100% !important;
-            height: 100% !important;
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            border: none !important;
-            outline: none !important;
-        }
-
-        .loading {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #38bdf8;
-            font-size: 16px;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 44px;
-            margin-bottom: 25px;
-            color: #38bdf8;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-
-        p {
-            font-size: 17px;
-            line-height: 1.7;
-            margin-bottom: 18px;
-            color: #d0d0d0;
-        }
-
-        .stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 35px 0;
-        }
-
-        .stat-card {
-            flex: 1;
-            min-width: 140px;
-            text-align: center;
-            padding: 22px;
-            background: #1a1a1a;
-            border-radius: 12px;
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .stat-card:hover {
-            background: #38bdf8;
-            transform: translateY(-5px);
-            border-color: #38bdf8;
-        }
-
-        .stat-card:hover .stat-number,
-        .stat-card:hover .stat-label {
-            color: #000000;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-            color: #38bdf8;
-            margin-bottom: 8px;
-            transition: color 0.3s ease;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #b0b0b0;
-            transition: color 0.3s ease;
-        }
-
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 18px;
-            margin: 35px 0;
-        }
-
-        .feature-card {
-            flex: 1;
-            min-width: 260px;
-            background: #1a1a1a;
-            color: #ffffff;
-            padding: 28px;
-            border-radius: 12px;
-            border: 1px solid rgba(56, 189, 248, 0.25);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            background: rgba(56, 189, 248, 0.1);
-            border-color: #38bdf8;
-            box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
-        }
-
-        .feature-card h3 {
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #38bdf8;
-        }
-
-        .feature-card p {
-            color: #c0c0c0;
-            font-size: 15px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 16px 38px;
-            background: #38bdf8;
-            color: #000000;
-            border: 2px solid #38bdf8;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            margin-top: 15px;
-            font-size: 16px;
-        }
-
-        .btn:hover {
-            background: transparent;
-            color: #38bdf8;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(56, 189, 248, 0.4);
-        }
-
-        footer {
-            text-align: center;
-            padding: 25px 0;
-            margin-top: 50px;
-            border-top: 1px solid rgba(56, 189, 248, 0.2);
-            font-size: 14px;
-            color: #808080;
-        }
-
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 15px;
-                padding: 20px;
-            }
-
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            nav ul li {
-                margin: 0;
-            }
-
-            .hero {
-                flex-direction: column;
-                padding: 30px 0;
-            }
-            
-            .model-container {
-                width: 100%;
-                height: 380px;
-            }
-            
-            h1 {
-                font-size: 32px;
-            }
-
-            p {
-                font-size: 16px;
-            }
-
-            .stat-card {
-                min-width: 120px;
-                padding: 18px;
-            }
-
-            .stat-number {
-                font-size: 30px;
-            }
-
-            .feature-card {
-                min-width: 100%;
-            }
-        }
-
-        /* Simplified Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #1a1a1a;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #38bdf8;
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #0ea5e9;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <div class="logo">AI Career Guide</div>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/about/" class="active">About</a></li>
-                    <li><a href="/recommendations/">Recommendations</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <section class="hero">
-            <div class="content">
-                <h1>Revolutionizing Career Guidance with AI</h1>
-                <p>Our AI-powered career recommendation system analyzes your skills, interests, and market trends to suggest the perfect career path tailored just for you.</p>
-                <p>Using advanced machine learning algorithms, we match your profile with thousands of career options to find your ideal professional journey.</p>
-                
-                <div class="stats">
-                    <div class="stat-card">
-                        <div class="stat-number">10K+</div>
-                        <div class="stat-label">Career Paths</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">95%</div>
-                        <div class="stat-label">Accuracy Rate</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Industries</div>
-                    </div>
-                </div>
-                
-                <div class="features">
-                    <div class="feature-card">
-                        <h3>Personalized Matching</h3>
-                        <p>Our AI understands your unique strengths and preferences to suggest careers that truly fit you.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h3>Market Insights</h3>
-                        <p>Get real-time data on job market trends, salary expectations, and future growth opportunities.</p>
-                    </div>
-                </div>
-                
-                <a href="/recommendations/" class="btn">Get Your Career Recommendations</a>
-            </div>
-            
-            <div class="model-container">
-                <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.10/build/spline-viewer.js"></script>
-                <spline-viewer url="https://prod.spline.design/g-95OinkkL5Z3X6D/scene.splinecode"></spline-viewer>
-                <div class="loading">Loading 3D Model...</div>
-            </div>
-        </section>
-
-        <footer>
-            <p>&copy; 2023 AI Career Recommendation System. All rights reserved.</p>
-        </footer>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const splineViewer = document.querySelector('spline-viewer');
-            const loading = document.querySelector('.loading');
-            
-            if (splineViewer) {
-                splineViewer.addEventListener('load', function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                });
-                
-                setTimeout(function() {
-                    if (loading) {
-                        loading.style.display = 'none';
-                    }
-                }, 5000);
-            }
-        });
-    </script>
-</body>
-</html> {% endcomment %}
-
-
-{% comment %} =================================================================================== {% endcomment %}
-{% comment %} =================================================================================== {% endcomment %}
-{% comment %} =================================================================================== {% endcomment %}
-{% comment %} =================================================================================== {% endcomment %}
-{% comment %} =================================================================================== {% endcomment %}
-{% comment %} =================================================================================== {% endcomment %}
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>About — AI Career Guide</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet" />
-  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.0.10/build/spline-viewer.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"></script>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
+    *{
+      margin:0; padding:0;
+      box-sizing:border-box;
+      font-family:"Poppins",sans-serif;
     }
 
-    body {
-      margin: 0;
-      background: url('https://jitechno.com/assets/images/slider/slide1.jpg') center/cover no-repeat;
-      position: relative;
-      color: #ffffff;
-      height: 100vh;
-      overflow: hidden; /* Scroll band kar diya taaki animation center me rahe */
+    /* BACKGROUND */
+    body{
+      background:url('https://jitechno.com/assets/images/slider/slide1.jpg') center/cover no-repeat fixed;
+      color:white;
+      overflow-x:hidden;
     }
-
-    /* FULL BACKGROUND BLUR */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: url('https://jitechno.com/assets/images/slider/slide1.jpg') center/cover no-repeat;
-      filter: blur(22px) brightness(0.55) saturate(1.2);
-      transform: scale(1.08);
-      z-index: -1;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:url('https://jitechno.com/assets/images/slider/slide1.jpg') center/cover no-repeat;
+      filter:blur(18px) brightness(.55);
+      transform:scale(1.05);
+      z-index:-1;
     }
 
     /* NAVBAR */
-    header.glass-nav {
-        width: 100%;
-        max-width: 1250px;
-        margin: 20px auto;
-        padding: 18px 26px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-radius: 16px;
-        background: rgba(255, 255, 255, 0.06);
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        z-index: 100;
-        position: relative;
-    }
-    .nav-logo { font-size: 24px; font-weight: 800; color: #38bdf8; letter-spacing: 0.5px; }
-    .nav-links { display: flex; gap: 18px; align-items: center; }
-    .nav-btn { text-decoration: none; font-weight: 500; font-size: 15px; padding: 8px 14px; border-radius: 10px; }
-    .btn-glass { color: white; background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(6px); border: 1px solid rgba(255, 255, 255, 0.15); }
-    .btn-active { color: #001020; font-weight: 600; background: #38bdf8; border: 1px solid #38bdf8; }
-
-    /* --- ORBIT SYSTEM CONTAINER --- */
-    .orbit-container {
-      position: absolute;
-      top: 55%; /* Screen ke center se thoda neeche */
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 800px; /* Ye decide karega ki circle kitna bada hai */
-      height: 800px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    header{
+      width:100%;
+      padding:22px 60px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:rgba(255,255,255,0.05);
+      backdrop-filter:blur(14px);
+      position:fixed;
+      top:0; left:0;
+      z-index:100;
+      border:none;
     }
 
-    /* CENTER STATIC MODEL */
-    .center-model {
-      position: absolute;
-      width: 380px;
-      height: 380px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 0 50px rgba(56, 189, 248, 0.15);
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .center-model spline-viewer {
-        width: 100%; height: 100%; transform: scale(1.2);
+    .logo{
+      font-size:26px;
+      font-weight:700;
+      color:white;
     }
 
-    /* THE ROTATING RING (Track) */
-    .orbit-ring {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      /* Animation: Spin Right (Clockwise) */
-      animation: spin-right 25s linear infinite; 
+    nav a{
+      margin-left:25px;
+      text-decoration:none;
+      color:#ececec;
+      padding:8px 14px;
+      border-radius:8px;
+      transition:.3s;
     }
 
-    /* PAUSE ON HOVER (Optional - User Experience ke liye) */
-    .orbit-container:hover .orbit-ring,
-    .orbit-container:hover .orbit-item {
-        animation-play-state: paused;
+    nav a:hover,
+    nav a.active{
+      background:rgba(255,255,255,0.3);
+      color:black;
     }
 
-    /* INDIVIDUAL CARDS (Items) */
-    .orbit-item {
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.4); /* Thoda dark kiya taaki text dikhe */
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(25px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      
-      /* IMPORTANT: Counter Rotation (Spin Left) */
-      /* Jitna time ring lega (25s), utna hi time isko dena padega ulta ghumne me */
-      animation: spin-left 25s linear infinite;
+    /* MAIN LAYOUT */
+    .main{
+      width:100%;
+      padding:160px 60px 60px;
+      display:flex;
+      justify-content:space-between;
+      gap:40px;
     }
 
-    /* Positioning Items Equally (Top, Right, Bottom, Left) */
-    
-    /* 1. TOP */
-    .pos-1 { top: 0; left: 50%; transform: translate(-50%, -50%); }
-    
-    /* 2. RIGHT */
-    .pos-2 { top: 50%; right: 0; transform: translate(50%, -50%); }
-    
-    /* 3. BOTTOM */
-    .pos-3 { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
-    
-    /* 4. LEFT */
-    .pos-4 { top: 50%; left: 0; transform: translate(-50%, -50%); }
-
-
-    /* TEXT STYLES */
-    h2 { font-size: 16px; color: #38bdf8; margin-bottom: 5px; font-weight: 700; }
-    p { font-size: 11px; color: #ddd; line-height: 1.4; }
-
-
-    /* --- KEYFRAMES (Animation Logic) --- */
-    
-    /* Ring ghoomega Clockwise (0 se 360) */
-    @keyframes spin-right {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+    .left{
+      width:50%;
     }
 
-    /* Items ghoomenge Counter-Clockwise (0 se -360) 
-       Isse wo apni jagah par seedhe dikhenge */
-    @keyframes spin-left {
-      0% { transform: translate(-50%, -50%) rotate(0deg); }
-      100% { transform: translate(-50%, -50%) rotate(-360deg); }
+    .title{
+      font-size:46px;
+      font-weight:700;
+      margin-bottom:12px;
     }
-    
-    /* NOTE: Right aur Bottom items ke liye translate alag hai, 
-       isliye unke liye alag keyframes banane padenge ya common logic lagana padega.
-       Easy fix ke liye main sabko center-origin se set kar raha hu:
-    */
-
-    /* Behtar Tarika (Rotate fix for all positions) */
-    .pos-1 { top: 0; left: 50%; margin-top: -130px; margin-left: -130px; transform: none; } 
-    /* margin = width/2 so center aligns perfectly on line */
-
-    /* Re-writing positions using margins to avoid transform conflict */
-    .orbit-item {
-        transform-origin: center center;
-        margin: 0;
-        /* Reset transform from class rules above */
-        transform: rotate(0deg); 
-        animation: keep-upright 25s linear infinite;
+    .subtitle{
+      font-size:17px;
+      opacity:.9;
+      margin-bottom:30px;
+      max-width:520px;
+      line-height:1.6;
     }
-    
-    /* Final Positions on the Circle Border */
-    .pos-1 { top: 0; left: 50%; margin-left: -130px; margin-top: -130px; } /* Top Center */
-    .pos-2 { top: 50%; right: 0; margin-top: -130px; margin-right: -130px;} /* Right Center */
-    .pos-3 { bottom: 0; left: 50%; margin-left: -130px; margin-bottom: -130px;} /* Bottom Center */
-    .pos-4 { top: 50%; left: 0; margin-top: -130px; margin-left: -130px;} /* Left Center */
 
-    @keyframes keep-upright {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(-360deg); }
+    /* CARDS */
+    .cards{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+    }
+    .card{
+      background:rgba(255,255,255,0.08);
+      backdrop-filter:blur(14px);
+      padding:18px 20px;
+      border-radius:16px;
+      box-shadow:0 0 20px rgba(0,0,0,0.35);
+      transition:.3s;
+      border:none;
+    }
+    .card:hover{
+      background:rgba(255,255,255,0.17);
+      transform:translateX(6px);
+    }
+    .card h3{
+      font-size:18px;
+      margin-bottom:5px;
+      color:white;
+    }
+    .card p{
+      font-size:14px;
+      opacity:.9;
+    }
+
+    /* RIGHT 3D MODEL AREA */
+    .right{
+      width:45%;
+      height:480px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      overflow:hidden !important;
+      border:none !important;
+      background:transparent !important;
+    }
+
+    .right spline-viewer{
+      width:100%;
+      height:100%;
+      transform:scale(1.12);
+      border:none !important;
+      background:transparent !important;
+    }
+
+    /* REMOVE BUILT-WITH-SPLINE WATERMARK — FINAL FIX */
+    spline-viewer::part(logo),
+    spline-viewer::part(watermark),
+    spline-viewer img[src*="spline"],
+    spline-viewer a[href*="spline"] {
+      display:none !important;
+      opacity:0 !important;
+      width:0 !important;
+      height:0 !important;
+      pointer-events:none !important;
+    }
+
+    /* RESPONSIVE */
+    @media(max-width:950px){
+      .main{
+        flex-direction:column;
+        text-align:center;
+      }
+      .left, .right{
+        width:100%;
+      }
+      .right{
+        height:360px;
+      }
     }
 
   </style>
 </head>
 <body>
 
-  <header class="glass-nav">
-    <div class="nav-logo">AI Career Guide</div>
-    <nav class="nav-links">
-      <a href="#" class="nav-btn btn-glass">Home</a>
-      <a href="#" class="nav-btn btn-active">About</a>
-      <a href="#" class="nav-btn btn-glass">Recs</a>
-      <a href="#" class="nav-btn btn-glass">Contact</a>
-    </nav>
-  </header>
+<header>
+  <div class="logo">AI Career Guide</div>
+  <nav>
+    <a href="#">Home</a>
+    <a class="active">About</a>
+    <a href="#">Recommendations</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
 
-  <div class="orbit-container">
-    
-    <div class="center-model">
-       <spline-viewer url="https://prod.spline.design/g-95OinkkL5Z3X6D/scene.splinecode"></spline-viewer>
-    </div>
+<section class="main">
 
-    <div class="orbit-ring">
-      
-      <div class="orbit-item pos-1">
-        <h2>🎯 Overview</h2>
-        <p>AI System analyzes academic performance & interests to find your perfect career path.</p>
+  <!-- LEFT SIDE -->
+  <div class="left">
+    <h1 class="title">About Our AI System</h1>
+    <p class="subtitle">
+      Our intelligent engine analyzes skills, academic performance, interests and personality 
+      to recommend the most suitable career path.
+    </p>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>🎯 Overview</h3>
+        <p>AI evaluates your overall profile and selects accurate career fields.</p>
       </div>
 
-      <div class="orbit-item pos-2">
-        <h2>✨ Features</h2>
-        <p>• Resume Analyzer<br>• Skill Roadmap<br>• Market Insights<br>• Personality Mapping</p>
+      <div class="card">
+        <h3>✨ Features</h3>
+        <p>Resume analyzer, personality mapping, skill roadmap & market insights.</p>
       </div>
 
-      <div class="orbit-item pos-3">
-        <h2>📌 Goal & Team</h2>
-        <p>Providing career clarity through AI.</p>
-        <p style="color:#38bdf8; font-weight:600; margin-top:4px;">Jatin • Jay • Kartik • Nitin</p>
+      <div class="card">
+        <h3>👨‍💻 Team</h3>
+        <p>Created by: Jatin • Jay • Kartik • Nitin</p>
       </div>
 
-      <div class="orbit-item pos-4">
-        <h2>🛠 Tech Stack</h2>
-        <p><b>Backend:</b> Django, Python<br><b>AI:</b> scikit-learn, spaCy<br><b>DB:</b> SQLite3</p>
+      <div class="card">
+        <h3>🛠 Tech Stack</h3>
+        <p>Django • Python • Machine Learning • scikit-learn • spaCy • SQLite</p>
       </div>
 
     </div>
   </div>
+
+  <!-- RIGHT SIDE 3D MODEL -->
+  <div class="right">
+    <spline-viewer url="https://prod.spline.design/g-95OinkkL5Z3X6D/scene.splinecode"></spline-viewer>
+  </div>
+
+</section>
 
 </body>
 </html>

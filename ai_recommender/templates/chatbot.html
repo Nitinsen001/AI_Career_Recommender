@@ -547,6 +547,14 @@
         const typingIndicator = document.getElementById('typingIndicator');
         const quickQuestions = document.getElementById('quickQuestions');
 
+        // --- DYNAMIC DATA INJECTION ---
+        const chatbotData = JSON.parse('{{ chatbot_data|escapejs }}');
+        const userName = chatbotData.user_name;
+        const topCareers = chatbotData.top_careers;
+        const missingSkills = chatbotData.missing_skills;
+        const trendingCareers = chatbotData.trending_careers;
+        const personalityType = chatbotData.personality_type;
+
         function askQuestion(question) {
             // Add user message
             addMessage(question, 'user');
@@ -562,7 +570,7 @@
                 typingIndicator.style.display = 'none';
                 quickQuestions.style.display = 'block';
                 generateResponse(question);
-            }, 2000);
+            }, 1500);
         }
 
         function sendMessage() {
@@ -616,145 +624,131 @@
         }
 
         function generateCareerResponse(message) {
-            return `Based on your profile, here are some career paths that align with your background:
+            let careerListHtml = '';
+            if (topCareers.length > 0) {
+                topCareers.forEach(career => {
+                    careerListHtml += `• **${career.title}** - ${career.match}% Match, ${career.salary} avg salary<br>`;
+                });
+            } else {
+                careerListHtml = "• No recommendations found yet. Please complete your profile.";
+            }
 
-🚀 **High-Growth Opportunities:**
-• **Data Scientist** - 31% growth, $120K avg salary
-• **AI/ML Engineer** - 28% growth, $135K avg salary
-• **Cloud Architect** - 25% growth, $140K avg salary
+            return `Based on your profile, here are your top career matches:
 
-💡 **Based on your skills:**
-• Strong analytical abilities
-• Technical proficiency
-• Problem-solving mindset
+🚀 **Your Top Recommendations:**
+${careerListHtml}
 
-Would you like me to analyze specific skills or provide more detailed career comparisons?`;
+💡 **Why these match:**
+• Aligned with your skills
+• Fits your personality type (${personalityType})
+• Strong market demand
+
+Would you like to explore specific skills for any of these roles?`;
         }
 
         function generateSkillResponse(message) {
-            return `Here's a skill development roadmap for your career goals:
+            let skillsHtml = '';
+            if (missingSkills.length > 0) {
+                missingSkills.forEach(skill => {
+                    skillsHtml += `• **${skill}**<br>`;
+                });
+            } else {
+                skillsHtml = "• You have a strong skill set! Consider advanced certifications.";
+            }
+
+            return `Here are the key skills you should focus on to reach your target career:
 
 🎯 **Priority Skills to Develop:**
-• **Machine Learning** - High demand across industries
-• **Cloud Computing (AWS/Azure)** - Essential for modern roles
-• **Data Visualization** - Key for decision-making roles
+${skillsHtml}
 
-📚 **Learning Resources:**
-• Coursera ML Specialization
-• AWS Certified Solutions Architect
-• Tableau Desktop Specialist
+📚 **Learning Strategy:**
+• Focus on practical projects
+• Take online courses for these specific tools
+• Apply these skills in your current work if possible
 
-⏱️ **Estimated Timeline:**
-• Foundation: 2-3 months
-• Intermediate: 4-6 months
-• Advanced: 6-12 months
-
-I can create a personalized learning plan based on your current level.`;
+I can suggest specific courses if you're interested.`;
         }
 
         function generateSalaryResponse(message) {
-            return `💰 **Current Salary Insights:**
+            let salaryHtml = '';
+            if (topCareers.length > 0) {
+                salaryHtml = `For your top match **${topCareers[0].title}**, the average salary is **${topCareers[0].salary}**.`;
+            } else {
+                salaryHtml = "Salary varies by role. Once you have career recommendations, I can give you specific figures.";
+            }
 
-**Tech Industry Averages:**
-• Entry Level: $75K - $95K
-• Mid Level: $95K - $130K
-• Senior Level: $130K - $180K+
+            return `💰 **Salary Insights:**
 
-**Location Premiums:**
-• SF Bay Area: +25%
-• New York: +20%
-• Remote: Competitive packages
+${salaryHtml}
 
-**Negotiation Tips:**
-• Research market rates
-• Highlight unique skills
-• Consider total compensation
+**General Tech Industry Ranges:**
+• Entry Level: $70K - $95K
+• Mid Level: $100K - $140K
+• Senior Level: $150K+
 
-Would you like specific salary data for a particular role or location?`;
+**Negotiation Tip:** Always research the specific market rate for your location and experience level before discussing numbers.`;
         }
 
         function generateTrendResponse(message) {
-            return `📈 **Current Career Market Trends:**
+            let trendHtml = '';
+            if (trendingCareers.length > 0) {
+                trendingCareers.forEach(career => {
+                    trendHtml += `• **${career.title}** - ${career.growth}% Growth<br>`;
+                });
+            } else {
+                trendHtml = "• AI & Machine Learning<br>• Data Science<br>• Cloud Computing";
+            }
 
-🔥 **High-Demand Fields:**
-• Artificial Intelligence & Machine Learning
-• Cybersecurity & Data Privacy
-• Sustainable Technology
-• Remote Work Infrastructure
+            return `📈 **Current Market Trends:**
 
-🚀 **Emerging Roles:**
-• AI Ethics Officer
-• Cloud Security Engineer
-• Digital Transformation Lead
-• Remote Team Manager
+🔥 **Fastest Growing Careers:**
+${trendHtml}
 
-💡 **Skills in Demand:**
-• Python & R for Data Science
-• Kubernetes & Docker
-• Cybersecurity Fundamentals
-• Agile Project Management
-
-These trends show strong opportunities in tech-focused roles with remote work flexibility.`;
+💡 **Key Insight:**
+The market is shifting towards AI-driven and data-centric roles. Continuous learning is key to staying competitive.`;
         }
 
         function generateResumeResponse(message) {
-            return `📄 **Resume Optimization Tips:**
+            return `📄 **Resume Optimization for ${userName}:**
 
-✅ **Key Improvements:**
-• Quantify achievements with metrics
-• Include relevant keywords from job descriptions
-• Highlight technical skills prominently
-• Show career progression clearly
+✅ **Quick Checks:**
+• Ensure your contact info is up to date.
+• Highlight your top skills: **${missingSkills.length > 0 ? 'Focus on adding ' + missingSkills[0] : 'Your skills look good!'}**.
+• Use action verbs (e.g., "Led", "Developed", "Optimized").
 
-🎯 **ATS-Friendly Format:**
-• Clean, professional layout
-• Standard section headings
-• Bullet points for readability
-• Consistent formatting
+🎯 **Tailoring:**
+Customize your resume for **${topCareers.length > 0 ? topCareers[0].title : 'your target role'}**. Match the keywords in the job description.
 
-💪 **Powerful Action Verbs:**
-• "Implemented", "Optimized", "Led"
-• "Developed", "Managed", "Analyzed"
-• "Improved", "Created", "Transformed"
-
-Would you like me to review your specific resume sections?`;
+Would you like me to review a specific section?`;
         }
 
         function generatePersonalityResponse(message) {
-            return `🧠 **Personality-Based Career Insights:**
+            return `🧠 **Personality Insights:**
 
-**Your Strengths:**
-• Analytical thinking and problem-solving
-• Attention to detail and accuracy
-• Strategic planning abilities
-• Continuous learning mindset
+**Your Type:** ${personalityType}
 
-**Ideal Work Environments:**
-• Challenging, innovative projects
-• Data-driven decision making
-• Collaborative yet autonomous
-• Growth-oriented culture
+**Strengths:**
+• Analytical thinking
+• Problem-solving
+• Adaptability
+
+**Work Style:**
+You likely thrive in environments that challenge you intellectually and offer opportunities for growth.
 
 **Career Alignment:**
-• Roles requiring deep analysis
-• Technology and innovation fields
-• Research and development
-• Strategic planning positions
-
-Your personality traits align well with technical leadership and specialist roles.`;
+Your personality is well-suited for roles like **${topCareers.length > 0 ? topCareers[0].title : 'Technical Specialist'}**.`;
         }
 
         function generateGeneralResponse(message) {
-            return `I understand you're interested in learning more about your career options!
+            return `I'm here to help you, ${userName}!
 
-I can help you with:
-• **Career Path Exploration** - Discover roles that match your skills
-• **Skill Gap Analysis** - Identify areas for development
-• **Market Research** - Understand industry trends and salaries
-• **Interview Preparation** - Get ready for your next career move
-• **Resume Optimization** - Make your application stand out
+I can provide personalized advice on:
+• **Your Career Matches** (e.g., ${topCareers.length > 0 ? topCareers[0].title : 'Software Engineer'})
+• **Skill Gaps** you need to fill
+• **Salary Expectations** for your target roles
+• **Market Trends** relevant to you
 
-What specific aspect of your career journey would you like to focus on today?`;
+What would you like to start with?`;
         }
 
         // Enter key to send message

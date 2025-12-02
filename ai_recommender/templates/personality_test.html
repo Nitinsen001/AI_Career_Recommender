@@ -1,5 +1,3 @@
-
-
 {% load static %}
 {% include "logo.html" %}
 
@@ -532,10 +530,10 @@
                 {% csrf_token %}
 
                 <div class="question-container">
-                    <!-- Question 1 -->
+                    <!-- Question 1: Extraversion -->
                     <div class="question-card">
                         <div class="question-number">1</div>
-                        <div class="question-text">I am outgoing and enjoy social gatherings</div>
+                        <div class="question-text">I enjoy social gatherings and meeting new people</div>
                         <div class="scale-labels">
                             <span>Strongly Disagree</span>
                             <span>Disagree</span>
@@ -562,10 +560,10 @@
                         </div>
                     </div>
 
-                    <!-- Question 2 -->
+                    <!-- Question 2: Agreeableness -->
                     <div class="question-card">
                         <div class="question-number">2</div>
-                        <div class="question-text">I prefer working with concrete facts rather than abstract theories</div>
+                        <div class="question-text">I am compassionate and eager to help others</div>
                         <div class="scale-labels">
                             <span>Strongly Disagree</span>
                             <span>Disagree</span>
@@ -592,10 +590,10 @@
                         </div>
                     </div>
 
-                    <!-- Question 3 -->
+                    <!-- Question 3: Conscientiousness -->
                     <div class="question-card">
                         <div class="question-number">3</div>
-                        <div class="question-text">I make decisions based on logic and objective analysis</div>
+                        <div class="question-text">I am organized and always come prepared</div>
                         <div class="scale-labels">
                             <span>Strongly Disagree</span>
                             <span>Disagree</span>
@@ -622,10 +620,10 @@
                         </div>
                     </div>
 
-                    <!-- Question 4 -->
+                    <!-- Question 4: Emotional Stability -->
                     <div class="question-card">
                         <div class="question-number">4</div>
-                        <div class="question-text">I prefer having a structured and organized lifestyle</div>
+                        <div class="question-text">I remain calm and composed under pressure</div>
                         <div class="scale-labels">
                             <span>Strongly Disagree</span>
                             <span>Disagree</span>
@@ -652,10 +650,10 @@
                         </div>
                     </div>
 
-                    <!-- Question 5 -->
+                    <!-- Question 5: Openness -->
                     <div class="question-card">
                         <div class="question-number">5</div>
-                        <div class="question-text">I enjoy helping and supporting other people</div>
+                        <div class="question-text">I enjoy exploring complex ideas and abstract theories</div>
                         <div class="scale-labels">
                             <span>Strongly Disagree</span>
                             <span>Disagree</span>
@@ -682,8 +680,155 @@
                         </div>
                     </div>
 
-                    <!-- Additional questions would follow the same pattern -->
-                    <!-- For brevity, I'm showing the pattern for the first 5 questions -->
+                    <!-- Question 6: Extraversion -->
+                    <div class="question-card">
+                        <div class="question-number">6</div>
+                        <div class="question-text">I feel comfortable being the center of attention</div>
+                        <div class="scale-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Disagree</span>
+                            <span>Neutral</span>
+                            <span>Agree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                        <div class="radio-group">
+                            {% for i in "12345" %}
+                            <div class="radio-option">
+                                <input type="radio" id="q6_{{ i }}" name="question_6" value="{{ i }}" required>
+                                <label for="q6_{{ i }}" class="radio-label">
+                                    <span class="radio-number">{{ i }}</span>
+                                    <span class="radio-text">
+                                        {% if forloop.counter == 1 %}Strongly Disagree
+                                        {% elif forloop.counter == 2 %}Disagree
+                                        {% elif forloop.counter == 3 %}Neutral
+                                        {% elif forloop.counter == 4 %}Agree
+                                        {% else %}Strongly Agree{% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Question 7: Agreeableness -->
+                    <div class="question-card">
+                        <div class="question-number">7</div>
+                        <div class="question-text">I try to avoid conflicts and keep the peace</div>
+                        <div class="scale-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Disagree</span>
+                            <span>Neutral</span>
+                            <span>Agree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                        <div class="radio-group">
+                            {% for i in "12345" %}
+                            <div class="radio-option">
+                                <input type="radio" id="q7_{{ i }}" name="question_7" value="{{ i }}" required>
+                                <label for="q7_{{ i }}" class="radio-label">
+                                    <span class="radio-number">{{ i }}</span>
+                                    <span class="radio-text">
+                                        {% if forloop.counter == 1 %}Strongly Disagree
+                                        {% elif forloop.counter == 2 %}Disagree
+                                        {% elif forloop.counter == 3 %}Neutral
+                                        {% elif forloop.counter == 4 %}Agree
+                                        {% else %}Strongly Agree{% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Question 8: Conscientiousness -->
+                    <div class="question-card">
+                        <div class="question-number">8</div>
+                        <div class="question-text">I pay attention to details and follow a schedule</div>
+                        <div class="scale-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Disagree</span>
+                            <span>Neutral</span>
+                            <span>Agree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                        <div class="radio-group">
+                            {% for i in "12345" %}
+                            <div class="radio-option">
+                                <input type="radio" id="q8_{{ i }}" name="question_8" value="{{ i }}" required>
+                                <label for="q8_{{ i }}" class="radio-label">
+                                    <span class="radio-number">{{ i }}</span>
+                                    <span class="radio-text">
+                                        {% if forloop.counter == 1 %}Strongly Disagree
+                                        {% elif forloop.counter == 2 %}Disagree
+                                        {% elif forloop.counter == 3 %}Neutral
+                                        {% elif forloop.counter == 4 %}Agree
+                                        {% else %}Strongly Agree{% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Question 9: Emotional Stability -->
+                    <div class="question-card">
+                        <div class="question-number">9</div>
+                        <div class="question-text">I rarely worry or get anxious about things</div>
+                        <div class="scale-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Disagree</span>
+                            <span>Neutral</span>
+                            <span>Agree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                        <div class="radio-group">
+                            {% for i in "12345" %}
+                            <div class="radio-option">
+                                <input type="radio" id="q9_{{ i }}" name="question_9" value="{{ i }}" required>
+                                <label for="q9_{{ i }}" class="radio-label">
+                                    <span class="radio-number">{{ i }}</span>
+                                    <span class="radio-text">
+                                        {% if forloop.counter == 1 %}Strongly Disagree
+                                        {% elif forloop.counter == 2 %}Disagree
+                                        {% elif forloop.counter == 3 %}Neutral
+                                        {% elif forloop.counter == 4 %}Agree
+                                        {% else %}Strongly Agree{% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Question 10: Openness -->
+                    <div class="question-card">
+                        <div class="question-number">10</div>
+                        <div class="question-text">I am curious about many different things</div>
+                        <div class="scale-labels">
+                            <span>Strongly Disagree</span>
+                            <span>Disagree</span>
+                            <span>Neutral</span>
+                            <span>Agree</span>
+                            <span>Strongly Agree</span>
+                        </div>
+                        <div class="radio-group">
+                            {% for i in "12345" %}
+                            <div class="radio-option">
+                                <input type="radio" id="q10_{{ i }}" name="question_10" value="{{ i }}" required>
+                                <label for="q10_{{ i }}" class="radio-label">
+                                    <span class="radio-number">{{ i }}</span>
+                                    <span class="radio-text">
+                                        {% if forloop.counter == 1 %}Strongly Disagree
+                                        {% elif forloop.counter == 2 %}Disagree
+                                        {% elif forloop.counter == 3 %}Neutral
+                                        {% elif forloop.counter == 4 %}Agree
+                                        {% else %}Strongly Agree{% endif %}
+                                    </span>
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
                 </div>
 
                 <div class="btn-container">
