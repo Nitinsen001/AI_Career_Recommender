@@ -1,0 +1,25 @@
+# Vercel Ignore File
+# Exclude large folders
+datasets/
+enhanced_models/
+media/
+tests/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.git/
+.gitignore
+
+# Exclude large files
+*.zip
+*.csv
+*.sqlite3
+db.sqlite3
+train_models.py
+
+# Whitelist essential small datasets
+!datasets/career_dataset.csv
+!datasets/job_market.csv
+!datasets/skills_dataset.csv
+!datasets/personality.csv
