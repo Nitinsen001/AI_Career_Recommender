@@ -1,25 +1,57 @@
 # Vercel Ignore File
-# Exclude large folders
-datasets/
+# Exclude large files and folders to reduce build size below 250MB
+
+# Large Models and Datasets
 enhanced_models/
+enhanced_models.zip
+datasets/
+data/
+models/
+*.pkl
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# Database
+db.sqlite3
+*.sqlite3
+
+# Media and Static Files
 media/
-tests/
+staticfiles/
+# Keep static/ as it is the source for collectstatic, but exclude if it has large raw assets not needed in prod
+# static/large_assets/
+
+# Python and Environment
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+.venv
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Git
 .git/
 .gitignore
 
-# Exclude large files
-*.zip
-*.csv
-*.sqlite3
-db.sqlite3
-train_models.py
+# Tests
+tests/
+test_*.py
+*_test.py
 
-# Whitelist essential small datasets
-!datasets/career_dataset.csv
-!datasets/job_market.csv
-!datasets/skills_dataset.csv
-!datasets/personality.csv
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
