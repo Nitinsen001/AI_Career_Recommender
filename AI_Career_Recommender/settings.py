@@ -132,3 +132,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # ================================================================================================================================
+
+# --- EXTERNAL API CONFIGURATION ---
+import os
+
+# JSearch API (for Jobs & Salaries)
+RAPIDAPI_KEY = os.environ.get('RAPIDAPI_KEY', '762af53df3msh559a5fbed1808c4p151191jsndbcaeb803eef')
+RAPIDAPI_HOST = "jsearch.p.rapidapi.com"
+
+# YouTube Data API (for Learning Resources)
+YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY', 'AIzaSyCgxF3-hVa5DgtRIHUfxwn8_ZYZgeahUZI')
+
+# CACHE SETTINGS (Simple file-based cache for dev, can be memcached in prod)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+    }
+}

@@ -22,7 +22,7 @@ from .services import (
     get_career_recommendations, enhance_recommendation_with_market_data,
     update_user_profile_skills, generate_skill_recommendations_based_on_profile,
     group_skills_by_category,
-    CAREER_DF, MARKET_DF, SKILLS_DF
+    CAREER_DF, SKILLS_DF
 )
 
 # --- CORE DJANGO VIEWS ---
@@ -461,9 +461,9 @@ def career_detail(request, career_id):
 
 @login_required
 def job_trends(request):
-    """Job market trends view"""
+    """Job market trends view - DYNAMIC & LIVE"""
     
-    if len(CAREER_DF) == 0 or len(MARKET_DF) == 0:
+    if len(CAREER_DF) == 0:
         context = {
             'trends': [],
             'total_careers': 0,
@@ -474,64 +474,87 @@ def job_trends(request):
         }
         return render(request, 'trends.html', context)
 
-    market_data = MARKET_DF.copy()
-    career_data = CAREER_DF[['career_name', 'required_skills', 'average_salary', 'clean_key']].copy()
-
-    trends_df = pd.merge(
-        market_data, 
-        career_data,
-        on='clean_key', 
-        how='left'
-    )
-    
-    trends_df.drop_duplicates(subset=['clean_key'], keep='first', inplace=True)
-    trends_df.dropna(subset=['job_title', 'average_salary'], inplace=True)
-    
-    median_salary = trends_df[trends_df['average_salary'] > 0]['average_salary'].median()
-    trends_df['average_salary'].fillna(median_salary if not pd.isna(median_salary) else 0, inplace=True) 
-    
-    trends_df['required_skills'].fillna('Not Specified', inplace=True)
-    trends_df['location'].fillna('Global/Remote', inplace=True)
-    
-    total_careers = len(trends_df)
-    avg_growth = trends_df['job_growth_rate'].mean() * 100 if total_careers > 0 else 0
-    valid_salaries = trends_df[trends_df['average_salary'] > 1000]['average_salary']
-    avg_salary = valid_salaries.mean() if not valid_salaries.empty else 0
-    
-    all_locations = set()
-    trends_df['location'].astype(str).apply(
-        lambda x: all_locations.update(loc.strip() for loc in x.split(',') if loc.strip())
-    )
-
-    processed_trends = trends_df.to_dict('records')
+    # 1. Select seed careers from CAREER_DF (Top 12 by salary for variety)
+    # We sort by salary just to pick "interesting" careers, then check live stats
+    seed_careers = CAREER_DF.sort_values(by='average_salary', ascending=False).head(12)
     
     final_trends_list = []
-    for trend in processed_trends:
+    total_growth = 0
+    total_salary = 0
+    count = 0
+    all_locations = set()
 
-        # === FIXED: BRACKET SAFE SKILL SPLIT ===
-        raw_skills = str(trend.get('required_skills', ''))
-        skills_list = smart_split_skills(raw_skills)
+    from .services import fetch_live_market_data
 
-        # LOCATIONS normal split
-        location_list = [l.strip() for l in str(trend.get('location', '')).split(',') if l.strip()]
+    for _, row in seed_careers.iterrows():
+        title = row['career_name']
+        
+        # 2. Fetch Live Data
+        live_data = fetch_live_market_data(title)
+        
+        # 3. Parse Data
+        growth = live_data.get('job_growth_rate', 0.05)
+        salary_str = str(live_data.get('salary_range', row.get('average_salary', 0))) # Use live or DB fallback
+        salary_val = 0
+        try:
+             # Very rough parsing if string
+             salary_val = float(str(salary_str).replace(',', '').replace('$', ''))
+        except:
+             salary_val = float(row.get('average_salary', 0))
+
+        # Update aggregates
+        total_growth += growth
+        total_salary += salary_val
+        count += 1
+        
+        # Parse locations if available (mocking for now as JSearch parsing is complex)
+        locs = ['Remote', 'New York', 'San Francisco'] 
+        all_locations.update(locs)
 
         final_trends_list.append({
-            'career_title': trend.get('job_title', 'Unknown'),
-            'growth_rate': round(float(trend.get('job_growth_rate', 0)) * 100, 1),
-            'average_salary': round(float(trend.get('average_salary', 0)), 0),
-
-            # CLEAN LISTS
-            'top_locations': location_list,
-            'key_skills_in_demand': skills_list,
-
-            'demand_level': 'High' if trend.get('job_growth_rate', 0) > 0.10 
-                            else ('Medium' if trend.get('job_growth_rate', 0) > 0.05 else 'Low'),
-            'avg_hiring_time_days': trend.get('avg_hiring_time_days', 'N/A'),
+            'career_title': title,
+            'growth_rate': round(growth * 100, 1),
+            'average_salary': round(salary_val, 0),
+            'top_locations': locs,
+            'key_skills_in_demand': smart_split_skills(str(row.get('required_skills', ''))),
+            'demand_level': live_data.get('demand_level', 'Medium'),
+            'avg_hiring_time_days': '30-45', # Placeholder
             'year': 2025
         })
-    
+
+    avg_growth = (total_growth / count * 100) if count > 0 else 0
+    avg_salary = (total_salary / count) if count > 0 else 0
+
     context = {
-        'trends': sorted(final_trends_list, key=lambda x: x.get('growth_rate', 0), reverse=True)[:10],
+        'trends': sorted(final_trends_list, key=lambda x: x.get('growth_rate', 0), reverse=True),
+        'total_careers': len(CAREER_DF),
+        'avg_growth': round(avg_growth, 1),
+        'avg_salary': round(avg_salary / 1000, 0), # Display in K
+        'unique_locations': len(all_locations),
+    }
+    return render(request, 'trends.html', context)
+    
+    # Sort and slice first
+    sorted_trends = sorted(final_trends_list, key=lambda x: x.get('growth_rate', 0), reverse=True)[:10]
+
+    # --- DYNAMIC UPDATE FOR TOP 10 ---
+    # Fetch live data for these top 10 to ensure fresh stats
+    from .services import fetch_live_market_data
+    for trend in sorted_trends:
+        try:
+            live_data = fetch_live_market_data(trend['career_title'])
+            # Update if live data seems valid (count > 0 or explicit source)
+            if live_data and live_data.get('source') == 'Live API':
+                # Update growth
+                trend['growth_rate'] = round(live_data.get('job_growth_rate', 0) * 100, 1)
+                trend['demand_level'] = live_data.get('demand_level', trend['demand_level'])
+                # We could update salary, but JSearch salary parsing is tough, so we trust our dataset/fallback 
+                # unless we parse it robustly.
+        except Exception as e:
+            print(f"Trend update failed for {trend['career_title']}: {e}")
+
+    context = {
+        'trends': sorted_trends,
         'total_careers': total_careers,
         'avg_growth': round(avg_growth, 1),
         'avg_salary': round(avg_salary / 1000, 0),
@@ -598,13 +621,19 @@ def chatbot(request):
 
     # 3. Get Market Trends (Top 3 by growth)
     trending_careers = []
-    if not MARKET_DF.empty:
-        trends = MARKET_DF.sort_values(by='job_growth_rate', ascending=False).head(3)
-        for _, row in trends.iterrows():
+    # 3. Get Market Trends (Top 3 by growth from seed list)
+    trending_careers = []
+    try:
+        # Use simple sort from CAREER_DF
+        top_growth = CAREER_DF.nlargest(3, 'job_growth_rate')
+        for _, row in top_growth.iterrows():
             trending_careers.append({
-                'title': row.get('job_title', 'Unknown'),
-                'growth': round(row.get('job_growth_rate', 0) * 100, 1)
+                'title': row.get('career_name', 'Unknown'),
+                 # growth in DB is decimal, e.g. 0.05
+                'growth': round(float(row.get('job_growth_rate', 0)) * 100, 1)
             })
+    except:
+        pass
 
     # 4. Personality
     personality_type = profile.personality_type or "Unknown"
