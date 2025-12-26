@@ -413,8 +413,12 @@ def extract_skills_from_text(text):
         'git', 'github', 'gitlab', 'docker', 'kubernetes', 'jenkins', 'aws', 'amazon web services', 'azure', 'microsoft azure', 'google cloud', 'gcp', 'terraform', 'ansible', 'circleci', 'heroku', 'digitalocean',
 
         # Tools & Others
-
-        'linux', 'bash', 'shell', 'jira', 'trello', 'slack', 'excel', 'power bi', 'tableau', 'figma', 'canva', 'photoshop', 'illustrator', 'premiere pro', 'automation', 'selenium', 'chatgpt', 'deepseek', 'llm', 'generative ai'
+        'linux', 'bash', 'shell', 'jira', 'trello', 'slack', 'excel', 'power bi', 'tableau', 'figma', 'canva', 'photoshop', 'illustrator', 'premiere pro', 'automation', 'selenium', 'chatgpt', 'deepseek', 'llm', 'generative ai',
+        
+        # Office & Productivity
+        'ms word', 'microsoft word', 'word', 'ms excel', 'microsoft excel', 'ms powerpoint', 'microsoft powerpoint', 'powerpoint',
+        'ms office', 'microsoft office', 'office 365', 'outlook', 'access', 'sharepoint', 'onenote',
+        'google docs', 'google sheets', 'google slides', 'spreadsheet', 'word processing'
 
     }
 

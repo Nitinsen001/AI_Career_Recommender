@@ -26,3 +26,4 @@ jupyter>=1.0.0
 ipykernel>=6.0.0
 nbconvert>=6.5.0
 whitenoise>=6.4.0
+gunicorn==20.1.0
