@@ -1,0 +1,43 @@
+{% extends "admin/index.html" %}
+{% load i18n %}
+
+{% block content %}
+<!-- CUSTOM ANALYTICS DASHBOARD -->
+<div style="margin-bottom: 30px; display: flex; gap: 20px; flex-wrap: wrap;">
+    <!-- CARD 1: TOTAL USERS -->
+    <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #2196F3;">
+        <h3 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #888;">Total Students</h3>
+        <p style="margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #333;">
+            {{ total_users|default:"--" }}
+        </p>
+    </div>
+
+    <!-- CARD 2: CAREERS -->
+    <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #4CAF50;">
+        <h3 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #888;">Active Careers</h3>
+        <p style="margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #333;">
+            {{ total_careers|default:"--" }}
+        </p>
+    </div>
+
+    <!-- CARD 3: AI SUGGESTIONS -->
+    <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #FF9800;">
+        <h3 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #888;">Pending AI Insights</h3>
+        <p style="margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #333;">
+            {{ pending_suggestions|default:"0" }}
+        </p>
+    </div>
+
+    <!-- CARD 4: AT RISK STUDENTS -->
+    <div style="flex: 1; min-width: 200px; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #F44336;">
+        <h3 style="margin: 0; font-size: 14px; text-transform: uppercase; color: #888;">At Risk (No Match)</h3>
+        <p style="margin: 10px 0 0; font-size: 28px; font-weight: bold; color: #333;">
+            {{ at_risk_count|default:"0" }}
+        </p>
+    </div>
+</div>
+
+<!-- DEFAULT DJANGO ADMIN INDEX -->
+{{ block.super }}
+
+{% endblock %}

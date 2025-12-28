@@ -39,6 +39,8 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
+            if user.is_superuser:
+                return redirect('admin_dashboard')
             return redirect('dashboard')
         else:
             messages.error(request, 'Invalid username or password')
@@ -93,7 +95,13 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     """User dashboard view"""
-    profile = request.user.userprofile
+    # FIXED: Robustly handle missing profile (e.g. for superusers)
+    try:
+        profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user)
+        # We can perform initial setup here if needed
+
     if not CareerRecommendation.objects.filter(user_profile=profile).exists():
         generate_career_recommendations(profile)
 

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Career Admin</title>
+    <!-- Tailwind CSS (CDN for simplicity) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .active-nav { background-color: #374151; border-left: 4px solid #60A5FA; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
+
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-900 text-white flex flex-col shadow-xl">
+            <div class="h-16 flex items-center justify-center font-bold text-xl tracking-wider text-blue-400 border-b border-gray-800">
+                <i class="fas fa-robot mr-2"></i> ADMIN PANEL
+            </div>
+
+            <nav class="flex-1 px-2 py-4 space-y-2">
+                <a href="/admin/dashboard/" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 transition {% if request.path == '/admin/dashboard/' %}active-nav{% endif %}">
+                    <i class="fas fa-tachometer-alt w-6"></i> Dashboard
+                </a>
+                <a href="/admin/users/" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 transition {% if 'users' in request.path %}active-nav{% endif %}">
+                    <i class="fas fa-users w-6"></i> User Management
+                </a>
+                <a href="/admin/careers/" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 transition {% if 'careers' in request.path %}active-nav{% endif %}">
+                    <i class="fas fa-briefcase w-6"></i> Careers
+                </a>
+                <a href="/admin/ai-suggestions/" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 transition {% if 'ai-suggestions' in request.path %}active-nav{% endif %}">
+                    <i class="fas fa-lightbulb w-6"></i> AI Suggestions
+                </a>
+                <a href="/admin/ai-settings/" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 transition {% if 'ai' in request.path %}active-nav{% endif %}">
+                    <i class="fas fa-brain w-6"></i> AI Configuration
+                </a>
+                <a href="/" target="_blank" class="flex items-center px-4 py-3 rounded-md hover:bg-gray-800 text-gray-400">
+                    <i class="fas fa-external-link-alt w-6"></i> View Site
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-gray-800">
+                <button onclick="logout()" class="w-full flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-sm font-medium transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <header class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
+                <h1 class="text-xl font-semibold text-gray-700 block">{{ page_title|default:"Dashboard" }}</h1>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600 mr-2">Welcome, {{ request.user.username }}</span>
+                    <div class="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                        {{ request.user.username|first|upper }}
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-6">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Common JS -->
+    <script>
+        // Use CSRF Token for Fetch API
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                     if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        async function logout() {
+            if(!confirm("Are you sure you want to logout?")) return;
+            try {
+                const res = await fetch('/admin/api/auth/logout/', {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': csrftoken}
+                });
+                if(res.ok) window.location.href = '/admin/login/';
+            } catch(e) {
+                console.error(e);
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

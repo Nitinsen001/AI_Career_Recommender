@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-#c!2)qtj*hw0ge*25ts7lnog&f&v%tqk+=146*8-#26bn&sg&n
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'ai_recommender',
 ]
 
@@ -57,7 +58,7 @@ ROOT_URLCONF = 'AI_Career_Recommender.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'ai_recommender' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

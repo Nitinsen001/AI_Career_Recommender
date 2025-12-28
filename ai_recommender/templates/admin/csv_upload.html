@@ -1,0 +1,25 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<div style="padding: 20px; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    <h1 style="color: #333; margin-bottom: 20px;">Upload Career Data CSV</h1>
+    <p style="margin-bottom: 20px; color: #666;">
+        Upload a CSV file to bulk import career data. 
+        <br>Expected columns: <strong>title, description, skills, salary, growth</strong>
+    </p>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div style="margin-bottom: 20px;">
+            <input type="file" name="csv_file" accept=".csv" required style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+        </div>
+        
+        <div>
+            <input type="submit" value="Upload & Process" class="default" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+        </div>
+    </form>
+    
+    <br>
+    <a href="../" style="color: #2196F3; text-decoration: none;">&larr; Back to Careers</a>
+</div>
+{% endblock %}

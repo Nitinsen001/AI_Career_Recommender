@@ -1,0 +1,63 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-bold text-gray-800 mb-6">AI Configuration</h2>
+    <p class="mb-4 text-gray-600">Tune the recommendation engine parameters dynamically.</p>
+
+    <div id="configGrid" class="space-y-4">
+        {% for c in configs %}
+        <div class="flex items-center justify-between bg-gray-50 p-4 rounded border">
+            <div>
+                <span class="font-mono text-blue-600 font-bold">{{ c.key }}</span>
+                <span class="mx-2 text-gray-400">=</span>
+                <span class="font-mono bg-white border px-2 py-1 rounded">{{ c.value }}</span>
+            </div>
+            <button onclick="deleteConfig({{ c.id }})" class="text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+        </div>
+        {% empty %}
+        <p class="text-gray-500">No configuration set.</p>
+        {% endfor %}
+    </div>
+
+    <div class="mt-8 border-t pt-4">
+        <h3 class="font-bold text-gray-700">Add New Parameter</h3>
+        <form id="configForm" class="mt-4 flex gap-4">
+            <input type="text" id="key" placeholder="Key (e.g. MIN_MATCH)" class="border p-2 rounded flex-1">
+            <input type="text" id="value" placeholder="Value (e.g. 0.75)" class="border p-2 rounded flex-1">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Add</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.getElementById('configForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const key = document.getElementById('key').value;
+        const value = document.getElementById('value').value;
+        
+        try {
+            const res = await fetch('/admin/api/ai-config/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+                body: JSON.stringify({ key, value })
+            });
+            if(res.ok) window.location.reload();
+        } catch(e) { console.error(e); }
+    });
+
+    async function deleteConfig(id) {
+        if(!confirm('Delete?')) return;
+        try {
+            await fetch(`/admin/api/ai-config/${id}/`, {
+                method: 'DELETE',
+                headers: {'X-CSRFToken': csrftoken}
+            });
+            window.location.reload();
+        } catch(e) { console.error(e); }
+    }
+</script>
+{% endblock %}

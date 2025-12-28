@@ -49,10 +49,29 @@ class Career(models.Model):
     job_growth_rate = models.DecimalField(max_digits=5, decimal_places=2)
     work_environment = models.TextField()
     related_fields = models.TextField(blank=True)
+    
+    # New Fields for Custom Admin
+    ai_weight = models.FloatField(default=1.0, help_text="Weightage for AI recommendation priority")
+    future_scope = models.TextField(blank=True, help_text="Details about future prospects")
+    salary_range = models.CharField(max_length=100, blank=True, help_text="e.g. $50k - $80k")
+    interests = models.TextField(blank=True, help_text="Comma-separated interests suitable for this career")
+    
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
+
+class AIConfig(models.Model):
+    """
+    Configuration for AI Recommendation Logic (Managed via Admin Panel)
+    """
+    key = models.CharField(max_length=50, unique=True, help_text="Config key (e.g. MIN_MATCH_SCORE)")
+    value = models.CharField(max_length=255, help_text="Config value")
+    description = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.key}: {self.value}"
 
 class PersonalityAssessment(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -154,3 +173,24 @@ class LearningResource(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.platform})"
+
+class SuggestedCareer(models.Model):
+    """
+    AI-Learned Career Patterns pending Admin Approval.
+    """
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending AI Insight'),
+        ('APPROVED', 'Approved (Added to Database)'),
+        ('REJECTED', 'Rejected'),
+    ]
+
+    title = models.CharField(max_length=200)
+    source = models.CharField(max_length=100, default="AI Pattern Analysis")
+    skills_detected = models.TextField(help_text="Skills found that triggered this suggestion")
+    confidence_score = models.FloatField(default=0.0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    admin_notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.status})"

@@ -20,7 +20,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Custom Admin Panel
+    path('admin/', include('ai_recommender.admin_urls')),
+    
+    # Django Default Admin (Moved)
+    path('django-admin/', admin.site.urls),
     path('', include('ai_recommender.urls')),
 ]
 

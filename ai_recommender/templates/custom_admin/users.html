@@ -1,0 +1,87 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-gray-800">User Management</h2>
+        <form method="GET" action="" class="relative">
+            <input type="text" name="q" value="{{ search_query|default:'' }}" placeholder="Search users (name, email)..." class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+            <button type="submit" class="absolute left-3 top-3 text-gray-400 hover:text-blue-500">
+                <i class="fas fa-search"></i>
+            </button>
+        </form>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table class="w-full whitespace-nowrap">
+            <thead>
+                <tr class="bg-gray-50 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    <th class="px-6 py-3">ID</th>
+                    <th class="px-6 py-3">User</th>
+                    <th class="px-6 py-3">Education</th>
+                    <th class="px-6 py-3">Resume</th>
+                    <th class="px-6 py-3">Joined</th>
+                    <th class="px-6 py-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for user in users %}
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-4 text-sm text-gray-500">#{{ user.id }}</td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">{{ user.user.username }}</div>
+                        <div class="text-sm text-gray-500">{{ user.user.email }}</div>
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">{{ user.education_level }}</td>
+                    <td class="px-6 py-4 text-sm">
+                        {% if user.resume_file %}
+                        <a href="{{ user.resume_file.url }}" target="_blank" class="text-blue-600 hover:underline text-xs"><i class="fas fa-file-pdf"></i> View Resume</a>
+                        {% else %}
+                        <span class="text-gray-400 text-xs">No Resume</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-500">{{ user.created_at|date:"M d, Y" }}</td>
+                    <td class="px-6 py-4 text-sm text-right space-x-2">
+                        <!-- LINK TO CUSTOM 360 VIEW -->
+                        <a href="/admin/users/{{ user.id }}/" class="text-blue-600 hover:text-blue-900" title="View Full 360 Profile">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button onclick="deleteUser({{ user.id }})" class="text-red-600 hover:text-red-900" title="Delete User"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6" class="text-center py-4">No users found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Edit User Modal (Hidden) -->
+<div id="userModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded-lg w-1/3">
+        <h3 class="text-lg font-bold mb-4">Edit User</h3>
+        <p class="text-gray-500">Feature coming soon via API.</p>
+        <div class="mt-4 flex justify-end">
+            <button onclick="document.getElementById('userModal').classList.add('hidden')" class="bg-gray-400 text-white px-4 py-2 rounded">Close</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function deleteUser(id) {
+        if(!confirm('Are you sure you want to delete this user?')) return;
+        try {
+            const res = await fetch(`/admin/api/users/${id}/`, {
+                method: 'DELETE',
+                headers: { 'X-CSRFToken': csrftoken }
+            });
+            if(res.ok) window.location.reload();
+        } catch(e) {
+            console.error(e);
+        }
+    }
+</script>
+{% endblock %}
